@@ -9,6 +9,7 @@ RUN npm run build:web
 FROM nginx:1.30.4-alpine
 ARG REVISION=local
 LABEL org.opencontainers.image.title="VetNotify web" org.opencontainers.image.revision=$REVISION
+RUN apk upgrade --no-cache
 COPY infra/local/web.conf /etc/nginx/nginx.conf
 COPY --from=build /app/dist /usr/share/nginx/html
 USER nginx

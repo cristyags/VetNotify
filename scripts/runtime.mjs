@@ -1,6 +1,6 @@
 import { compose } from './local.mjs';
 import { poll, request } from '../tests/support/harness.mjs';
-import { kubectlClient } from './kubectl-client.mjs';
+import { kubectlClient, stopRemoteContainer } from './kubectl-client.mjs';
 
 const k8s=process.env.VET_TARGET==='k8s';
 const namespace=process.env.VET_NAMESPACE ?? 'vetnotify-dev';
@@ -36,14 +36,28 @@ export function killWorker() {
   if(k8s) {
     const pods=JSON.parse(kube(['get','pods','-l','app=worker-email','-o','json'],true)).items;
     if(pods.length!==1) throw new Error('La prueba espera un único pod worker-email');
-    const id=pods[0].metadata.uid;
-    kube(['delete','pod',pods[0].metadata.name,'--grace-period=0','--force']);
-    return id;
+    const pod=pods[0];
+    if(process.env.VET_SSH_TARGET){
+      const container=pod.status.containerStatuses?.find(item=>item.name==='worker-email');
+      const id=container?.containerID?.split('://')[1];
+      if(!container?.state?.running||!id) throw new Error('No se observó el contenedor de correo activo');
+      stopRemoteContainer(id);
+      return {podUid:pod.metadata.uid,containerId:id,method:'cri-stop',restartsBefore:container.restartCount};
+    }
+    kube(['delete','pod',pod.metadata.name,'--grace-period=0','--force']);
+    return {podUid:pod.metadata.uid,method:'force-delete'};
   }
   const id=compose(['ps','-q','worker-email'],true);
   compose(['kill','-s','SIGKILL','worker-email']);
   compose(['up','-d','worker-email']);
   return id;
+}
+export function workerRestarted(prior) {
+  if(!k8s||prior?.method!=='cri-stop') return undefined;
+  const pods=JSON.parse(kube(['get','pods','-l','app=worker-email','-o','json'],true)).items;
+  return pods.some(p=>p.status.containerStatuses?.some(c=>c.name==='worker-email'&&c.ready&&
+    c.containerID?.split('://')[1]!==prior.containerId&&
+    (p.metadata.uid!==prior.podUid||c.restartCount>prior.restartsBefore)));
 }
 export function restartApi() {
   if(k8s) {

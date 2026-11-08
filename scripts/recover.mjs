@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { pathToFileURL } from 'node:url';
 import { api, attempts, db as connect, evidence, expectStatus, get, login, payload, poll, request, runId, send, terminal, withProfile } from '../tests/support/harness.mjs';
-import { devOnly, killWorker, kube, readiness, restartApi, startDatabase, stopDatabase } from './runtime.mjs';
+import { devOnly, killWorker, kube, readiness, restartApi, startDatabase, stopDatabase, workerRestarted } from './runtime.mjs';
 
 export async function recover(auth,db,run) {
   devOnly();
@@ -43,6 +43,7 @@ async function exerciseRecovery(auth,db,run) {
   });
   const recovered=await Promise.all(ids.map(id=>terminal(id,auth)));
   assert.ok(recovered.every(n=>n.state==='delivered' && n.attempt_count<=3));
+  if(killed?.method==='cri-stop') assert.ok(workerRestarted(killed),'Kubelet creó un proceso nuevo');
   const history=await attempts(lease.id,auth);
   assert.deepEqual(history.map(row=>row.number),[1,2]);
   assert.equal(history[0].code,'lease_expired');
