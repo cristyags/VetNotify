@@ -52,8 +52,11 @@ jobs:
             docker buildx build --platform linux/amd64 --provenance=false --sbom=false \
               -f "$file" --build-arg "REVISION=$GITHUB_SHA" --label "org.opencontainers.image.source=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" \
               -t "$ref" --output "type=oci,dest=$archive" --metadata-file "$RUNNER_TEMP/$component.json" .
-            docker run --rm -v "$PWD/.runtime/release:/scan:ro" aquasec/trivy:0.70.0 image \
-              --input "/scan/$component.oci.tar" --scanners vuln --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1
+            layout="$RUNNER_TEMP/$component-oci"
+            mkdir "$layout"
+            tar -xf "$archive" -C "$layout"
+            docker run --rm -v "$layout:/scan:ro" aquasec/trivy:0.70.0 image \
+              --input /scan --scanners vuln --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1
             skopeo copy --preserve-digests --authfile "$auth" "oci-archive:$archive" "docker://$ref"
             digest=$(docker buildx imagetools inspect "$ref" | awk '/^Digest:/{print $2;exit}')
             test "${#digest}" -eq 71

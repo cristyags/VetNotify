@@ -61,7 +61,7 @@ app.setErrorHandler((err, req, reply) => {
     return reply.code(status).send({ code: status === 429 ? 'rate_limited' : 'invalid_input',
       message: status === 429 ? 'Demasiados intentos. Espera un minuto.' : 'Revisa los campos y el formato de la solicitud.' });
   }
-  const unavailable = !e.code || /^(08|53|57P0|57014|ECONN|ETIMEDOUT|ENET|EPIPE)/.test(e.code);
+  const unavailable = !e.code || /^(08|53|57P0|57014|ECONN|ETIMEDOUT|ENET|EPIPE|ENOTFOUND|EAI_AGAIN)/.test(e.code);
   tel.logger.error({ operation: 'request_failed', route: req.routeOptions.url, result: e.code ?? 'dependency_error' });
   return reply.code(unavailable ? 503 : 500).send({
     code: unavailable ? 'unavailable' : 'internal_error', message: 'La operación no se pudo completar.',
@@ -70,7 +70,14 @@ app.setErrorHandler((err, req, reply) => {
 
 app.get('/health/live', { schema: { summary: 'Liveness del proceso', response: { 200: health } } }, async () => ({ status: 'live' }));
 app.get('/health/ready', { schema: { summary: 'Verifica PostgreSQL y migración', response: { 200: health, 503: errors[503] } } },
-  async () => { await ready(pool); return { status: 'ready' }; });
+  async () => {
+    try {
+      await ready(pool);
+      return { status: 'ready' };
+    } catch {
+      throw new HttpError(503, 'not_ready', 'PostgreSQL o el esquema aún no están listos.');
+    }
+  });
 app.get(prefix+'/version', { schema: { summary: 'Versión desplegada', response: { 200: schema.versionSchema } } },
   async () => ({ name: 'VetNotify', version: '1.0.0', commit: process.env.REVISION ?? 'local',
     image: process.env.IMAGE_REF ?? 'local', environment }));

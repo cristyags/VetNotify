@@ -48,14 +48,30 @@ kubectl(['apply','-f','-'],{input:rendered});
 kubectl(['-n',namespace,'rollout','status','statefulset/postgres','--timeout=150s'],{timeout:160000});
 const jobName='db-setup-'+randomBytes(4).toString('hex');
 const envFrom=(name,secret,key)=>({name,valueFrom:{secretKeyRef:{name:'vetnotify-'+secret,key}}});
+const waitForDatabase=`
+import { setTimeout as wait } from 'node:timers/promises';
+import { database } from './dist-api/packages/db/index.js';
+const pool=database();
+const deadline=Date.now()+45000;
+try {
+  while (true) {
+    try { await pool.query('SELECT 1'); break; }
+    catch {
+      if (Date.now()>=deadline) throw new Error('PostgreSQL no es alcanzable desde el Job');
+      await wait(1000);
+    }
+  }
+} finally { await pool.end(); }
+`;
 const job={apiVersion:'batch/v1',kind:'Job',metadata:{name:jobName,namespace},
   spec:{ttlSecondsAfterFinished:1800,backoffLimit:4,activeDeadlineSeconds:150,template:{metadata:{labels:{app:'db-setup'}},spec:{
-    restartPolicy:'Never',automountServiceAccountToken:false,serviceAccountName:'vetnotify-app',
+    restartPolicy:'Never',automountServiceAccountToken:false,serviceAccountName:'vetnotify-app',enableServiceLinks:false,
     securityContext:{seccompProfile:{type:'RuntimeDefault'}},containers:[{
       name:'setup',image:backend,imagePullPolicy:'IfNotPresent',
       securityContext:{runAsNonRoot:true,runAsUser:1000,runAsGroup:1000,allowPrivilegeEscalation:false,capabilities:{drop:['ALL']}},
       resources:{requests:{cpu:'20m',memory:'48Mi'},limits:{cpu:'500m',memory:'196Mi'}},
-      command:['sh','-ec','node dist-api/scripts/migrate.js && node dist-api/scripts/seed.js'],
+      command:['sh','-ec','node --input-type=module -e "$1" && node dist-api/scripts/migrate.js && node dist-api/scripts/seed.js',
+        'vetnotify-db-setup',waitForDatabase],
       env:[envFrom('DATABASE_URL','database','url'),envFrom('AGENDA_KEY','agenda','key'),envFrom('LAB_KEY','laboratorio','key'),
         ...Object.keys(setupSecrets.seed).map(k=>envFrom(k,'seed',k))]
     }],
