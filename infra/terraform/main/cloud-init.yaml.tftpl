@@ -1,0 +1,57 @@
+#cloud-config
+package_update: true
+packages: [ca-certificates, curl]
+write_files:
+  - path: /etc/rancher/k3s/config.yaml
+    permissions: '0600'
+    content: |
+      write-kubeconfig-mode: "0600"
+      secrets-encryption: true
+      disable: [traefik, servicelb]
+  - path: /etc/caddy/Caddyfile
+    permissions: '0644'
+    content: |
+      {
+        admin off
+      }
+      ${fqdn} {
+        encode zstd gzip
+        header {
+          Strict-Transport-Security "max-age=86400"
+          -Server
+        }
+        reverse_proxy 127.0.0.1:31080
+      }
+  - path: /etc/systemd/system/vetnotify-edge.service
+    permissions: '0644'
+    content: |
+      [Unit]
+      Description=VetNotify edge TLS
+      After=network-online.target
+      Wants=network-online.target
+      [Service]
+      User=vetedge
+      StateDirectory=vetnotify-edge
+      Environment=XDG_DATA_HOME=/var/lib/vetnotify-edge
+      Environment=XDG_CONFIG_HOME=/var/lib/vetnotify-edge
+      ExecStart=/usr/local/bin/caddy run --config /etc/caddy/Caddyfile
+      AmbientCapabilities=CAP_NET_BIND_SERVICE
+      CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+      NoNewPrivileges=true
+      Restart=on-failure
+      [Install]
+      WantedBy=multi-user.target
+runcmd:
+  - |
+    set -eu
+    curl --fail --silent --show-error --location --retry 5 https://get.k3s.io -o /var/tmp/k3s-install.sh
+    INSTALL_K3S_VERSION=v1.35.2+k3s1 sh /var/tmp/k3s-install.sh server
+    cd /var/tmp
+    curl -fsSLO --retry 5 https://github.com/caddyserver/caddy/releases/download/v2.10.2/caddy_2.10.2_linux_amd64.tar.gz
+    curl -fsSLO --retry 5 https://github.com/caddyserver/caddy/releases/download/v2.10.2/caddy_2.10.2_checksums.txt
+    grep ' caddy_2.10.2_linux_amd64.tar.gz$' caddy_2.10.2_checksums.txt | sha512sum --check
+    tar -xzf caddy_2.10.2_linux_amd64.tar.gz caddy
+    install -m 0755 caddy /usr/local/bin/caddy
+    id -u vetedge >/dev/null 2>&1 || useradd --system --home-dir /var/lib/vetnotify-edge --shell /usr/sbin/nologin vetedge
+    systemctl daemon-reload
+    systemctl enable --now vetnotify-edge

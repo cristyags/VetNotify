@@ -1,0 +1,74 @@
+name: Entrega controlada
+on:
+  workflow_dispatch:
+    inputs:
+      release_run:
+        description: Ejecución de Publicar candidato desde main
+        type: string
+        required: true
+permissions:
+  actions: read
+  contents: read
+concurrency:
+  group: vetnotify-release
+  cancel-in-progress: false
+jobs:
+  verify-release:
+    if: github.ref == 'refs/heads/main' && vars.VETNOTIFY_PROMOTION_ENABLED == 'configured'
+    runs-on: ubuntu-24.04
+    outputs:
+      commit: ${{ steps.source.outputs.commit }}
+      backend: ${{ steps.release.outputs.backend }}
+      web: ${{ steps.release.outputs.web }}
+    steps:
+      - name: Verify source run
+        id: source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_RUN: ${{ inputs.release_run }}
+        run: |
+          [[ "$RELEASE_RUN" =~ ^[0-9]+$ ]]
+          run=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RELEASE_RUN")
+          jq -e '.name=="Publicar candidato" and .head_branch=="main" and .conclusion=="success"' <<< "$run"
+          echo "commit=$(jq -r .head_sha <<< "$run")" >> "$GITHUB_OUTPUT"
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: release-${{ steps.source.outputs.commit }}
+          run-id: ${{ inputs.release_run }}
+          github-token: ${{ github.token }}
+      - id: release
+        env:
+          EXPECTED_COMMIT: ${{ steps.source.outputs.commit }}
+        run: |
+          [[ $(jq -r .commit release.json) == "$EXPECTED_COMMIT" ]]
+          for image in backend web; do
+            ref=$(jq -r ".$image" release.json)
+            prefix="ghcr.io/${GITHUB_REPOSITORY,,}-$image@sha256:"
+            [[ "$ref" == "$prefix"* ]]
+            [[ "${ref##*:}" =~ ^[0-9a-f]{64}$ ]]
+            echo "$image=$ref" >> "$GITHUB_OUTPUT"
+          done
+  validation:
+    needs: verify-release
+    runs-on: [self-hosted, vetnotify-deploy]
+    environment: validation
+    steps:
+      - env:
+          KUBE_CONTEXT: vetnotify-dev-release
+          BACKEND: ${{ needs.verify-release.outputs.backend }}
+          WEB: ${{ needs.verify-release.outputs.web }}
+          COMMIT: ${{ needs.verify-release.outputs.commit }}
+          BASE_URL: ${{ vars.DEV_BASE_URL }}
+        run: /opt/vetnotify/promote.sh vetnotify-dev
+  production:
+    needs: [verify-release, validation]
+    runs-on: [self-hosted, vetnotify-deploy]
+    environment: production
+    steps:
+      - env:
+          KUBE_CONTEXT: vetnotify-prod-release
+          BACKEND: ${{ needs.verify-release.outputs.backend }}
+          WEB: ${{ needs.verify-release.outputs.web }}
+          COMMIT: ${{ needs.verify-release.outputs.commit }}
+          BASE_URL: ${{ vars.PROD_BASE_URL }}
+        run: /opt/vetnotify/promote.sh vetnotify-prod

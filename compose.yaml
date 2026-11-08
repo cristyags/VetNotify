@@ -1,0 +1,168 @@
+name: vetnotify
+
+x-backend: &backend
+  image: vetnotify-backend:local
+  restart: unless-stopped
+  init: true
+  security_opt: [no-new-privileges:true]
+  cap_drop: [ALL]
+  environment: &app-env
+    DATABASE_URL: postgresql://vetnotify:${POSTGRES_PASSWORD:?Ejecuta npm run bootstrap-local}@postgres:5432/vetnotify
+    VET_ENV: ${VET_ENV:-local}
+    DEMO_FAULTS: "true"
+    IDEMPOTENCY_TTL_SECONDS: ${IDEMPOTENCY_TTL_SECONDS:-86400}
+    OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: http://collector:4318/v1/traces
+  healthcheck: &node-health
+    test: ["CMD","node","-e","fetch('http://localhost:8080/health/ready').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+    interval: 4s
+    timeout: 4s
+    retries: 8
+services:
+  postgres:
+    image: postgres:18-bookworm
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: vetnotify
+      POSTGRES_DB: vetnotify
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Genera credenciales locales}
+    ports: ["127.0.0.1:${PG_PORT:-15432}:5432"]
+    volumes: [pg:/var/lib/postgresql]
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U vetnotify -d vetnotify"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+  migrate:
+    <<: *backend
+    profiles: [setup]
+    restart: "no"
+    healthcheck: {disable: true}
+    command: ["node","dist-api/scripts/migrate.js"]
+  seed:
+    <<: *backend
+    profiles: [setup]
+    restart: "no"
+    healthcheck: {disable: true}
+    command: ["node","dist-api/scripts/seed.js"]
+    environment:
+      <<: *app-env
+      AGENDA_KEY: ${AGENDA_KEY}
+      LAB_KEY: ${LAB_KEY}
+      DISABLED_KEY: ${DISABLED_KEY}
+      OPERATOR_PASSWORD: ${OPERATOR_PASSWORD}
+      SOFIA_PASSWORD: ${SOFIA_PASSWORD}
+      DIEGO_PASSWORD: ${DIEGO_PASSWORD}
+  api:
+    <<: *backend
+    build:
+      context: .
+      args: {REVISION: "${REVISION:-local}"}
+    environment:
+      <<: *app-env
+      PUBLIC_ORIGIN: "http://localhost:${VET_PORT:-18080}"
+      AGENDA_URL: http://agenda:8080
+      LAB_URL: http://laboratorio:8080
+      ADAPTER_KEY: ${ADAPTER_KEY}
+  worker-email:
+    <<: *backend
+    command: ["node","dist-api/apps/worker/src/index.js","email"]
+    environment:
+      <<: *app-env
+      SIMULATOR_URL: http://simulator:8080
+      SIMULATOR_KEY: ${SIMULATOR_KEY}
+  worker-internal:
+    <<: *backend
+    command: ["node","dist-api/apps/worker/src/index.js","internal"]
+  simulator:
+    <<: *backend
+    command: ["node","dist-api/apps/email-simulator/src/index.js"]
+    environment:
+      <<: *app-env
+      SIMULATOR_KEY: ${SIMULATOR_KEY}
+  agenda:
+    <<: *backend
+    command: ["node","dist-api/clients/agenda/index.js","serve"]
+    environment:
+      VET_ENV: ${VET_ENV:-local}
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: http://collector:4318/v1/traces
+      API_URL: http://api:8080
+      ADAPTER_KEY: ${ADAPTER_KEY}
+      AGENDA_KEY: ${AGENDA_KEY}
+  laboratorio:
+    <<: *backend
+    command: ["node","dist-api/clients/laboratorio/index.js","serve"]
+    environment:
+      VET_ENV: ${VET_ENV:-local}
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: http://collector:4318/v1/traces
+      API_URL: http://api:8080
+      ADAPTER_KEY: ${ADAPTER_KEY}
+      LAB_KEY: ${LAB_KEY}
+  gateway:
+    image: nginx:1.30.4-alpine
+    restart: unless-stopped
+    user: "101:101"
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    entrypoint: ["nginx","-g","daemon off;"]
+    ports: ["127.0.0.1:${VET_PORT:-18080}:8080"]
+    volumes: ["./infra/local/gateway.conf:/etc/nginx/nginx.conf:ro"]
+  web:
+    image: vetnotify-web:local
+    restart: unless-stopped
+    profiles: [web]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+      args: {REVISION: "${REVISION:-local}"}
+  collector:
+    image: otel/opentelemetry-collector:0.160.0
+    profiles: [observability]
+    restart: unless-stopped
+    command: ["--config=/etc/otelcol/vetnotify.yaml"]
+    volumes: ["./infra/observability/collector.yaml:/etc/otelcol/vetnotify.yaml:ro"]
+  jaeger:
+    image: cr.jaegertracing.io/jaegertracing/jaeger:2.22.0
+    profiles: [observability]
+    restart: unless-stopped
+    command: ["--config=/etc/jaeger/vetnotify.yaml"]
+    volumes: ["./infra/observability/jaeger.yaml:/etc/jaeger/vetnotify.yaml:ro", "traces:/tmp"]
+    ports: ["127.0.0.1:${JAEGER_PORT:-16686}:16686"]
+  prometheus:
+    image: prom/prometheus:v3.15.0
+    profiles: [observability]
+    restart: unless-stopped
+    command: ["--config.file=/etc/prometheus/vetnotify.yaml","--storage.tsdb.retention.time=3d","--storage.tsdb.retention.size=1GB"]
+    volumes: ["./infra/observability/prometheus.yaml:/etc/prometheus/vetnotify.yaml:ro", "./infra/observability/rules.yaml:/etc/prometheus/rules.yaml:ro", "prom:/prometheus"]
+    ports: ["127.0.0.1:${PROM_PORT:-19090}:9090"]
+  grafana:
+    image: grafana/grafana:13.2.4
+    profiles: [observability]
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: vetnotify
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+    volumes: ["./infra/observability/grafana/provisioning:/etc/grafana/provisioning:ro", "./infra/observability/grafana/dashboards:/var/lib/grafana/dashboards:ro", "grafana:/var/lib/grafana"]
+    ports: ["127.0.0.1:${GRAFANA_PORT:-13000}:3000"]
+  probe:
+    <<: *backend
+    profiles: [observability]
+    command: ["node","scripts/probe.mjs"]
+    environment:
+      API_URL: http://gateway:8080
+      AGENDA_KEY: ${AGENDA_KEY}
+      VET_ENV: ${VET_ENV:-local}
+    healthcheck: {disable: true}
+  node-exporter:
+    image: prom/node-exporter:v1.11.1
+    restart: unless-stopped
+    profiles: [observability]
+volumes:
+  pg:
+  traces:
+  prom:
+  grafana:

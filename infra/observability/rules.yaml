@@ -1,0 +1,17 @@
+groups:
+  - name: vetnotify
+    rules:
+      - alert: VetNotifyDeliveryDegraded
+        expr: |
+          (vetnotify_final_2m{outcome="failed"} / ignoring(outcome) vetnotify_final_2m{outcome="all"} > 0.20)
+          and ignoring(outcome) (vetnotify_final_2m{outcome="all"} >= 10)
+        for: 15s
+        labels: {severity: warning}
+        annotations:
+          summary: "Más de 20% de fallos finales del canal en los últimos 2 min"
+      - alert: VetNotifyWorkStalled
+        expr: (vetnotify_oldest_pending_seconds > 30) or (time() - vetnotify_worker_heartbeat_timestamp_seconds > 30)
+        for: 15s
+        labels: {severity: warning}
+        annotations:
+          summary: "Trabajo pendiente antiguo o latido ausente por canal"

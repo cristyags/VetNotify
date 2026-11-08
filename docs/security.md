@@ -1,0 +1,11 @@
+# Seguridad y acceso
+
+- Usuarios ficticios con contraseñas aleatorias y scrypt con sal individual. El token aleatorio de sesión se almacena por SHA-256 y se revoca al salir. La cookie es HttpOnly, SameSite=Strict y Secure en HTTPS. Las escrituras humanas comprueban token CSRF y Origin cuando el navegador lo envía.
+- La cuenta `operador` tiene rol admin de laboratorio. El rol operator puede consultar e iniciar envíos de demo y reprocesos. Los destinatarios consultan exclusivamente su bandeja y lectura. El backend ignora encabezados de rol aportados por el cliente.
+- Las credenciales de máquina tienen 256 bits de entropía y solo se registra su hash. Se pueden añadir y revocar en `application_credentials` con acceso administrativo de datos. El frontend solo recibe la sesión humana. Las llamadas a adaptadores y simulador usan secretos distintos de las claves de emisores.
+- Azure cifra el transporte público con Caddy y un certificado ACME para el FQDN de la IP de Azure. NSG expone HTTP/HTTPS y restringe SSH a la IP autorizada /32. La API K3s, PostgreSQL y herramientas de observabilidad se administran desde túneles autorizados.
+- Kubernetes almacena secretos con cifrado de K3s habilitado. Cada Deployment recibe solo sus claves mediante `secretKeyRef`. La cuenta de workload no monta token. Las NetworkPolicies filtran ingress. La cuenta de release solo inspecciona objetos y cambia imágenes en Deployments nombrados.
+- La VM y PostgreSQL comparten el límite de confianza de un administrador de infraestructura. Una sola cuenta de conexión PostgreSQL simplifica el laboratorio. Cada ambiente conserva su propia instancia y credenciales. Quien controla root de la VM puede acceder a ambos ambientes.
+- El backend Terraform usa OAuth de Azure y lease del blob. El contenedor es privado, con versionado y recuperación temporal. El permiso de datos sobre el blob se separa del permiso de gestión Azure.
+
+Para inspecciones, muestra `kubectl auth can-i` y metadatos de Secrets, jamás el valor de los objetos. Conserva credenciales, clave SSH, planes y kubeconfig en directorios privados del operador.

@@ -1,0 +1,6 @@
+resource_group_name  = "rg-vetnotify-state-REEMPLAZAR"
+storage_account_name = "vetnotifystREEMPLAZAR"
+container_name       = "tfstate"
+key                  = "main.tfstate"
+use_azuread_auth     = true
+use_cli              = true

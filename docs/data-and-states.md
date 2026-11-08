@@ -1,0 +1,13 @@
+# Datos, estados y garantías
+
+- `notifications` contiene la aceptación inmutable, estado actual, correlación, contexto del evento y familia de reprocesos. `jobs` contiene un trabajo por notificación, con máximo 1–3 capturado al crear, próxima fecha, número y token. `attempts`, `transitions` y `audit_log` conservan el historial.
+- La API responde 202 después del commit de aceptación. La misma transacción almacena accepted y pending. La aceptación garantiza que hay trabajo recuperable.
+- El alcance de idempotencia es aplicación + canal + clave. PostgreSQL serializa la decisión incluso si la clave aún no tiene fila mediante advisory lock de transacción. La PK protege la unicidad. Se aplica SHA-256 a los campos efectivos tras normalizar el correo a minúsculas, recortar texto y ordenar claves JSON. `runId` sirve para agrupar evidencia y queda fuera de la huella. La aplicación y el canal forman parte del alcance.
+- La fecha de vencimiento se calcula en PostgreSQL con la primera aceptación. Después de 86 400 s, una clave terminal permite una nueva alta. Un trabajo activo conserva su protección aunque haya vencido el TTL. La fila anterior y sus efectos permanecen. En el entorno aislado `test` se permite acortar el TTL.
+- `FOR UPDATE SKIP LOCKED` reclama trabajos con una transacción corta. El worker marca processing y añade el intento antes del HTTP. El lease predeterminado de 9 s supera el timeout integral de 2 s. La actualización terminal requiere el mismo token y un lease vigente.
+- Errores 429, 502, 503 y 504 se tratan como transitorios. Timeout, interrupción de transporte y recibo inválido son inciertos. El 422 del simulador es permanente. Otros códigos no previstos se guardan como fallo permanente de protocolo. Las esperas de 2 y 4 s quedan en `next_attempt_at`.
+- Si vence un lease, el worker cierra el intento como incierto. Si quedan intentos, reprograma. Si se agotaron, marca failed. El token anterior pierde el derecho de escribir. La cola interna y la de correo avanzan en procesos distintos.
+- La bandeja y delivered se confirman en la misma transacción. Leída se registra en otra columna. El simulador usa entorno + UUID como clave de entrega y conserva un único recibo si se perdió su respuesta. Un proveedor externo sin esa capacidad podría repetir un efecto.
+- Reprocesar crea una derivada con parent, root, orden idempotente y actor auditado. Cada fuente fallida admite una sola derivada. El replay de la orden resuelve primero su resultado anterior. Una derivada conserva la información efectiva y cuenta por separado en métricas y en su propio presupuesto de intentos.
+
+Evidencias de recepción, recurrencia, fallos y recuperación en [informes](evidence/).
