@@ -1,0 +1,25 @@
+{
+  "title": "VetNotify · Demostración sin frontend",
+  "runId": "sin-web-mw8gp2cx-5de422d9",
+  "start": "2026-11-08T23:27:02.089Z",
+  "cases": [
+    {
+      "name": "USR-01",
+      "state": "falló",
+      "summary": "Falló la demo de API\n\n1 !== 0\n"
+    }
+  ],
+  "version": {
+    "name": "VetNotify",
+    "version": "1.0.0",
+    "commit": "f7e1ff3720c56b42b096a56fa7559abb4fe773c5",
+    "image": "docker.io/library/vetnotify-backend@sha256:07cbb0df9ecea050a8005e8349c3bebc5d2aed8d66ac79dd3f04ad6106847f97",
+    "environment": "dev"
+  },
+  "restoredReplicas": {
+    "web": 1,
+    "agenda": 1,
+    "laboratorio": 1
+  },
+  "end": "2026-11-08T23:32:01.738Z"
+}

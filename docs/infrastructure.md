@@ -16,11 +16,11 @@ El código de bootstrap y estado se conserva al eliminar el workload. El plan au
 
 ## Despliegue inicial
 
-Comprueba la huella SSH por Azure Run Command y usa `ssh -L 16443:127.0.0.1:6443` con la clave dedicada y `known_hosts`. Conserva un kubeconfig fuera de Git y cambia solo el servidor del contexto a `https://127.0.0.1:16443`. El kubeconfig administrativo sirve para la inicialización, las pruebas de reinicio y diagnóstico. La entrega repetida usa una cuenta de servicio RBAC en cada namespace.
+Comprueba la clave de host SSH con Azure Run Command y guárdala en un `known_hosts` dedicado. La inicialización y las pruebas usan `VET_SSH_TARGET=vetops@FQDN`, `VET_SSH_KEY` y `VET_SSH_KNOWN_HOSTS` con rutas privadas. Si hay problemas de resolución, `VET_SSH_ADDRESS` admite la IPv4 pública estática consultada desde Azure. SSH conserva el FQDN como identificador de la clave conocida. El script invoca `sudo k3s kubectl` por SSH. El kubeconfig administrativo permanece en la VM. Los manifiestos incluyen una cuenta de servicio de release con RBAC acotado por namespace.
 
 ```powershell
 node scripts/bootstrap-local.mjs C:/ruta-privada/vetnotify-dev.env
-# Establece KUBECONFIG, BACKEND_IMAGE, WEB_IMAGE y PUBLIC_ORIGIN antes de ejecutar.
+# Establece VET_SSH_TARGET, VET_SSH_KEY, VET_SSH_KNOWN_HOSTS, BACKEND_IMAGE, WEB_IMAGE y PUBLIC_ORIGIN.
 node --env-file=C:/ruta-privada/vetnotify-dev.env scripts/deploy-k3s.mjs dev
 ```
 
@@ -28,12 +28,10 @@ Usa imágenes por digest. Para pull privado, instala una credencial dedicada de 
 
 Caddy expone el gateway de validación (NodePort 31080) en el FQDN de Azure. Producción usa otro namespace, contraseña, bases y NodePort (31081), con perfiles de fallo desactivados. La exposición pública se cambia a producción después de su aprobación y verificación. El NodePort no está abierto a Internet en el NSG.
 
-Para observabilidad en validación, abre port-forward a los tres Services:
+Para observabilidad en validación, inicia un proceso SSH por Service. Usa el mismo archivo `known_hosts` verificado y la clave dedicada. Ejemplo para Grafana:
 
 ```powershell
-kubectl -n vetnotify-dev port-forward svc/grafana 13001:3000
-kubectl -n vetnotify-dev port-forward svc/prometheus 19091:9090
-kubectl -n vetnotify-dev port-forward svc/jaeger 16687:16686
+ssh -i RUTA_CLAVE -o StrictHostKeyChecking=yes -o UserKnownHostsFile=RUTA_HOSTS -L 13001:127.0.0.1:13001 vetops@FQDN 'sudo k3s kubectl -n vetnotify-dev port-forward svc/grafana 13001:3000'
 ```
 
-Las evidencias registran el destino realmente usado. [Estado y accesos](STATUS.md).
+Usa `19091:9090` para Prometheus y `16687:16686` para Jaeger. En ambos casos, el puerto local del túnel coincide con el puerto de port-forward en la VM. Las evidencias registran el destino realmente usado. [Estado y accesos](STATUS.md).

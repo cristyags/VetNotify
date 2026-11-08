@@ -1,0 +1,51 @@
+{
+  "title": "VetNotify · Dos clientes de consola",
+  "runId": "demo-cli-mw8g8ddb-0e7fb4fd",
+  "start": "2026-11-08T23:13:58.704Z",
+  "cases": [
+    {
+      "name": "Emisores CLI",
+      "state": "pasó",
+      "summary": "Dos procesos y credenciales; cuatro IDs, dos recibos y dos avisos internos.",
+      "results": [
+        {
+          "id": "cceaf57f-04cb-4298-acc7-42cd0b257a9d",
+          "application": "agenda-veterinaria",
+          "channel": "email",
+          "state": "delivered"
+        },
+        {
+          "id": "3f53d79d-6bf5-4986-bcb7-6d1bf37674ef",
+          "application": "agenda-veterinaria",
+          "channel": "internal",
+          "state": "delivered"
+        },
+        {
+          "id": "10afe86e-1f23-4677-bc33-9dcd84c11619",
+          "application": "laboratorio-veterinario",
+          "channel": "email",
+          "state": "delivered"
+        },
+        {
+          "id": "8421ff99-67ef-492c-8efa-ee5160f7f938",
+          "application": "laboratorio-veterinario",
+          "channel": "internal",
+          "state": "delivered"
+        }
+      ]
+    },
+    {
+      "name": "Demo API",
+      "state": "falló",
+      "summary": "Alguna prueba de aceptación falló\n\n1 !== 0\n"
+    }
+  ],
+  "version": {
+    "name": "VetNotify",
+    "version": "1.0.0",
+    "commit": "f7e1ff3720c56b42b096a56fa7559abb4fe773c5",
+    "image": "docker.io/library/vetnotify-backend@sha256:07cbb0df9ecea050a8005e8349c3bebc5d2aed8d66ac79dd3f04ad6106847f97",
+    "environment": "dev"
+  },
+  "end": "2026-11-08T23:17:16.110Z"
+}

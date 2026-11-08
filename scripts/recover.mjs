@@ -75,7 +75,7 @@ async function exerciseRecovery(auth,db,run) {
     response=>![502,503,504].includes(response.status));
   const replay=expectStatus(replayResponse,200);
   assert.equal(replay.id,ids[0]);
-  const preserved=await Promise.all(ids.map(id=>get(id,auth)));
+  const preserved=await Promise.all(ids.map(id=>terminal(id,auth)));
   assert.ok(preserved.every(n=>n.state==='delivered'));
   const { rows:[check] }=await db.query(`SELECT count(*)::int AS total FROM notifications WHERE run_id=$1`,[run+'-db-unavailable']);
   assert.equal(check.total,0);

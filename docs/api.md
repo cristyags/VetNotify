@@ -35,4 +35,4 @@ Ejemplo del cuerpo que emite Agenda.
 }
 ```
 
-Rutas de consulta: `/notifications`, `/notifications/{id}`, `/attempts` y `/transitions` en el detalle. El destinatario usa `/me/inbox`. `/stats` calcula grupo/total del canal sobre el conjunto filtrado. `/stats/cohorts` mide cohortes maduras globales y desgloses. `/version` identifica el build. Los controles `/admin/faults/{runId}` son temporales, administrativos y quedan deshabilitados en producción.
+Consulta el historial en `/notifications` y el detalle en `/notifications/{id}`, con subrutas `/attempts` y `/transitions`. El destinatario usa `/me/inbox`. `/stats` calcula grupo/total del canal sobre el conjunto filtrado. `/stats/cohorts` mide cohortes maduras globales y desgloses. `/version` identifica el build. Los controles `/admin/faults/{runId}` son temporales y administrativos, con acceso limitado a validación.

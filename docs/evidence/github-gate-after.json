@@ -1,0 +1,36 @@
+{
+  "at": "2026-11-08T23:37:01.0854924Z",
+  "pr": "https://github.com/cristyags/VetNotify/pull/1",
+  "head": "92e5a9af8cfd7c1c5c7d409fd77c126e6bb7c30b",
+  "mergeStateStatus": "BLOCKED",
+  "reviewDecision": "REVIEW_REQUIRED",
+  "checks": [
+    {
+      "name": "verify",
+      "conclusion": "SUCCESS",
+      "status": "COMPLETED",
+      "detailsUrl": "https://github.com/cristyags/VetNotify/actions/runs/42535374047/job/128898407597"
+    },
+    {
+      "name": "iac",
+      "conclusion": "SUCCESS",
+      "status": "COMPLETED",
+      "detailsUrl": "https://github.com/cristyags/VetNotify/actions/runs/42535374047/job/128898407778"
+    }
+  ],
+  "policy": {
+    "strict": true,
+    "enforceAdmins": true,
+    "checks": [
+      "verify",
+      "iac"
+    ],
+    "approvals": 1
+  },
+  "invitations": [
+    {
+      "login": "Jechev1",
+      "permissions": "write"
+    }
+  ]
+}

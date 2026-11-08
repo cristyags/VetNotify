@@ -20,7 +20,8 @@ const browser=await chromium.launch({channel:process.platform==='win32'?'chrome'
 try{
   const panelDir=join(process.env.EVIDENCE_DIR??'docs/evidence',source.version.environment==='dev'?'signals-azure':'signals-local');
   await mkdir(panelDir,{recursive:true});
-  const page=await browser.newPage({viewport:{width:1440,height:1120}});
+  const page=await browser.newPage({viewport:{width:1440,height:1640}});
+  await poll('Grafana listo',()=>page.request.get(grafana+'/api/health',{timeout:3500}),r=>r.ok(),45000,800);
   const session=await page.request.post(grafana+'/login',{data:{user:'vetnotify',password}});
   assert.ok(session.ok(),'Grafana requiere inicio de sesión válido');
   const dashboard=await (await page.request.get(grafana+'/api/dashboards/uid/vetnotify-ops')).json();
@@ -33,7 +34,7 @@ try{
   const end=Date.parse(incident.after.at)+10000;
   await page.goto(grafana+'/d/vetnotify-ops?from='+start+'&to='+end+'&kiosk');
   await page.getByText('Resultados durables por estado',{exact:true}).first().waitFor({timeout:20000});
-  await page.locator('canvas').first().waitFor({state:'visible',timeout:20000});
+  await page.locator('canvas').nth(dashboard.dashboard.panels.length-1).waitFor({state:'visible',timeout:20000});
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
   await page.screenshot({path:join(panelDir,'grafana.png'),animations:'disabled',fullPage:true});
   await page.goto(jaeger+'/trace/'+traceId);

@@ -1,0 +1,115 @@
+{
+  "title": "VetNotify · Aceptación del Escenario 1",
+  "runId": "aceptacion-mw8h08i3-2b3ed68c",
+  "start": "2026-11-08T23:35:38.764Z",
+  "cases": [
+    {
+      "name": "P1-1",
+      "state": "no ejecutado",
+      "summary": "Fuera de la selección de esta corrida."
+    },
+    {
+      "name": "P1-2",
+      "state": "no ejecutado",
+      "summary": "Fuera de la selección de esta corrida."
+    },
+    {
+      "name": "P1-3",
+      "state": "no ejecutado",
+      "summary": "Fuera de la selección de esta corrida."
+    },
+    {
+      "name": "P1-4",
+      "state": "pasó",
+      "start": "2026-11-08T23:35:39.460Z",
+      "end": "2026-11-08T23:36:49.841Z",
+      "summary": "Worker terminado tras reclamar con pendientes; lease recuperado, token viejo rechazado y PostgreSQL/API reiniciados.",
+      "killed": {
+        "podUid": "ab6875e2-c5bf-402c-827d-581d19c499c8",
+        "containerId": "d7c673301965a7514a582c3fd492a72cf5271fc7f3802189ea03afe77a24c614",
+        "method": "cri-stop",
+        "restartsBefore": 0
+      },
+      "ids": [
+        "1885418b-b855-4308-b93f-6878d424f8b5",
+        "383bbbf5-cb61-49a4-a6e3-9a321617c919",
+        "e21ed0af-f345-477a-ba62-e1b05eaeeee0",
+        "68e3ee91-68fc-4593-9f0d-0c6c74b69f21",
+        "0c3d7215-c55d-4a13-9cfe-2aac748288ef",
+        "f6bdf3af-d011-4ecc-bac8-8185a50bbd87"
+      ],
+      "leaseNotification": "1885418b-b855-4308-b93f-6878d424f8b5",
+      "history": [
+        {
+          "id": "efd285ac-9f81-4e0f-8aa9-efe569bbbc23",
+          "number": 1,
+          "worker_id": "worker-email-585fb5d9c7-g7w8x-email",
+          "started_at": "2026-11-08T23:35:47.234Z",
+          "finished_at": "2026-11-08T23:36:05.355Z",
+          "duration_ms": 18120.58,
+          "outcome": "uncertain",
+          "code": "lease_expired",
+          "receipt_id": null,
+          "trace_id": null,
+          "span_id": null
+        },
+        {
+          "id": "8adfbbe8-506c-4f13-83e4-05ce15068f15",
+          "number": 2,
+          "worker_id": "worker-email-585fb5d9c7-g7w8x-email",
+          "started_at": "2026-11-08T23:36:07.487Z",
+          "finished_at": "2026-11-08T23:36:07.503Z",
+          "duration_ms": 15.63,
+          "outcome": "delivered",
+          "code": "provider_accepted",
+          "receipt_id": "93594106-a72c-44ae-b131-b1d52c0cc1b8",
+          "trace_id": "de252bf6f4f2afc66af16680890ce42e",
+          "span_id": "2f922be75b8f03f3"
+        }
+      ],
+      "replayed": "1885418b-b855-4308-b93f-6878d424f8b5",
+      "postRestartStates": [
+        "delivered",
+        "delivered",
+        "delivered",
+        "delivered",
+        "delivered",
+        "delivered"
+      ],
+      "gatewayDuringOutage": 502,
+      "unavailableWrites": 0,
+      "controlledTiming": {
+        "providerTimeoutMs": 12000,
+        "leaseMs": 18000
+      }
+    },
+    {
+      "name": "P1-5",
+      "state": "no ejecutado",
+      "summary": "Fuera de la selección de esta corrida."
+    },
+    {
+      "name": "Seguridad y acceso cruzado",
+      "state": "no ejecutado",
+      "summary": "Fuera de la selección de esta corrida."
+    },
+    {
+      "name": "Reproceso y resultado ambiguo",
+      "state": "no ejecutado",
+      "summary": "Fuera de la selección de esta corrida."
+    },
+    {
+      "name": "Commit sin respuesta y cohorte madura",
+      "state": "no ejecutado",
+      "summary": "Fuera de la selección de esta corrida."
+    }
+  ],
+  "version": {
+    "name": "VetNotify",
+    "version": "1.0.0",
+    "commit": "f7e1ff3720c56b42b096a56fa7559abb4fe773c5",
+    "image": "docker.io/library/vetnotify-backend@sha256:07cbb0df9ecea050a8005e8349c3bebc5d2aed8d66ac79dd3f04ad6106847f97",
+    "environment": "dev"
+  },
+  "end": "2026-11-08T23:36:49.842Z"
+}

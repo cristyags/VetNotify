@@ -1,0 +1,20 @@
+{
+  "title": "VetNotify · Señales y persistencia de trazas",
+  "runId": "senales-mw8hn0w5-6dd9123b",
+  "version": {
+    "name": "VetNotify",
+    "version": "1.0.0",
+    "commit": "92e5a9af8cfd7c1c5c7d409fd77c126e6bb7c30b",
+    "image": "ghcr.io/cristyags/vetnotify-backend@sha256:bceee49a3f1dfeb5c2d7ecb5a81d6039cb7ddf2142c9f37cecc93e7dab00e0d9",
+    "environment": "dev"
+  },
+  "start": "2026-11-08T23:53:21.989Z",
+  "cases": [
+    {
+      "name": "MET-03/04/05",
+      "state": "falló",
+      "summary": "apiRequestContext.post: socket hang up (ECONNRESET)\nCall log:\n\u001b[2m  - → POST http://localhost:13001/login\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - content-type: application/json\u001b[22m\n\u001b[2m    - content-length: 77\u001b[22m\n"
+    }
+  ],
+  "end": "2026-11-08T23:53:22.989Z"
+}

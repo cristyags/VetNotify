@@ -12,10 +12,18 @@ $target = $env:VET_SSH_TARGET
 if ($target -cnotmatch '^vetops@(vetnotify-[a-z0-9]+\.[a-z0-9.-]+)$' -or !$env:VET_SSH_KEY -or !$env:VET_SSH_KNOWN_HOSTS) {
     throw 'Indica el destino VetNotify, la clave privada y el archivo known_hosts verificado.'
 }
-$env:PUBLIC_ORIGIN = 'https://' + $Matches[1]
+$fqdn = $Matches[1]
+$env:PUBLIC_ORIGIN = 'https://' + $fqdn
 $credentials = (Resolve-Path -LiteralPath $CredentialsFile).Path
 $ssh = @('-o', 'BatchMode=yes', '-o', 'StrictHostKeyChecking=yes', '-o', "UserKnownHostsFile=$env:VET_SSH_KNOWN_HOSTS",
     '-o', 'ConnectionAttempts=3', '-o', 'ConnectTimeout=5', '-i', $env:VET_SSH_KEY)
+if ($env:VET_SSH_ADDRESS) {
+    $address = $null
+    if (![System.Net.IPAddress]::TryParse($env:VET_SSH_ADDRESS, [ref]$address) -or $address.AddressFamily -ne 'InterNetwork') {
+        throw 'VET_SSH_ADDRESS debe ser la IPv4 de la VM VetNotify.'
+    }
+    $ssh += @('-o', "HostName=$address", '-o', "HostKeyAlias=$fqdn")
+}
 
 Push-Location (Join-Path $PSScriptRoot '..')
 try {

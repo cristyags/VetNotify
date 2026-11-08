@@ -1,0 +1,257 @@
+{
+  "severity": "HIGH,CRITICAL con corrección",
+  "scanner": "Trivy 0.70.0",
+  "at": "2026-11-08T23:11:49.0347220Z",
+  "results": [
+    {
+      "findings": [],
+      "component": "backend",
+      "count": 0
+    },
+    {
+      "findings": [
+        {
+          "VulnerabilityID": "CVE-2026-111497",
+          "PkgName": "brotli-libs",
+          "InstalledVersion": "1.2.0-r1",
+          "FixedVersion": "1.2.1-r0",
+          "Severity": "CRITICAL"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-92392",
+          "PkgName": "curl",
+          "InstalledVersion": "8.21.0-r0",
+          "FixedVersion": "8.23.0-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-14456",
+          "PkgName": "libcrypto3",
+          "InstalledVersion": "3.5.7-r0",
+          "FixedVersion": "3.5.8-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-92392",
+          "PkgName": "libcurl",
+          "InstalledVersion": "8.21.0-r0",
+          "FixedVersion": "8.23.0-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-113351",
+          "PkgName": "libexpat",
+          "InstalledVersion": "2.8.2-r0",
+          "FixedVersion": "2.10.0-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-115506",
+          "PkgName": "libexpat",
+          "InstalledVersion": "2.8.2-r0",
+          "FixedVersion": "2.10.0-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-117610",
+          "PkgName": "libexpat",
+          "InstalledVersion": "2.8.2-r0",
+          "FixedVersion": "2.10.0-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-118370",
+          "PkgName": "libexpat",
+          "InstalledVersion": "2.8.2-r0",
+          "FixedVersion": "2.10.0-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-66046",
+          "PkgName": "libexpat",
+          "InstalledVersion": "2.8.2-r0",
+          "FixedVersion": "2.8.4-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-76641",
+          "PkgName": "libexpat",
+          "InstalledVersion": "2.8.2-r0",
+          "FixedVersion": "2.8.4-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-76956",
+          "PkgName": "libexpat",
+          "InstalledVersion": "2.8.2-r0",
+          "FixedVersion": "2.8.4-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-76957",
+          "PkgName": "libexpat",
+          "InstalledVersion": "2.8.2-r0",
+          "FixedVersion": "2.8.4-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-77214",
+          "PkgName": "libexpat",
+          "InstalledVersion": "2.8.2-r0",
+          "FixedVersion": "2.9.0-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-93990",
+          "PkgName": "libexpat",
+          "InstalledVersion": "2.8.2-r0",
+          "FixedVersion": "2.8.5-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-14456",
+          "PkgName": "libssl3",
+          "InstalledVersion": "3.5.7-r0",
+          "FixedVersion": "3.5.8-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-53612",
+          "PkgName": "libuuid",
+          "InstalledVersion": "2.42.1-r0",
+          "FixedVersion": "2.42.3-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-53613",
+          "PkgName": "libuuid",
+          "InstalledVersion": "2.42.1-r0",
+          "FixedVersion": "2.42.3-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-53614",
+          "PkgName": "libuuid",
+          "InstalledVersion": "2.42.1-r0",
+          "FixedVersion": "2.42.3-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-76642",
+          "PkgName": "libuuid",
+          "InstalledVersion": "2.42.1-r0",
+          "FixedVersion": "2.42.3-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-78408",
+          "PkgName": "libuuid",
+          "InstalledVersion": "2.42.1-r0",
+          "FixedVersion": "2.42.3-r1",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-78409",
+          "PkgName": "libuuid",
+          "InstalledVersion": "2.42.1-r0",
+          "FixedVersion": "2.42.3-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-78410",
+          "PkgName": "libuuid",
+          "InstalledVersion": "2.42.1-r0",
+          "FixedVersion": "2.42.3-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-88806",
+          "PkgName": "libx11",
+          "InstalledVersion": "1.8.13-r0",
+          "FixedVersion": "1.8.14-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-107891",
+          "PkgName": "musl",
+          "InstalledVersion": "1.2.6-r2",
+          "FixedVersion": "1.2.6-r3",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-107891",
+          "PkgName": "musl-utils",
+          "InstalledVersion": "1.2.6-r2",
+          "FixedVersion": "1.2.6-r3",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-15176",
+          "PkgName": "nginx",
+          "InstalledVersion": "1.30.4-r1",
+          "FixedVersion": "1.30.6-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-93479",
+          "PkgName": "nginx",
+          "InstalledVersion": "1.30.4-r1",
+          "FixedVersion": "1.30.6-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-97205",
+          "PkgName": "nginx",
+          "InstalledVersion": "1.30.4-r1",
+          "FixedVersion": "1.30.6-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-103111",
+          "PkgName": "pcre2",
+          "InstalledVersion": "10.47-r1",
+          "FixedVersion": "10.49-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-86145",
+          "PkgName": "pcre2",
+          "InstalledVersion": "10.47-r1",
+          "FixedVersion": "10.48-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-89157",
+          "PkgName": "pcre2",
+          "InstalledVersion": "10.47-r1",
+          "FixedVersion": "10.48-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-89161",
+          "PkgName": "pcre2",
+          "InstalledVersion": "10.47-r1",
+          "FixedVersion": "10.48-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-4775",
+          "PkgName": "tiff",
+          "InstalledVersion": "4.7.1-r0",
+          "FixedVersion": "4.7.2-r0",
+          "Severity": "HIGH"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-85091",
+          "PkgName": "zlib",
+          "InstalledVersion": "1.3.2-r0",
+          "FixedVersion": "1.3.2-r1",
+          "Severity": "HIGH"
+        }
+      ],
+      "component": "web",
+      "count": 34
+    }
+  ],
+  "commit": "b846e90c7d997d20d2caf4a7dfc6556fead265c0"
+}

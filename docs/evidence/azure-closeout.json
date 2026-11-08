@@ -1,0 +1,30 @@
+{
+  "at": "2026-11-08T23:55:28.0230791Z",
+  "origin": "https://vetnotify-26a7d1.mexicocentral.cloudapp.azure.com",
+  "backend": {
+    "name": "VetNotify",
+    "version": "1.0.0",
+    "commit": "92e5a9af8cfd7c1c5c7d409fd77c126e6bb7c30b",
+    "image": "ghcr.io/cristyags/vetnotify-backend@sha256:bceee49a3f1dfeb5c2d7ecb5a81d6039cb7ddf2142c9f37cecc93e7dab00e0d9",
+    "environment": "dev"
+  },
+  "webStatus": "200",
+  "readyStatus": "200",
+  "tlsValidated": true,
+  "k3s": {
+    "web": "ghcr.io/cristyags/vetnotify-web@sha256:884f01be7e5f61070aee38cf175cc34b9ab6569802739479d35bd12743dcc302",
+    "webReady": 1,
+    "prodDeployments": 0,
+    "temporarySqlServiceRemaining": 0
+  },
+  "finalPower": {
+    "at": "2026-11-08T23:58:00.0188665Z",
+    "resourceGroup": "rg-vetnotify-26a7d1",
+    "vm": "vetnotify-26a7d1",
+    "states": [
+      "ProvisioningState/succeeded",
+      "PowerState/deallocated"
+    ],
+    "diskAndIpRetained": true
+  }
+}

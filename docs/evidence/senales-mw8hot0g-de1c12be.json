@@ -1,0 +1,36 @@
+{
+  "title": "VetNotify · Señales y persistencia de trazas",
+  "runId": "senales-mw8hot0g-de1c12be",
+  "version": {
+    "name": "VetNotify",
+    "version": "1.0.0",
+    "commit": "92e5a9af8cfd7c1c5c7d409fd77c126e6bb7c30b",
+    "image": "ghcr.io/cristyags/vetnotify-backend@sha256:bceee49a3f1dfeb5c2d7ecb5a81d6039cb7ddf2142c9f37cecc93e7dab00e0d9",
+    "environment": "dev"
+  },
+  "start": "2026-11-08T23:54:45.088Z",
+  "cases": [
+    {
+      "name": "MET-03/04/05",
+      "state": "pasó",
+      "summary": "Dashboard provisionado, targets arriba y traza consultable por datasource y tras reinicio.",
+      "panels": 10,
+      "targets": [
+        {
+          "job": "node",
+          "status": "up"
+        },
+        {
+          "job": "outside-probe",
+          "status": "up"
+        },
+        {
+          "job": "vetnotify",
+          "status": "up"
+        }
+      ],
+      "traceId": "65e6a42b8be4e9d6b3b6eabb3bde9607"
+    }
+  ],
+  "end": "2026-11-08T23:55:17.778Z"
+}

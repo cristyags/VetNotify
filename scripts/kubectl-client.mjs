@@ -1,12 +1,15 @@
 import { spawnSync } from 'node:child_process';
+import { isIPv4 } from 'node:net';
 
 const quote = value => "'"+value.replaceAll("'","'\\''")+"'";
 function sshArgs(command) {
-  const { VET_SSH_TARGET: target, VET_SSH_KEY: key, VET_SSH_KNOWN_HOSTS: hosts } = process.env;
+  const { VET_SSH_TARGET: target, VET_SSH_KEY: key, VET_SSH_KNOWN_HOSTS: hosts, VET_SSH_ADDRESS: address } = process.env;
   if(!target || !/^vetops@vetnotify-[a-z0-9]+\.[a-z0-9.-]+$/.test(target) || !key || !hosts) {
     throw new Error('El acceso remoto requiere VM VetNotify, clave privada local y known_hosts verificado.');
   }
-  return ['-o','BatchMode=yes','-o','StrictHostKeyChecking=yes','-o','UserKnownHostsFile='+hosts,
+  if(address && !isIPv4(address)) throw new Error('VET_SSH_ADDRESS debe ser la IPv4 de la VM VetNotify');
+  const pinnedAddress=address ? ['-o','HostName='+address,'-o','HostKeyAlias='+target.split('@')[1]] : [];
+  return [...pinnedAddress,'-o','BatchMode=yes','-o','StrictHostKeyChecking=yes','-o','UserKnownHostsFile='+hosts,
     '-o','ConnectionAttempts=3','-o','ConnectTimeout=5','-i',key,target,command];
 }
 

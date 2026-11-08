@@ -15,10 +15,12 @@ Con 12 h de cómputo y 7 días de IP, el subtotal base estimado con un mes de di
 
 El presupuesto mensual de US$20 del grupo de workload usa avisos al 50%, 75% y 90%. La operación lleva el acumulado de ambos grupos independientemente del reinicio mensual. Las alertas y los cargos tienen retraso. Consulta `Cost Management > Cost analysis` filtrando los dos grupos. Si la API aún no devuelve cargos atribuibles, registra «no disponible» con fecha.
 
+La consulta de cargos reales de los dos grupos regresó una tabla vacía el 8 de noviembre. Una consulta posterior recibió HTTP 429. Los cargos atribuibles aún no están disponibles. El servicio de apagado programado de Azure requiere que el schedule viva en la misma región que la VM. México Central no ofrece ese recurso para esta suscripción. El control del cómputo usa `cloud-stop` y `cloud-start`. [Evidencia de Azure](evidence/azure-platform.json).
+
 ```powershell
 npm run cloud-status -- -Subscription ID -Suffix 26a7d1
 npm run cloud-start -- -Subscription ID -Suffix 26a7d1
 npm run cloud-stop -- -Subscription ID -Suffix 26a7d1
 ```
 
-Desasignar detiene cómputo. El disco, la IP y el estado siguen facturando según uso. `cloud-destroy` produce un plan de eliminación del workload y exige revisar destino antes de aplicar. El bootstrap del estado se conserva por separado. [Presupuestos Azure](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/tutorial-acm-create-budgets).
+Azure confirmó la desasignación al finalizar la verificación. El disco, la IP y el estado siguen facturando según uso. `cloud-destroy` produce un plan de eliminación del workload y exige revisar destino antes de aplicar. El bootstrap del estado se conserva por separado. [Estado final](evidence/azure-closeout.json) · [Presupuestos Azure](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/tutorial-acm-create-budgets).
