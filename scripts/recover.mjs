@@ -70,7 +70,10 @@ async function exerciseRecovery(auth,db,run) {
   }
   restartApi();
   await readiness(200);
-  const replay=expectStatus(await send(payload(run,'email','luna',{subject:'Recuperación 0'}),{key}),200);
+  const replayResponse=await poll('replay por el gateway tras reinicio',
+    ()=>send(payload(run,'email','luna',{subject:'Recuperación 0'}),{key}),
+    response=>![502,503,504].includes(response.status));
+  const replay=expectStatus(replayResponse,200);
   assert.equal(replay.id,ids[0]);
   const preserved=await Promise.all(ids.map(id=>get(id,auth)));
   assert.ok(preserved.every(n=>n.state==='delivered'));

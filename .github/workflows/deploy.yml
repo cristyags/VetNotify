@@ -9,7 +9,7 @@ on:
       production_pr:
         description: PR de autorización de producción ya integrado en main
         type: string
-        required: false
+        required: true
 permissions:
   actions: read
   contents: read
@@ -19,7 +19,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   verify-release:
-    if: github.ref == 'refs/heads/main' && vars.VETNOTIFY_PROMOTION_ENABLED == 'configured'
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     outputs:
       commit: ${{ steps.source.outputs.commit }}
@@ -34,7 +34,7 @@ jobs:
         run: |
           [[ "$RELEASE_RUN" =~ ^[0-9]+$ ]]
           run=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RELEASE_RUN")
-          jq -e '.name=="Publicar candidato" and .head_branch=="main" and .conclusion=="success"' <<< "$run"
+          jq -e '.path==".github/workflows/publish.yml" and .head_branch=="main" and .event=="push" and .conclusion=="success"' <<< "$run"
           echo "commit=$(jq -r .head_sha <<< "$run")" >> "$GITHUB_OUTPUT"
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
@@ -53,21 +53,8 @@ jobs:
             [[ "${ref##*:}" =~ ^[0-9a-f]{64}$ ]]
             echo "$image=$ref" >> "$GITHUB_OUTPUT"
           done
-  validation:
-    needs: verify-release
-    runs-on: [self-hosted, vetnotify-deploy]
-    environment: validation
-    steps:
-      - env:
-          KUBE_CONTEXT: vetnotify-dev-release
-          BACKEND: ${{ needs.verify-release.outputs.backend }}
-          WEB: ${{ needs.verify-release.outputs.web }}
-          COMMIT: ${{ needs.verify-release.outputs.commit }}
-          BASE_URL: ${{ vars.DEV_BASE_URL }}
-        run: /opt/vetnotify/promote.sh vetnotify-dev
   authorize-production:
-    needs: [verify-release, validation]
-    if: inputs.production_pr != ''
+    needs: verify-release
     runs-on: ubuntu-24.04
     steps:
       - name: Verify independently reviewed promotion PR
@@ -86,23 +73,35 @@ jobs:
           head=$(jq -r .head.sha <<< "$pr")
           author=$(jq -r .user.login <<< "$pr")
           merge=$(jq -r .merge_commit_sha <<< "$pr")
-          gh api "$repo/pulls/$PROMOTION_PR/files" | jq -e '[.[].filename] == ["releases/production.json"]'
+          gh api "$repo/pulls/$PROMOTION_PR/files" | jq -e 'length==1 and .[0].filename=="releases/production.json"
+            and (.[0].status=="added" or .[0].status=="modified")'
           gh api --paginate --slurp "$repo/pulls/$PROMOTION_PR/reviews" |
             jq -e --arg head "$head" --arg author "$author" '
               flatten | any(.state=="APPROVED" and .commit_id==$head and .user.login!=$author
                 and (.author_association=="MEMBER" or .author_association=="OWNER" or .author_association=="COLLABORATOR"))
             '
           gh api "$repo/contents/releases/production.json?ref=$merge" --jq .content | base64 -d |
-            jq -e --arg commit "$COMMIT" --arg backend "$BACKEND" --arg web "$WEB" +              '.commit==$commit and .backend==$backend and .web==$web'
-  production:
-    needs: [verify-release, validation, authorize-production]
-    runs-on: [self-hosted, vetnotify-deploy]
-    environment: production
-    steps:
-      - env:
-          KUBE_CONTEXT: vetnotify-prod-release
+            jq -e --arg commit "$COMMIT" --arg backend "$BACKEND" --arg web "$WEB" \
+              '.commit==$commit and .backend==$backend and .web==$web'
+      - name: Confirm live validation and export authorization
+        env:
           BACKEND: ${{ needs.verify-release.outputs.backend }}
           WEB: ${{ needs.verify-release.outputs.web }}
           COMMIT: ${{ needs.verify-release.outputs.commit }}
-          BASE_URL: ${{ vars.PROD_BASE_URL }}
-        run: /opt/vetnotify/promote.sh vetnotify-prod
+          BASE_URL: ${{ vars.DEV_BASE_URL }}
+          RELEASE_RUN: ${{ inputs.release_run }}
+          PROMOTION_PR: ${{ inputs.production_pr }}
+        run: |
+          [[ "$BASE_URL" == https://vetnotify-*.cloudapp.azure.com ]]
+          curl --fail --silent --show-error --max-time 15 "$BASE_URL/health/ready" >/dev/null
+          curl --fail --silent --show-error --max-time 15 "$BASE_URL/" >/dev/null
+          curl --fail --silent --show-error --max-time 15 "$BASE_URL/api/v1/version" |
+            jq -e --arg commit "$COMMIT" --arg image "$BACKEND" '.environment=="dev" and .commit==$commit and .image==$image'
+          jq -n --arg commit "$COMMIT" --arg backend "$BACKEND" --arg web "$WEB" \
+            --arg releaseRun "$RELEASE_RUN" --arg pr "$PROMOTION_PR" \
+            '{commit:$commit,backend:$backend,web:$web,releaseRun:$releaseRun,pr:$pr}' > "$RUNNER_TEMP/vetnotify-authorization.json"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: production-${{ needs.verify-release.outputs.commit }}
+          path: ${{ runner.temp }}/vetnotify-authorization.json
+          retention-days: 5

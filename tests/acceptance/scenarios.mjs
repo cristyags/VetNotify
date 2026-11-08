@@ -25,10 +25,8 @@ export async function load100(auth, db, run) {
       }));
     }
     assert.equal(new Set(records.map(item=>item.id)).size,100);
-    const emails = records.filter(row=>row.channel==='email');
-    const internals = records.filter(row=>row.channel==='internal');
     const recipientAuth = [await login('sofia'),await login('diego')];
-    const observations = await Promise.all([...internals,...emails].map(async item => {
+    const observe = async item => {
       const n=await terminal(item.id,auth);
       assert.equal(n.application_id,item.app===0?'agenda-veterinaria':'laboratorio-veterinario');
       assert.equal(n.channel,item.channel);
@@ -46,7 +44,11 @@ export async function load100(auth, db, run) {
       }
       return { id:n.id,app:n.application_id,channel:n.channel,state:n.state,attempts:n.attempt_count,
         correlationId:n.correlation_id,traceId:n.trace_id,acceptedAt:n.accepted_at,deliveredAt:n.delivered_at };
-    }));
+    };
+    const observations=[];
+    for(let i=0;i<records.length;i+=10) {
+      observations.push(...await Promise.all(records.slice(i,i+10).map(observe)));
+    }
     const { rows:[persisted] }=await db.query(`SELECT count(n.id)::int AS notifications,
       count(j.notification_id)::int AS jobs,count(i.notification_id)::int AS inbox,
       count(d.receipt_id)::int AS receipts FROM notifications n JOIN jobs j ON j.notification_id=n.id
