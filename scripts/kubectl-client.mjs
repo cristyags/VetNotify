@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process';
 
 const quote = value => "'"+value.replaceAll("'","'\\''")+"'";
-export function kubectlClient(args, { input, capture=false, timeout=100000, sensitive=false }={}) {
+export function kubectlClient(args, { input, capture=false, timeout=100000, sensitive=false, acceptedStatuses=[0] }={}) {
   const { VET_SSH_TARGET: target, VET_SSH_KEY: key, VET_SSH_KNOWN_HOSTS: hosts } = process.env;
   const remote=target && args[0]!=='kustomize';
   if(remote && (!/^vetops@vetnotify-[a-z0-9]+\.[a-z0-9.-]+$/.test(target) || !key || !hosts)) {
@@ -12,6 +12,6 @@ export function kubectlClient(args, { input, capture=false, timeout=100000, sens
     '-i',key,target,'sudo k3s kubectl '+args.map(quote).join(' ')]:args;
   const result=spawnSync(command,flags,{encoding:'utf8',input,timeout,maxBuffer:3_000_000,
     stdio:[input===undefined?'ignore':'pipe',capture?'pipe':'inherit',capture||sensitive?'pipe':'inherit']});
-  if(result.status!==0) throw new Error('kubectl '+args[0]+' falló'+(sensitive?' (datos protegidos)':result.stderr?.trim() ? ': '+result.stderr.trim():''));
+  if(!acceptedStatuses.includes(result.status)) throw new Error('kubectl '+args[0]+' falló'+(sensitive?' (datos protegidos)':result.stderr?.trim() ? ': '+result.stderr.trim():''));
   return result.stdout?.trim();
 }

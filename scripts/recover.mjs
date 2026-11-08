@@ -1,10 +1,27 @@
 import assert from 'node:assert/strict';
 import { pathToFileURL } from 'node:url';
 import { api, attempts, db as connect, evidence, expectStatus, get, login, payload, poll, request, runId, send, terminal, withProfile } from '../tests/support/harness.mjs';
-import { devOnly, killWorker, readiness, restartApi, startDatabase, stopDatabase } from './runtime.mjs';
+import { devOnly, killWorker, kube, readiness, restartApi, startDatabase, stopDatabase } from './runtime.mjs';
 
 export async function recover(auth,db,run) {
   devOnly();
+  if(process.env.VET_TARGET!=='k8s') return exerciseRecovery(auth,db,run);
+  // Give kubelet and the remote administrative client a deterministic in-flight window.
+  const deployments=['deployment/worker-email','deployment/simulator'];
+  kube(['set','env',...deployments,'PROVIDER_TIMEOUT_MS=12000','LEASE_MS=18000']);
+  try {
+    for(const name of deployments) kube(['rollout','status',name,'--timeout=90s']);
+    const result=await exerciseRecovery(auth,db,run);
+    return {...result,controlledTiming:{providerTimeoutMs:12000,leaseMs:18000}};
+  } finally {
+    for(const name of deployments) {
+      kube(['rollout','undo',name]);
+      kube(['rollout','status',name,'--timeout=90s']);
+    }
+  }
+}
+
+async function exerciseRecovery(auth,db,run) {
   const key=run+'-original';
   const ids=[];
   let lease;

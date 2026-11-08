@@ -24,9 +24,8 @@ try{
   assert.ok(claims.length>=4 && claims.every(c=>c.state==='Bound'));
   const actor='--as=system:serviceaccount:'+ns+':vetnotify-release';
   const releaseCanPatch=kube(['auth','can-i','patch','deployment/api',actor],true);
-  let releaseCannotReadSecrets=false;
-  try{kube(['auth','can-i','get','secrets',actor],true);}
-  catch{releaseCannotReadSecrets=true;}
+  const denied=kubectlClient(['-n',ns,'auth','can-i','get','secrets',actor],{capture:true,acceptedStatuses:[0,1]});
+  const releaseCannotReadSecrets=denied==='no';
   assert.equal(releaseCanPatch,'yes');
   assert.ok(releaseCannotReadSecrets);
   const cpu=kube(['top','pods','--containers'],true);

@@ -14,7 +14,9 @@ ARG REVISION=local
 LABEL org.opencontainers.image.title="VetNotify backend" org.opencontainers.image.revision=$REVISION
 WORKDIR /app
 ENV NODE_ENV=production REVISION=$REVISION
-RUN rm -rf /usr/local/lib/node_modules /opt/yarn-v* \
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends --only-upgrade apt libapt-pkg6.0 libpcre2-8-0 perl-base \
+ && rm -rf /var/lib/apt/lists/* /usr/local/lib/node_modules /opt/yarn-v* \
  && rm -f /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack /usr/local/bin/yarn /usr/local/bin/yarnpkg
 COPY --from=build --chown=node:node /app/package.json ./
 COPY --from=build --chown=node:node /app/node_modules ./node_modules

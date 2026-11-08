@@ -29,8 +29,12 @@ try{
   assert.ok(targets.length>=3&&targets.every(t=>t.health==='up'));
   const routed=await page.request.get(grafana+'/api/datasources/proxy/uid/vet-jaeger/api/v3/traces/'+traceId);
   assert.ok(routed.ok()&&(await routed.json()).result.resourceSpans.length>=2,'Grafana puede consultar Jaeger con el datasource provisionado');
-  await page.goto(grafana+'/d/vetnotify-ops');
+  const start=Date.parse(incident.before.at)-180_000;
+  const end=Date.parse(incident.after.at)+10000;
+  await page.goto(grafana+'/d/vetnotify-ops?from='+start+'&to='+end+'&kiosk');
   await page.getByText('Resultados durables por estado',{exact:true}).first().waitFor({timeout:20000});
+  await page.locator('canvas').first().waitFor({state:'visible',timeout:20000});
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
   await page.screenshot({path:join(panelDir,'grafana.png'),animations:'disabled',fullPage:true});
   await page.goto(jaeger+'/trace/'+traceId);
   await page.getByText('vetnotify-worker-email',{exact:true}).first().waitFor({timeout:20000});
