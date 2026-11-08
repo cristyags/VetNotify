@@ -6,7 +6,7 @@ COPY tsconfig.web.json vite.config.ts ./
 COPY apps/web ./apps/web
 RUN npm run build:web
 
-FROM nginx:1.30.4-alpine
+FROM nginx:1.30.6-alpine
 ARG REVISION=local
 LABEL org.opencontainers.image.title="VetNotify web" org.opencontainers.image.revision=$REVISION
 RUN apk upgrade --no-cache

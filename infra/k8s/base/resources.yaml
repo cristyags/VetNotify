@@ -159,7 +159,7 @@
             "resources": {
               "requests": {
                 "cpu": "30m",
-                "memory": "64Mi"
+                "memory": "160Mi"
               },
               "limits": {
                 "cpu": "500m",
@@ -1242,7 +1242,7 @@
         "containers": [
           {
             "name": "gateway",
-            "image": "nginx:1.30.4-alpine",
+            "image": "nginx:1.30.6-alpine",
             "imagePullPolicy": "IfNotPresent",
             "ports": [
               {
@@ -2116,7 +2116,7 @@
             "resources": {
               "requests": {
                 "cpu": "40m",
-                "memory": "128Mi"
+                "memory": "208Mi"
               },
               "limits": {
                 "cpu": "400m",

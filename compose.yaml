@@ -98,7 +98,7 @@ services:
       ADAPTER_KEY: ${ADAPTER_KEY}
       LAB_KEY: ${LAB_KEY}
   gateway:
-    image: nginx:1.30.4-alpine
+    image: nginx:1.30.6-alpine
     restart: unless-stopped
     user: "101:101"
     cap_drop: [ALL]

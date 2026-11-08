@@ -6,7 +6,8 @@ function sshArgs(command) {
   if(!target || !/^vetops@vetnotify-[a-z0-9]+\.[a-z0-9.-]+$/.test(target) || !key || !hosts) {
     throw new Error('El acceso remoto requiere VM VetNotify, clave privada local y known_hosts verificado.');
   }
-  return ['-o','BatchMode=yes','-o','StrictHostKeyChecking=yes','-o','UserKnownHostsFile='+hosts,'-i',key,target,command];
+  return ['-o','BatchMode=yes','-o','StrictHostKeyChecking=yes','-o','UserKnownHostsFile='+hosts,
+    '-o','ConnectionAttempts=3','-o','ConnectTimeout=5','-i',key,target,command];
 }
 
 export function stopRemoteContainer(id) {
