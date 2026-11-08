@@ -1,0 +1,20 @@
+sequenceDiagram
+  autonumber
+  participant C as Agenda o Laboratorio
+  participant A as API
+  participant P as PostgreSQL
+  participant W as Worker del canal
+  C->>A: POST notificación y clave opcional
+  A->>P: Verifica identidad y abre transacción
+  A->>P: Bloquea alcance de idempotencia
+  alt Clave vigente y datos iguales
+    P-->>A: ID original
+    A-->>C: 200 replay
+  else Clave vigente y datos distintos
+    A-->>C: 409 conflicto
+  else Alta nueva
+    A->>P: Notificación, trabajo, accepted/pending y TTL
+    P-->>A: Commit confirmado
+    A-->>C: 202 con ID y Location
+    W->>P: Reclama con lease e intento durable
+  end

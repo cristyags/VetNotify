@@ -1,6 +1,6 @@
-import { spawnSync } from 'node:child_process';
 import { compose } from './local.mjs';
 import { poll, request } from '../tests/support/harness.mjs';
+import { kubectlClient } from './kubectl-client.mjs';
 
 const k8s=process.env.VET_TARGET==='k8s';
 const namespace=process.env.VET_NAMESPACE ?? 'vetnotify-dev';
@@ -9,11 +9,8 @@ export const devOnly = () => {
   if (k8s && namespace!=='vetnotify-dev') throw new Error('La prueba de falla solo se ejecuta en vetnotify-dev');
 };
 export function kube(args, capture=false) {
-  if (!process.env.KUBECONFIG) throw new Error('Indica un KUBECONFIG dedicado a VetNotify');
-  const result=spawnSync('kubectl',['-n',namespace,...args],{encoding:'utf8',timeout:100_000,
-    stdio:capture?'pipe':'inherit'});
-  if(result.status!==0) throw new Error('kubectl '+args[0]+' falló'+(capture?': '+result.stderr?.trim():''));
-  return result.stdout?.trim();
+  if (!process.env.KUBECONFIG&&!process.env.VET_SSH_TARGET) throw new Error('Indica un contexto o SSH dedicado a VetNotify');
+  return kubectlClient(['-n',namespace,...args],{capture});
 }
 
 const replicas = service => JSON.parse(kube(['get','deployment',service,'-o','json'],true)).spec.replicas ?? 1;

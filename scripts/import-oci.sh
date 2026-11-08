@@ -6,7 +6,8 @@ digest="${3:?digest}"
 [[ "$component" == backend || "$component" == web ]]
 [[ "$revision" =~ ^[0-9a-f]{40}$ && "$digest" =~ ^sha256:[0-9a-f]{64}$ ]]
 archive="$HOME/vetnotify-oci/$component.oci.tar"
-ref="docker.io/library/vetnotify-$component"
+ref="${4:-docker.io/library/vetnotify-$component}"
+[[ "$ref" == "docker.io/library/vetnotify-$component" || "$ref" == "ghcr.io/cristyags/vetnotify-$component" ]]
 test -f "$archive"
 hex="${digest#sha256:}"
 actual=$(tar -xOf "$archive" "blobs/sha256/$hex" | sha256sum | cut -d ' ' -f 1)

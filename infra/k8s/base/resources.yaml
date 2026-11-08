@@ -1444,7 +1444,7 @@
                 "command": [
                   "sh",
                   "-ec",
-                  "pg_isready -U vetnotify -d vetnotify"
+                  "pg_isready -h 127.0.0.1 -U vetnotify -d vetnotify"
                 ]
               },
               "periodSeconds": 3,
@@ -1455,7 +1455,7 @@
                 "command": [
                   "sh",
                   "-ec",
-                  "pg_isready -U vetnotify -d vetnotify"
+                  "pg_isready -h 127.0.0.1 -U vetnotify -d vetnotify"
                 ]
               },
               "periodSeconds": 3
@@ -1465,7 +1465,7 @@
                 "command": [
                   "sh",
                   "-ec",
-                  "pg_isready -U vetnotify -d vetnotify"
+                  "pg_isready -h 127.0.0.1 -U vetnotify -d vetnotify"
                 ]
               },
               "periodSeconds": 10,

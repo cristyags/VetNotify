@@ -1,0 +1,38 @@
+flowchart LR
+  subgraph Users["Identidades"]
+    A["Agenda CLI"]
+    L["Laboratorio CLI"]
+    B["Operador / destinatario"]
+  end
+  subgraph Azure["Azure · VM K3s"]
+    E["Caddy TLS / gateway"]
+    W["Web React opcional"]
+    N["API Fastify"]
+    EA["Adaptador Agenda"]
+    EL["Adaptador Laboratorio"]
+    P[("PostgreSQL · PVC")]
+    WI["Worker interno"]
+    WE["Worker correo"]
+    S["Simulador HTTP"]
+    I["Bandeja persistente"]
+    O["Collector · Jaeger"]
+    G["Prometheus · Grafana"]
+  end
+  A -->|clave Agenda| E
+  L -->|clave Lab| E
+  B -->|HTTPS| E
+  E -->|recursos web| W
+  E -->|API y sesión| N
+  N --> EA
+  N --> EL
+  EA -->|HTTP| N
+  EL -->|HTTP| N
+  N -->|commit| P
+  P --> WI
+  P --> WE
+  WI --> I
+  WE --> S
+  S -->|recibo| P
+  N -.-> O
+  WE -.-> O
+  N -.-> G

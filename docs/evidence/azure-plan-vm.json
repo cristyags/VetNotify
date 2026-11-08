@@ -1,0 +1,13 @@
+{
+  "phase": "vm-retry",
+  "ubuntu": "24.04.202610210",
+  "changes": [
+    {
+      "action": [
+        "create"
+      ],
+      "resource": "azurerm_linux_virtual_machine.k3s"
+    }
+  ],
+  "reviewedAt": "2026-11-08T22:26:58.5129156Z"
+}

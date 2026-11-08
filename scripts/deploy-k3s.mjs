@@ -1,9 +1,11 @@
-import { spawnSync } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
 import { readFileSync } from 'node:fs';
+import { kubectlClient as kubectl } from './kubectl-client.mjs';
 
 const target=process.argv[2];
-if(!['dev','prod'].includes(target) || !process.env.KUBECONFIG) throw new Error('Usa dev|prod con KUBECONFIG dedicado a VetNotify');
+if(!['dev','prod'].includes(target) || (!process.env.KUBECONFIG&&!process.env.VET_SSH_TARGET)) {
+  throw new Error('Usa dev|prod con contexto o SSH dedicado a VetNotify');
+}
 const namespace='vetnotify-'+target;
 const origin=new URL(process.env.PUBLIC_ORIGIN ?? 'http://localhost:28080').origin;
 if(target==='prod' && !origin.startsWith('https://')) throw new Error('Producción requiere un origen HTTPS');
@@ -14,12 +16,6 @@ const web=process.env.WEB_IMAGE ?? 'vetnotify-web:local';
 const local=process.env.VET_LOCAL_CLUSTER==='true';
 if(!local && ![backend,web].every(x=>/@sha256:[0-9a-f]{64}$/.test(x))) throw new Error('Indica imágenes por digest inmutable');
 
-function kubectl(args, {input,capture=false,timeout=100000,sensitive=false}={}) {
-  const result=spawnSync('kubectl',args,{encoding:'utf8',input,timeout,maxBuffer:3_000_000,
-    stdio:[input===undefined?'inherit':'pipe',capture?'pipe':'inherit',sensitive?'pipe':'inherit']});
-  if(result.status!==0) throw new Error('kubectl '+args[0]+' falló'+(sensitive?' (datos protegidos)':''));
-  return result.stdout;
-}
 const nodes=JSON.parse(kubectl(['get','nodes','-o','json'],{capture:true})).items;
 if(!local && !nodes.some(node=>/^vetnotify-[a-z0-9]+$/.test(node.metadata.name))) {
   throw new Error('El clúster seleccionado no tiene un nodo VetNotify');
@@ -38,7 +34,7 @@ const setupSecrets={
   seed:Object.fromEntries(['DISABLED_KEY','OPERATOR_PASSWORD','SOFIA_PASSWORD','DIEGO_PASSWORD'].map(k=>[k,value(k)])),
 };
 
-kubectl(['apply','-f',overlay+'/namespace.yaml']);
+kubectl(['apply','-f','-'],{input:readFileSync(overlay+'/namespace.yaml','utf8')});
 for(const [name,stringData] of Object.entries(setupSecrets)){
   const secret={apiVersion:'v1',kind:'Secret',type:'Opaque',metadata:{name:'vetnotify-'+name,namespace},stringData};
   kubectl(['apply','--server-side','--field-manager=vetnotify-bootstrap','-f','-'],{input:JSON.stringify(secret),sensitive:true});
@@ -53,7 +49,7 @@ kubectl(['-n',namespace,'rollout','status','statefulset/postgres','--timeout=150
 const jobName='db-setup-'+randomBytes(4).toString('hex');
 const envFrom=(name,secret,key)=>({name,valueFrom:{secretKeyRef:{name:'vetnotify-'+secret,key}}});
 const job={apiVersion:'batch/v1',kind:'Job',metadata:{name:jobName,namespace},
-  spec:{ttlSecondsAfterFinished:1800,backoffLimit:1,template:{metadata:{labels:{app:'db-setup'}},spec:{
+  spec:{ttlSecondsAfterFinished:1800,backoffLimit:4,activeDeadlineSeconds:150,template:{metadata:{labels:{app:'db-setup'}},spec:{
     restartPolicy:'Never',automountServiceAccountToken:false,serviceAccountName:'vetnotify-app',
     securityContext:{seccompProfile:{type:'RuntimeDefault'}},containers:[{
       name:'setup',image:backend,imagePullPolicy:'IfNotPresent',

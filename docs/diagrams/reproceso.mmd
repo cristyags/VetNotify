@@ -1,0 +1,17 @@
+sequenceDiagram
+  autonumber
+  participant O as Operador autenticado
+  participant A as API
+  participant P as PostgreSQL
+  O->>A: POST reprocess + motivo + clave
+  A->>P: Bloquea la notificación fuente
+  alt Orden repetida con el mismo motivo
+    P-->>A: ID de derivada original
+    A-->>O: 200 replay
+  else Orden nueva y último fallo
+    A->>P: Nueva notificación, parent/root, trabajo y auditoría
+    P-->>A: Commit
+    A-->>O: 202 con ID derivado
+  else Conflicto o fuente no reprocesable
+    A-->>O: 409
+  end

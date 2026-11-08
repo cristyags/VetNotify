@@ -1,0 +1,31 @@
+{
+  "title": "VetNotify · Demostración sin frontend",
+  "runId": "sin-web-mw8f0r9n-1d4616d0",
+  "start": "2026-11-08T22:40:04.659Z",
+  "cases": [
+    {
+      "name": "USR-01",
+      "state": "pasó",
+      "summary": "Web a cero durante la demo, API y backend por el mismo gateway.",
+      "previousReplicas": 1,
+      "observedWebStatus": 502,
+      "webReplicasDuringTest": 0,
+      "apiVersion": {
+        "name": "VetNotify",
+        "version": "1.0.0",
+        "commit": "6a24524f2de9",
+        "image": "local",
+        "environment": "local"
+      }
+    }
+  ],
+  "version": {
+    "name": "VetNotify",
+    "version": "1.0.0",
+    "commit": "6a24524f2de9",
+    "image": "local",
+    "environment": "local"
+  },
+  "restoredReplicas": 1,
+  "end": "2026-11-08T22:43:50.056Z"
+}

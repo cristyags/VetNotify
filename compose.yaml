@@ -28,7 +28,7 @@ services:
     ports: ["127.0.0.1:${PG_PORT:-15432}:5432"]
     volumes: [pg:/var/lib/postgresql]
     healthcheck:
-      test: ["CMD-SHELL","pg_isready -U vetnotify -d vetnotify"]
+      test: ["CMD-SHELL","pg_isready -h 127.0.0.1 -U vetnotify -d vetnotify"]
       interval: 2s
       timeout: 3s
       retries: 20

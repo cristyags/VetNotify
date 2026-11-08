@@ -6,9 +6,14 @@ on:
         description: Ejecución de Publicar candidato desde main
         type: string
         required: true
+      production_pr:
+        description: PR de autorización de producción ya integrado en main
+        type: string
+        required: false
 permissions:
   actions: read
   contents: read
+  pull-requests: read
 concurrency:
   group: vetnotify-release
   cancel-in-progress: false
@@ -60,8 +65,37 @@ jobs:
           COMMIT: ${{ needs.verify-release.outputs.commit }}
           BASE_URL: ${{ vars.DEV_BASE_URL }}
         run: /opt/vetnotify/promote.sh vetnotify-dev
-  production:
+  authorize-production:
     needs: [verify-release, validation]
+    if: inputs.production_pr != ''
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Verify independently reviewed promotion PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PROMOTION_PR: ${{ inputs.production_pr }}
+          COMMIT: ${{ needs.verify-release.outputs.commit }}
+          BACKEND: ${{ needs.verify-release.outputs.backend }}
+          WEB: ${{ needs.verify-release.outputs.web }}
+        run: |
+          [[ "$PROMOTION_PR" =~ ^[0-9]+$ ]]
+          repo="repos/$GITHUB_REPOSITORY"
+          gh api "$repo/branches/main" --jq '.protected' | grep -Fx true
+          pr=$(gh api "$repo/pulls/$PROMOTION_PR")
+          jq -e '.merged and .base.ref=="main"' <<< "$pr"
+          head=$(jq -r .head.sha <<< "$pr")
+          author=$(jq -r .user.login <<< "$pr")
+          merge=$(jq -r .merge_commit_sha <<< "$pr")
+          gh api "$repo/pulls/$PROMOTION_PR/files" | jq -e '[.[].filename] == ["releases/production.json"]'
+          gh api --paginate --slurp "$repo/pulls/$PROMOTION_PR/reviews" |
+            jq -e --arg head "$head" --arg author "$author" '
+              flatten | any(.state=="APPROVED" and .commit_id==$head and .user.login!=$author
+                and (.author_association=="MEMBER" or .author_association=="OWNER" or .author_association=="COLLABORATOR"))
+            '
+          gh api "$repo/contents/releases/production.json?ref=$merge" --jq .content | base64 -d |
+            jq -e --arg commit "$COMMIT" --arg backend "$BACKEND" --arg web "$WEB" +              '.commit==$commit and .backend==$backend and .web==$web'
+  production:
+    needs: [verify-release, validation, authorize-production]
     runs-on: [self-hosted, vetnotify-deploy]
     environment: production
     steps:

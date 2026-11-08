@@ -1,0 +1,26 @@
+{
+  "title": "VetNotify · Vencimiento atómico de idempotencia",
+  "runId": "ttl-mw8etwlf-201187d8",
+  "start": "2026-11-08T22:34:44.163Z",
+  "cases": [
+    {
+      "name": "TTL",
+      "state": "pasó",
+      "summary": "A 2 s, replay mientras activo; nuevo ID al vencer y finalizar. Historial anterior conservado.",
+      "original": "265cbe6b-b33c-427b-8cbd-ffdd392a1ae3",
+      "replacement": "cf1cf5af-20bc-4251-8952-c61d8f73c23b",
+      "counts": {
+        "originals": 2,
+        "keys": 1
+      }
+    }
+  ],
+  "version": {
+    "name": "VetNotify",
+    "version": "1.0.0",
+    "commit": "6a24524f2de9",
+    "image": "local",
+    "environment": "test"
+  },
+  "end": "2026-11-08T22:34:48.930Z"
+}

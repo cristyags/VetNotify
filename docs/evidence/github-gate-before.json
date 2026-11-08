@@ -1,0 +1,72 @@
+{
+  "at": "2026-11-08T22:53:43.5027075Z",
+  "branch": "main",
+  "pr": {
+    "mergeStateStatus": "BLOCKED",
+    "reviewDecision": "REVIEW_REQUIRED",
+    "statusCheckRollup": [
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-11-08T22:49:08Z",
+        "conclusion": "FAILURE",
+        "detailsUrl": "https://github.com/cristyags/VetNotify/actions/runs/42531426130/job/128886253286",
+        "name": "verify",
+        "startedAt": "2026-11-08T22:40:49Z",
+        "status": "COMPLETED",
+        "workflowName": "CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-11-08T22:49:01Z",
+        "conclusion": "FAILURE",
+        "detailsUrl": "https://github.com/cristyags/VetNotify/actions/runs/42531425570/job/128886251263",
+        "name": "verify",
+        "startedAt": "2026-11-08T22:40:49Z",
+        "status": "COMPLETED",
+        "workflowName": "CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-11-08T22:49:06Z",
+        "conclusion": "FAILURE",
+        "detailsUrl": "https://github.com/cristyags/VetNotify/actions/runs/42531425426/job/128886251138",
+        "name": "publish",
+        "startedAt": "2026-11-08T22:40:49Z",
+        "status": "COMPLETED",
+        "workflowName": "Publicar candidato"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-11-08T22:41:04Z",
+        "conclusion": "FAILURE",
+        "detailsUrl": "https://github.com/cristyags/VetNotify/actions/runs/42531426130/job/128886253106",
+        "name": "iac",
+        "startedAt": "2026-11-08T22:40:49Z",
+        "status": "COMPLETED",
+        "workflowName": "CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-11-08T22:40:58Z",
+        "conclusion": "FAILURE",
+        "detailsUrl": "https://github.com/cristyags/VetNotify/actions/runs/42531425570/job/128886251409",
+        "name": "iac",
+        "startedAt": "2026-11-08T22:40:49Z",
+        "status": "COMPLETED",
+        "workflowName": "CI"
+      }
+    ],
+    "url": "https://github.com/cristyags/VetNotify/pull/1"
+  },
+  "protection": {
+    "approvals": 1,
+    "checks": [
+      "verify",
+      "iac"
+    ],
+    "enforce_admins": true,
+    "strict": true
+  },
+  "environmentReviewHttp": 422,
+  "diagnosis": "Terraform: el lockfile no incluía la suma h1 para linux_amd64."
+}

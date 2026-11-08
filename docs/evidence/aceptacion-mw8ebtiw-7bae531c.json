@@ -1,0 +1,62 @@
+{
+  "title": "VetNotify · Aceptación del Escenario 1",
+  "runId": "aceptacion-mw8ebtiw-7bae531c",
+  "start": "2026-11-08T22:20:40.378Z",
+  "cases": [
+    {
+      "name": "P1-1",
+      "state": "falló",
+      "start": "2026-11-08T22:20:40.680Z",
+      "end": "2026-11-08T22:20:40.922Z",
+      "summary": "HTTP 500 (internal_error) · se esperaba 202"
+    },
+    {
+      "name": "P1-2",
+      "state": "falló",
+      "start": "2026-11-08T22:20:40.922Z",
+      "end": "2026-11-08T22:20:41.206Z",
+      "summary": "HTTP 500 (internal_error) · se esperaba 202"
+    },
+    {
+      "name": "P1-3",
+      "state": "falló",
+      "start": "2026-11-08T22:20:41.206Z",
+      "end": "2026-11-08T22:20:41.256Z",
+      "summary": "HTTP 500 (internal_error) · se esperaba 202"
+    },
+    {
+      "name": "P1-4",
+      "state": "falló",
+      "start": "2026-11-08T22:20:41.256Z",
+      "end": "2026-11-08T22:20:41.406Z",
+      "summary": "HTTP 500 (internal_error) · se esperaba 202"
+    },
+    {
+      "name": "P1-5",
+      "state": "no ejecutado",
+      "summary": "Fuera de la selección de esta corrida."
+    },
+    {
+      "name": "Seguridad y acceso cruzado",
+      "state": "falló",
+      "start": "2026-11-08T22:20:41.406Z",
+      "end": "2026-11-08T22:20:41.632Z",
+      "summary": "HTTP 500 (internal_error) · se esperaba 202"
+    },
+    {
+      "name": "Reproceso y resultado ambiguo",
+      "state": "falló",
+      "start": "2026-11-08T22:20:41.632Z",
+      "end": "2026-11-08T22:20:41.707Z",
+      "summary": "HTTP 500 (internal_error) · se esperaba 202"
+    }
+  ],
+  "version": {
+    "name": "VetNotify",
+    "version": "1.0.0",
+    "commit": "6a24524f2de9",
+    "image": "local",
+    "environment": "local"
+  },
+  "end": "2026-11-08T22:20:41.707Z"
+}
