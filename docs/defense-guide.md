@@ -4,8 +4,8 @@ La guía evalúa DevOps y Métricas por separado. Cada integrante debe poder exp
 
 ## Orden de ensayo
 
-1. Antes de abrir React, consulta `/api/v1/version` y `/health/ready`. Identifica el entorno, el commit y el digest. En GitHub muestra el PR revisado y el artefacto `release.json`. [Estado de la entrega](evidence/qa-main/entrega.json).
-2. Recorre la consola en Compose o en `dev`. Muestra los tres Deployments a cero y la API respondiendo. Lee los cuatro IDs de Agenda y Laboratorio y sus dos tipos de efecto. [Guion API](demo-api.md) · [Prueba sin frontend](evidence/qa-main/sin-web-mw8r1rcr-9e94605d.md).
+1. Antes de abrir React, consulta `/api/v1/version` y `/health/ready` en el FQDN público. Identifica `prod`, el commit y el digest. En GitHub muestra el PR revisado y el artefacto `release.json`. [Cierre de producción](evidence/qa-main/produccion.json).
+2. Recorre la consola en Compose para la prueba destructiva durante la defensa. Muestra los tres servicios detenidos y la API respondiendo. Contrasta con las tres réplicas a cero en la evidencia de Azure dev. Lee los cuatro IDs de Agenda y Laboratorio y sus dos tipos de efecto. [Guion API](demo-api.md) · [Prueba sin frontend en K3s](evidence/qa-main/sin-web-mw8r1rcr-9e94605d.md).
 3. Abre la interfaz y muestra cómo se observa la misma entrega desde el detalle y la bandeja. Explica quién puede emitir, reprocesar y leer. Usa datos de prueba. [Guion visual](demo-ui.md) · [Chrome](evidence/ui-azure-main.json).
 4. Reconstruye el incidente con un ID de correlación y su traza. Muestra el 503, la espera entre intentos, la entrega interna y el cambio de estado de la alerta. [Informe del incidente](incident-report.md).
 5. Para DevOps, abre el plan autenticado, la revisión de promoción y el rollback de validación. Explica por qué el estado remoto bloquea escritores y por qué el rollback conserva los datos del PVC. [Entrega](ci-cd.md) · [Rollback probado](evidence/qa-main/rollback-mw8r97ia-49728e73.md).

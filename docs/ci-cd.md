@@ -28,4 +28,6 @@ pwsh -NoProfile -File scripts/install-ci-candidate.ps1 -ReleaseRun ID -ExpectedC
 
 La versión y los Pods se consultan con `GET /api/v1/version` y `kubectl get pods -o json`. El ensayo del control con el PR #2 abierto validó los digests, falló en la condición de integración a `main` y dejó cero artefactos de autorización. [Evidencia del ensayo](evidence/qa-main/promocion-control.json) · [Estado de los ambientes](STATUS.md).
 
+Tras la aprobación e integración del PR #2 por `Jechev1`, la misma verificación terminó con éxito y emitió la autorización para `e1132db`. El instalador sirvió ambos digests por el gateway privado antes de cambiar Caddy. El gateway público respondió por HTTPS en `prod` y redirigió HTTP con 308. [PR #2](https://github.com/cristyags/VetNotify/pull/2) · [Autorización](https://github.com/cristyags/VetNotify/actions/runs/42681915057) · [Verificación privada](evidence/qa-main/runtime-prod.json) · [Cambio público](evidence/qa-main/public-prod.json).
+
 El FQDN público sirve un ambiente por vez. Tras el primer cambio a producción, coordina una ventana para volver a servir validación por ese FQDN mientras se verifica y autoriza el candidato siguiente. En esa ventana el acceso público corresponde a `dev`. El entorno productivo conserva sus datos y su gateway privado.

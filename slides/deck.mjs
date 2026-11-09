@@ -123,8 +123,9 @@ const deck=[
     evidenceLine('El rollback cambia el Deployment. PostgreSQL conserva el volumen.'),
   notes:'Enseñar el UID del Pod con error, digest original y resultado funcional. Consulta '+reportLink(rollback)+'.'},
  {section:'13 · COSTOS',title:'Operación bajo demanda',
-  body:table(['Concepto','Tarifa o medida'],[['VM B2as v2','US$0.0827 por hora de cómputo.'],
+  body:table(['Concepto','Tarifa o medida'],[['VM D2s v4','US$0.106 por hora de cómputo.'],
     ['Disco E6','US$5.28 por mes, más operaciones.'],['IPv4 Standard','US$0.005 por hora.'],
+    ['Cargos observados','US$0.40 antes de impuestos al corte del 9 de noviembre.'],
     ['Control','US$20/mes de presupuesto de aviso. El equipo controla el acumulado de US$100.']])+
     evidenceLine('La desasignación corta el cómputo. La IP y el disco permanecen.'),
   notes:'Identificar cargos observados y separar el estimado del reporte de facturación. Explicar los umbrales 50, 75 y 90%. Consulta docs/costs.md y la API oficial de precios Azure.'},
@@ -132,7 +133,8 @@ const deck=[
   body:split(h2(load?'Lote P1-1 · '+load.persisted.notifications+' notificaciones':'Lote de aceptación')+
     text(load?'95 entregadas y 5 fallidas esperadas en el lote controlado.':'Consulta el informe P1-1 para el resultado del lote.')+
     list([headlessCloud?'API comprobada con la web a cero en K3s.':headlessLocal?'API comprobada con la web detenida en Compose.':'La independencia se registra en el informe de pruebas.',
-      'Chrome recorrió ambos emisores y la bandeja a 360 px.']),
+      'Chrome recorrió ambos emisores y la bandeja a 360 px.',
+      ...(production?.status==='verified'?[production.qa.totalDelivered+' entregas sanas en producción por CLI y Chrome.']:[])]),
     image(screenshot,'Resumen de VetNotify con datos reales de prueba','evidence-image'))+
     evidenceLine('La captura muestra el resumen acumulado de validación. La matriz y los guiones están en el repositorio.'),
   notes:'Arranca con la demo API y conserva la web apagada durante la comprobación. Cambia a la demo visual para mostrar exactamente los mismos contratos. Consulta '+reportLink(headlessCloud??headlessLocal)+'.'},

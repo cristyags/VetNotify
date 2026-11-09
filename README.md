@@ -39,4 +39,4 @@ Abre [VetNotify local](http://localhost:18080). La semilla crea `operador`, `sof
 
 Consulta `docs/STATUS.md` para el estado efectivo de Azure y de los gates. Para detener contenedores locales y conservar datos, ejecuta `docker compose --profile web --profile observability down`.
 
-La entrada Azure sirve el ambiente activo. Consulta `/api/v1/version` para comprobar el ambiente, el commit y la imagen. Si la VM está desasignada, `az vm start -g rg-vetnotify-26a7d1 -n vetnotify-26a7d1` la inicia desde la sesión Azure autorizada. Los datos permanecen en sus volúmenes. [VetNotify en Azure](https://vetnotify-26a7d1.mexicocentral.cloudapp.azure.com) · [Operación Azure](docs/infrastructure.md).
+La entrada Azure sirve producción con la versión `e1132db`. Consulta `/api/v1/version` para comprobar el ambiente, el commit y la imagen. Si la VM está desasignada, `az vm start -g rg-vetnotify-26a7d1 -n vetnotify-26a7d1` la inicia desde la sesión Azure autorizada. [VetNotify en Azure](https://vetnotify-26a7d1.mexicocentral.cloudapp.azure.com) · [Operación Azure](docs/infrastructure.md).

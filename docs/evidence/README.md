@@ -33,3 +33,13 @@ Los informes JSON conservan el entorno, la versión, las horas UTC y las comprob
 Las capturas muestran datos ficticios de pruebas ejecutadas por Chrome. La suite completa de Azure usó un túnel SSH local hacia el mismo Caddy HTTPS con validación del certificado del FQDN. La prueba visual usó el FQDN público. La corrida directa de consola anterior registró timeouts y se conserva para comparar. [Corrida directa](aceptacion-mw8ha5w5-3d7d42ab.md).
 
 Para interpretar una incidencia, usa los IDs de correlación y las series del informe, junto con la consulta de logs y trazas de [observabilidad](../observability.md).
+
+## Producción
+
+| Comprobación | Evidencia |
+|---|---|
+| Aprobación, autorización y versión activa | [Registro de producción](qa-main/produccion.json) · [Actions](https://github.com/cristyags/VetNotify/actions/runs/42681915057) |
+| Capacidad zonal, cambio de tamaño y costos | [Recuperación](qa-main/azure-start-recovery.json) · [Plan autenticado](https://github.com/cristyags/VetNotify/actions/runs/42681725794) · [Cargos](qa-main/cost-production.json) |
+| Separación de namespaces y entrada HTTPS | [K3s](qa-main/runtime-prod.json) · [Gateway](qa-main/public-prod.json) |
+| Entregas de Agenda y Laboratorio | [Consola](qa-main/cli-prod/demo-cli-mw9nien7-e297d078.md) · [Chrome](qa-main/ui-prod/results.json) · [Capturas](qa-main/ui-prod/) |
+| Paneles, targets y traza de una entrega | [Señales](qa-main/signals-prod.json) |

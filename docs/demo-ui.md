@@ -10,4 +10,4 @@
 
 `npm run demo-ui` reproduce el flujo en Chrome y guarda capturas con datos sintéticos. Para ejecutar en validación, usa las credenciales de ese ambiente y `API_URL` de su gateway.
 
-Para una comprobación sana de producción usa el acceso, los dos emisores y la bandeja de los pasos 1–3. Los pasos de degradación, reproceso tras fallo y rechazo controlado se muestran desde validación o Compose. [Comprobación en Azure](evidence/ui-azure-main.json).
+Para una comprobación sana de producción usa el acceso, los dos emisores y la bandeja de los pasos 1–3. Los pasos de degradación, reproceso tras fallo y rechazo controlado se muestran desde validación o Compose. [Chrome en producción](evidence/qa-main/ui-prod/results.json) · [Chrome en validación](evidence/ui-azure-main.json).

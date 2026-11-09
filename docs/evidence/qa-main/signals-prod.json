@@ -1,0 +1,26 @@
+{
+  "checkedAtUtc": "2026-11-09T19:26:21.5560349Z",
+  "signals": {
+    "namespace": "vetnotify-prod",
+    "targets": {
+      "node": "up",
+      "outside-probe": "up",
+      "vetnotify": "up"
+    },
+    "grafanaDatabase": "ok",
+    "dashboardPanels": 10,
+    "prometheusAlerts": [
+      "VetNotifyDeliveryDegraded",
+      "VetNotifyWorkStalled"
+    ],
+    "traceId": "be31a83aaa27d0405cacb4915074cd4d",
+    "traceResourceSpans": 5,
+    "traceServices": [
+      "agenda-veterinaria",
+      "vetnotify-api",
+      "vetnotify-email-simulator",
+      "vetnotify-worker-email",
+      "vetnotify-worker-internal"
+    ]
+  }
+}

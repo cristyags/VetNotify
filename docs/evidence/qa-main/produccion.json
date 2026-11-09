@@ -1,0 +1,78 @@
+{
+  "status": "verified",
+  "verifiedAtUtc": "2026-11-09T19:27:19.2692828Z",
+  "release": {
+    "publicationRun": 42558821440,
+    "commit": "e1132db86bbf4e87b3855d17f1c7a562e7c834fe",
+    "backend": "ghcr.io/cristyags/vetnotify-backend@sha256:4a52bb43f1b772fada00799c5ae5ae68e45b89287a2569bdeed9f237ae4b5ef8",
+    "web": "ghcr.io/cristyags/vetnotify-web@sha256:4fdfc4180bda44a258606ba8a8c4f5d71290174cf71943aedca8d266c37a6279"
+  },
+  "promotion": {
+    "pr": "https://github.com/cristyags/VetNotify/pull/2",
+    "manifestHead": "1da6f187ba1aeac74ebfc77a318d6ffd88f1f94a",
+    "mergeCommit": "25cb57f1b4c4f56b4b219227f9d34955f9e4e4e2",
+    "mergedBy": "Jechev1",
+    "mergedAtUtc": "2026-11-09T05:11:33Z",
+    "review": {
+      "association": "COLLABORATOR",
+      "commit": "1da6f187ba1aeac74ebfc77a318d6ffd88f1f94a",
+      "reviewedAtUtc": "2026-11-09T05:11:26Z",
+      "reviewer": "Jechev1"
+    },
+    "authorization": "https://github.com/cristyags/VetNotify/actions/runs/42681915057"
+  },
+  "terraform": {
+    "plan": "https://github.com/cristyags/VetNotify/actions/runs/42681725794",
+    "changes": [],
+    "recoveryEvidence": "azure-start-recovery.json",
+    "sku": "Standard_D2s_v4"
+  },
+  "azure": {
+    "vm": "vetnotify-26a7d1",
+    "power": "PowerState/running",
+    "namespace": "vetnotify-prod",
+    "publicPorts": [
+      80,
+      443
+    ],
+    "sshRestrictedToAdministrativeSlash32": true
+  },
+  "deployment": {
+    "publicEvidence": "public-prod.json",
+    "runtimeEvidence": "runtime-prod.json",
+    "endpoint": "https://vetnotify-26a7d1.mexicocentral.cloudapp.azure.com",
+    "version": {
+      "name": "VetNotify",
+      "version": "1.0.0",
+      "commit": "e1132db86bbf4e87b3855d17f1c7a562e7c834fe",
+      "image": "ghcr.io/cristyags/vetnotify-backend@sha256:4a52bb43f1b772fada00799c5ae5ae68e45b89287a2569bdeed9f237ae4b5ef8",
+      "environment": "prod"
+    },
+    "httpsFrontendStatus": 200,
+    "httpsReadinessStatus": 200,
+    "deploymentsReady": 14,
+    "postgresReady": true,
+    "distinctPvc": true
+  },
+  "qa": {
+    "cliDeliveries": 4,
+    "browserDeliveries": 4,
+    "totalDelivered": 8,
+    "simulatedEmailReceipts": 4,
+    "internalInboxItems": 4,
+    "cliEvidence": "cli-prod/demo-cli-mw9nien7-e297d078.json",
+    "browserEvidence": "ui-prod/results.json",
+    "browserSecurity": {
+      "faultsDisabled": true,
+      "developmentKeyInProduction": 401,
+      "recipientIsolation": 404,
+      "sessionCookieSecure": true
+    },
+    "observabilityEvidence": "signals-prod.json"
+  },
+  "costs": {
+    "evidence": "cost-production.json",
+    "observedPreTaxUsd": 0.404496851162942,
+    "checkedAtUtc": "2026-11-09T19:09:15.064672Z"
+  }
+}
