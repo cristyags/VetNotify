@@ -15,7 +15,7 @@ Con 12 h de cómputo y 7 días de IP, el subtotal base estimado con un mes de di
 
 El presupuesto mensual de US$20 del grupo de workload usa avisos al 50%, 75% y 90%. La operación lleva el acumulado de ambos grupos independientemente del reinicio mensual. Las alertas y los cargos tienen retraso. Consulta `Cost Management > Cost analysis` filtrando los dos grupos. Si la API aún no devuelve cargos atribuibles, registra «no disponible» con fecha.
 
-La consulta de cargos reales de los dos grupos regresó una tabla vacía el 8 de noviembre. Una consulta posterior recibió HTTP 429. Los cargos atribuibles aún no están disponibles. El servicio de apagado programado de Azure requiere que el schedule viva en la misma región que la VM. México Central no ofrece ese recurso para esta suscripción. El control del cómputo usa `cloud-stop` y `cloud-start`. [Evidencia de Azure](evidence/azure-platform.json).
+La primera consulta de cargos reales regresó una tabla vacía y otra recibió HTTP 429. En el QA del candidato `e1132db`, `ActualCost` volvió a responder sin filas atribuibles a los dos grupos de VetNotify. El servicio de apagado programado requiere que el schedule viva en la misma región que la VM. México Central carece de ese recurso para esta suscripción. El control del cómputo usa `cloud-stop` y `cloud-start`. [Evidencia de Azure](evidence/azure-platform.json) · [Consulta durante QA](evidence/qa-main/entrega.json).
 
 ```powershell
 npm run cloud-status -- -Subscription ID -Suffix 26a7d1

@@ -2,6 +2,7 @@ import { api, db as connect, evidence, login, runId, poll } from '../support/har
 import { degradation, idempotency, load100, manualAndAmbiguous, security } from './scenarios.mjs';
 import { recover } from '../../scripts/recover.mjs';
 import { incident } from '../../scripts/incident.mjs';
+import { devOnly } from '../../scripts/runtime.mjs';
 import { cohortsWithPending, lostResponse } from './invariants.mjs';
 
 const id=runId('aceptacion');
@@ -23,6 +24,7 @@ const selected=process.argv.slice(2);
 const pool=connect();
 try {
   report.version=await poll('versión API',()=>api('/version'),x=>Boolean(x.commit));
+  await devOnly(report.version);
   const auth=await login();
   for(const [name,test] of tests){
     if(selected.length && !selected.includes(name)){

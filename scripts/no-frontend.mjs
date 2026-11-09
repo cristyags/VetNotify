@@ -3,13 +3,12 @@ import { spawn } from 'node:child_process';
 import { api, evidence, poll, request, runId } from '../tests/support/harness.mjs';
 import { desired, devOnly, running, scale } from './runtime.mjs';
 
-devOnly();
+const version=await devOnly();
 const id=runId('sin-web');
 const services=['web','agenda','laboratorio'];
 const prior=Object.fromEntries(services.map(service=>[service,desired(service)]));
-const report={title:'VetNotify · Demostración sin frontend',runId:id,start:new Date().toISOString(),cases:[]};
+const report={title:'VetNotify · Demostración sin frontend',runId:id,start:new Date().toISOString(),version,cases:[]};
 try{
-  report.version=await api('/version');
   for(const service of services) if(prior[service]>0) scale(service,0);
   const front=await poll('web y adaptadores realmente detenidos',async()=>({
     replicas:services.map(running),http:(await request('/')).status,

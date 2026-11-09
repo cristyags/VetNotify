@@ -6,9 +6,9 @@ import { chromium } from '@playwright/test';
 const folder=fileURLToPath(new URL('.',import.meta.url));
 const evidence=fileURLToPath(new URL('../docs/evidence/',import.meta.url));
 const reports=[];
-for(const file of (await readdir(evidence)).filter(n=>n.endsWith('.json'))){
+for(const file of (await readdir(evidence,{recursive:true})).filter(n=>n.endsWith('.json'))){
   const result=JSON.parse((await readFile(join(evidence,file),'utf8')).replace(/^\uFEFF/,''));
-  if(result.cases)reports.push({...result,file});
+  if(result.cases)reports.push({...result,file:file.replaceAll('\\','/')});
 }
 reports.sort((a,b)=>String(b.end).localeCompare(String(a.end)));
 function findCase(name, environment) {
@@ -27,10 +27,16 @@ const percent=firing?new Intl.NumberFormat('es-MX',{style:'percent',maximumFract
 const clock=x=>x?.slice(11,19)??'—';
 const reportLink=record=>record?'docs/evidence/'+record.file:'docs/STATUS.md';
 const exists=async path=>Boolean(await stat(join(folder,path)).catch(()=>null));
-const screenshot=await exists('../docs/evidence/ui-azure/06-resumen.png')?
-  '../docs/evidence/ui-azure/06-resumen.png':'../docs/evidence/ui-local/06-resumen.png';
-const grafana=await exists('../docs/evidence/signals-azure/grafana.png')?
-  '../docs/evidence/signals-azure/grafana.png':'../docs/evidence/signals-local/grafana.png';
+async function availableImage(paths) {
+  for(const path of paths) if(await exists(path)) return path;
+  throw new Error('Falta una captura de QA');
+}
+const screenshot=await availableImage(['../docs/evidence/ui-azure-main/06-resumen.png',
+  '../docs/evidence/ui-azure/06-resumen.png','../docs/evidence/ui-local/06-resumen.png']);
+const grafana=await availableImage(['../docs/evidence/qa-main/signals-azure/grafana.png',
+  '../docs/evidence/signals-azure/grafana.png','../docs/evidence/signals-local/grafana.png']);
+const productionPath='../docs/evidence/qa-main/produccion.json';
+const production=await exists(productionPath) ? JSON.parse(await readFile(join(folder,productionPath),'utf8')) : null;
 
 const escape=x=>String(x).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 const h2=text=>'<h2>'+escape(text)+'</h2>';
@@ -81,8 +87,9 @@ const deck=[
  {section:'07 · CI/CD',title:'Checks, revisión y digests',
   body:split(h2('Integración')+list(['verify prueba código, API y navegador.','iac valida Terraform y Kustomize.','main exige checks y revisión independiente.']),
     h2('Publicación y promoción')+list(['GHCR vincula la imagen con commit y workflow.','Validación comprueba el digest antes de promover.','Producción requiere un PR aprobado con los digests.']))+
-    evidenceLine('Estado de la promoción y de GitHub en docs/STATUS.md.'),
-  notes:'Abrir PR #1 y la ejecución real. Distinguir un check exitoso, una revisión humana y la promoción. El plan privado rechazó reviewers de ambiente. Consulta docs/ci-cd.md y https://github.com/cristyags/VetNotify/pull/1.'},
+    evidenceLine(production?.status==='verified'?'Producción verificada con los digests aprobados en el PR #2.':
+      'PR #1 integrado. El PR #2 fija los digests para la aprobación de producción.'),
+  notes:'Abre el PR #1 y el PR #2. Distingue los checks de la aprobación del digest. Muestra el plan autenticado con cero cambios. Consulta docs/evidence/qa-main/entrega.json y docs/ci-cd.md.'},
  {section:'08 · OPERACIÓN',title:'Ambientes, acceso y salud',
   body:table(['Control','Efecto'],[['Namespaces dev/prod','Configuración, base, PVC y secretos separados.'],
     ['TLS y NSG','Caddy sirve HTTPS. SSH tiene una IP autorizada.'],

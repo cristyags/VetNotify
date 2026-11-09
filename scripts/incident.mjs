@@ -21,7 +21,7 @@ async function snapshot() {
   return { at:now(), values:Object.fromEntries(samples.map((x,i)=>[expressions[i],x.data.result])) };
 }
 export async function incident(auth,run) {
-  devOnly();
+  await devOnly();
   await poll('Prometheus listo',()=>query('vetnotify_final_2m'),x=>x.data.result.length>0,45000);
   await poll('Alerta normal antes del incidente',alert,x=>x.length===0,145000,3000);
   const start=now();
@@ -88,7 +88,7 @@ if(process.argv[1] && import.meta.url===pathToFileURL(process.argv[1]).href){
   const id=runId('incidente');
   const report={title:'VetNotify · Incidente y recuperación',runId:id,start:now(),cases:[]};
   try{
-    report.version=await api('/version');
+    report.version=await devOnly();
     report.cases.push({name:'P1-5',state:'pasó',...await incident(await login(),id)});
   }catch(error){
     report.cases.push({name:'P1-5',state:'falló',summary:error.message});

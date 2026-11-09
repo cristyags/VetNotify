@@ -14,6 +14,8 @@ Sesión Azure CLI con suscripción Azure for Students autorizada, crédito compr
 
 El código de bootstrap y estado se conserva al eliminar el workload. El plan autenticado de GitHub requiere federación solo desde `main`, Reader en el grupo del proyecto y permiso de datos para el lease del blob. Concede el permiso al principal de salida `plan_principal_id` exclusivamente sobre el contenedor. El rol de propietario queda para el bootstrap y la operación administrativa.
 
+Para reconstruir la federación de este repositorio, usa `gh api repos/cristyags/VetNotify --jq '{owner:.owner.login,ownerId:.owner.id,repo:.name,repoId:.id}'`. En el archivo privado de variables y en `TF_INPUTS_JSON` establece `repository` en `cristyags@180483232/VetNotify@1450699252`. Terraform forma el sujeto con `repo:` y `:ref:refs/heads/main`. Entra exige coincidencia exacta de sujeto, emisor y audiencia. El plan de Actions verificó la corrección con `changes: []`. [Identificadores inmutables de GitHub](https://docs.github.com/en/actions/reference/security/oidc) · [Plan de VetNotify](https://github.com/cristyags/VetNotify/actions/runs/42560565344).
+
 ## Despliegue inicial
 
 Comprueba la clave de host SSH con Azure Run Command y guárdala en un `known_hosts` dedicado. La inicialización y las pruebas usan `VET_SSH_TARGET=vetops@FQDN`, `VET_SSH_KEY` y `VET_SSH_KNOWN_HOSTS` con rutas privadas. Si hay problemas de resolución, `VET_SSH_ADDRESS` admite la IPv4 pública estática consultada desde Azure. SSH conserva el FQDN como identificador de la clave conocida. El script invoca `sudo k3s kubectl` por SSH. El kubeconfig administrativo permanece en la VM. Los manifiestos incluyen una cuenta de servicio de release con RBAC acotado por namespace.

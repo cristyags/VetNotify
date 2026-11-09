@@ -1,0 +1,37 @@
+{
+  "title": "VetNotify · Rollback de Deployment",
+  "runId": "rollback-mw8r97ia-49728e73",
+  "start": "2026-11-09T04:22:33.538Z",
+  "cases": [
+    {
+      "name": "DEV-12",
+      "state": "pasó",
+      "summary": "Imagen inexistente detectada; rollback al digest anterior y dos operaciones verificadas.",
+      "failure": [
+        {
+          "uid": "aa0ee214-dc62-4463-a8a3-10a18a003a44",
+          "phase": "Pending",
+          "reason": "ErrImagePull"
+        }
+      ],
+      "original": "ghcr.io/cristyags/vetnotify-backend@sha256:4a52bb43f1b772fada00799c5ae5ae68e45b89287a2569bdeed9f237ae4b5ef8",
+      "after": {
+        "name": "VetNotify",
+        "version": "1.0.0",
+        "commit": "e1132db86bbf4e87b3855d17f1c7a562e7c834fe",
+        "image": "ghcr.io/cristyags/vetnotify-backend@sha256:4a52bb43f1b772fada00799c5ae5ae68e45b89287a2569bdeed9f237ae4b5ef8",
+        "environment": "dev"
+      },
+      "baseline": "7de50135-bf6c-4358-b386-8ec93b911e13",
+      "verified": "5666d98d-e658-4f63-8c71-1521e152bed5"
+    }
+  ],
+  "version": {
+    "name": "VetNotify",
+    "version": "1.0.0",
+    "commit": "e1132db86bbf4e87b3855d17f1c7a562e7c834fe",
+    "image": "ghcr.io/cristyags/vetnotify-backend@sha256:4a52bb43f1b772fada00799c5ae5ae68e45b89287a2569bdeed9f237ae4b5ef8",
+    "environment": "dev"
+  },
+  "end": "2026-11-09T04:22:47.786Z"
+}

@@ -6,6 +6,8 @@ El repositorio privado usa `main` protegido y los checks `verify` e `iac`. La ra
 
 `Terraform autorizado` obtiene credencial efímera OIDC en `main`, usa el lease y emite un resumen de acciones. El apply lo ejecuta una identidad autorizada sobre el plan revisado. El pipeline de PR no tiene credenciales de Azure.
 
+El PR #1 fue aprobado e integrado por `Jechev1`. El primer plan de `main` expuso un desajuste del sujeto OIDC. Después de actualizar solo la credencial federada, el plan autenticado terminó con `changes: []`. El candidato `e1132db` pasó la aceptación y Chrome por el gateway de validación. [Cadena comprobada](evidence/qa-main/entrega.json) · [QA de Azure](qa-cierre.md).
+
 GitHub respondió HTTP 422 al configurar revisores para un ambiente privado. El control alternativo usa un PR de promoción sobre `main` y una ejecución de Actions sin credenciales del clúster. La transferencia al nodo usa un puente de despliegue ejecutado por el operador desde su equipo. La clave SSH queda fuera de Actions y el clúster no necesita una credencial persistente de GHCR. La administración del nodo utiliza la clave SSH y la IPv4 /32 autorizadas. [Ambientes de GitHub](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments) · [Grupos de ejecutores](https://docs.github.com/en/actions/concepts/runners/runner-groups).
 
 ## Validación
@@ -24,4 +26,4 @@ pwsh -NoProfile -File scripts/install-ci-candidate.ps1 -ReleaseRun ID -ExpectedC
 4. Genera credenciales separadas con `node scripts/bootstrap-local.mjs RUTA_PROD`. Ejecuta el mismo puente de validación con `-CredentialsFile RUTA_PROD -ProductionAuthorizationRun ID_AUTORIZACION`. El puente valida ambas ejecuciones de `main`, la protección actual y el manifiesto aprobado antes de aplicar. Comprueba el digest de producción en el NodePort privado 31081.
 5. Desde SSH, conserva una copia de `/etc/caddy/Caddyfile`, cambia el upstream de `127.0.0.1:31080` a `127.0.0.1:31081`, valida con `sudo /usr/local/bin/caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile` y ejecuta `sudo systemctl restart vetnotify-edge`. Verifica `/health/ready`, `/api/v1/version` y una entrega por los dos canales. Si falla la verificación, restaura la copia y reinicia el servicio de nuevo.
 
-La versión y los Pods se consultan con `GET /api/v1/version` y `kubectl get pods -o json`. Consulta [estado](STATUS.md) para distinguir las ejecuciones de validación y de producción.
+La versión y los Pods se consultan con `GET /api/v1/version` y `kubectl get pods -o json`. El ensayo del control con el PR #2 abierto validó los digests, falló en la condición de integración a `main` y dejó cero artefactos de autorización. [Evidencia del ensayo](evidence/qa-main/promocion-control.json) · [Estado de los ambientes](STATUS.md).

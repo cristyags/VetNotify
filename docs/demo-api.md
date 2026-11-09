@@ -12,3 +12,5 @@ Duración sugerida de defensa 8–12 minutos. Requisitos de ejecución en [READM
 8. Comprueba restauración de las réplicas de web, Agenda y Laboratorio con el último JSON.
 
 Para comandos aislados de emisor, consulta [API](api.md). Para la VM, carga el archivo privado dev mediante `node --env-file` y establece `API_URL`, `PROM_URL`, `JAEGER_URL`, `PG_PORT`, `VET_TARGET=k8s`, `VET_NAMESPACE=vetnotify-dev` y las tres variables SSH de [infraestructura](infrastructure.md). Usa un port-forward temporal directo al Pod API en `VET_API_DIRECT` y un túnel SQL que sobreviva a recreación del Pod de PostgreSQL. El Service temporal `verification-postgres` se crea con `VET_DEV_DB_FORWARD=true` y se retira al terminar.
+
+Antes de ejecutar la suite completa, confirma que `/api/v1/version` corresponda a Compose o a `dev`. Cuando el FQDN sirva `prod`, usa `npm run demo-api -- --smoke` con sus credenciales para comprobar las cuatro entregas sanas. Para las pruebas de caída y web detenida usa Compose o el gateway de validación. [Controles de QA](qa-cierre.md).

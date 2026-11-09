@@ -4,7 +4,7 @@ import { api, attempts, db as connect, evidence, expectStatus, get, login, paylo
 import { devOnly, killWorker, kube, readiness, restartApi, startDatabase, stopDatabase, workerRestarted } from './runtime.mjs';
 
 export async function recover(auth,db,run) {
-  devOnly();
+  await devOnly();
   if(process.env.VET_TARGET!=='k8s') return exerciseRecovery(auth,db,run);
   // Give kubelet and the remote administrative client a deterministic in-flight window.
   const deployments=['deployment/worker-email','deployment/simulator'];
@@ -89,7 +89,7 @@ if(process.argv[1] && import.meta.url===pathToFileURL(process.argv[1]).href){
   const report={title:'VetNotify · Recuperación',runId:id,start:new Date().toISOString(),cases:[]};
   const db=connect();
   try{
-    report.version=await api('/version');
+    report.version=await devOnly();
     const result=await recover(await login(),db,id);
     report.cases.push({name:'P1-4',state:'pasó',...result});
   }catch(error){

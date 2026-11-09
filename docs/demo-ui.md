@@ -9,3 +9,5 @@
 7. Muestra en Grafana la espera, reintentos y población. Usa el incidente versionado para mostrar alerta y resolución. El disparo requiere el volumen mínimo, así que la prueba visual de un solo fallo no activa por sí sola la alerta.
 
 `npm run demo-ui` reproduce el flujo en Chrome y guarda capturas con datos sintéticos. Para ejecutar en validación, usa las credenciales de ese ambiente y `API_URL` de su gateway.
+
+Para una comprobación sana de producción usa el acceso, los dos emisores y la bandeja de los pasos 1–3. Los pasos de degradación, reproceso tras fallo y rechazo controlado se muestran desde validación o Compose. [Comprobación en Azure](evidence/ui-azure-main.json).

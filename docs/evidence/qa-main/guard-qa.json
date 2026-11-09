@@ -1,0 +1,15 @@
+{
+  "verifiedAtUtc": "2026-11-09T04:28:04.848Z",
+  "target": "servidor de prueba",
+  "configuredNamespace": "vetnotify-dev",
+  "rejectedWhenApiReports": "prod",
+  "rejected": [
+    "scripts/no-frontend.mjs",
+    "scripts/demo-api.mjs",
+    "tests/acceptance/run.mjs",
+    "scripts/rollback.mjs"
+  ],
+  "requestsBeforeRejection": 4,
+  "mutationRequests": 0,
+  "allowedWhenApiReports": "dev"
+}

@@ -1,16 +1,15 @@
 import assert from 'node:assert/strict';
-import { api, evidence, poll, runId } from '../tests/support/harness.mjs';
+import { evidence, poll, runId } from '../tests/support/harness.mjs';
 import { kube, devOnly } from './runtime.mjs';
 import { kubectlClient } from './kubectl-client.mjs';
 
 if(process.env.VET_TARGET!=='k8s') throw new Error('Esta evidencia requiere K3s.');
-devOnly();
+const version=await devOnly();
 const id=runId('k3s');
-const report={title:'VetNotify · Evidencia operativa de K3s',runId:id,start:new Date().toISOString(),cases:[]};
+const report={title:'VetNotify · Evidencia operativa de K3s',runId:id,start:new Date().toISOString(),version,cases:[]};
 const parse=(args)=>JSON.parse(kube([...args,'-o','json'],true));
 let patched=false;
 try{
-  report.version=await api('/version');
   const ns=process.env.VET_NAMESPACE??'vetnotify-dev';
   const nodes=parse(['get','nodes']).items.map(n=>({name:n.metadata.name,version:n.status.nodeInfo.kubeletVersion,
     ready:n.status.conditions.find(c=>c.type==='Ready')?.status,allocatable:n.status.allocatable}));
