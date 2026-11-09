@@ -79,11 +79,12 @@ const deck=[
     evidenceLine('El token vencido pierde el derecho de aplicar resultados.'),
   notes:'Muestra el caso P1-4 y la pantalla de reproceso. Contrasta recuperación automática del lease con nueva notificación derivada. Consulta '+reportLink(findCase('P1-4'))+'.'},
  {section:'06 · INFRAESTRUCTURA',title:'Terraform y K3s en Azure',
-  body:table(['Decisión','Configuración'],[['Cómputo','VM B2as v2, 2 vCPU y 8 GiB en México Central.'],
+  body:table(['Decisión','Configuración'],[['Cómputo','VM D2s v4, 2 vCPU y 8 GiB en México Central.'],
     ['Estado','Blob privado con OAuth, lease y versiones.'],
     ['Arranque','Cloud-init instala K3s y Caddy con versiones fijadas.'],
-    ['Persistencia','PVC local-path para PostgreSQL, Prometheus, Grafana y Jaeger.']]),
-  notes:'Explica qué vive en el estado y qué vive en Secrets. Lee el plan antes de aplicar. Consulta docs/evidence/azure-plan-vm.json, docs/infrastructure.md.'},
+    ['Persistencia','PVC local-path para PostgreSQL, Prometheus, Grafana y Jaeger.']])+
+    evidenceLine('El cambio de tamaño conservó el disco, la IP y la zona.'),
+  notes:'Explica qué vive en el estado y qué vive en Secrets. Lee el plan del cambio de tamaño por capacidad zonal. Consulta docs/evidence/qa-main/azure-start-recovery.json y docs/infrastructure.md.'},
  {section:'07 · CI/CD',title:'Checks, revisión y digests',
   body:split(h2('Integración')+list(['verify prueba código, API y navegador.','iac valida Terraform y Kustomize.','main exige checks y revisión independiente.']),
     h2('Publicación y promoción')+list(['GHCR vincula la imagen con commit y workflow.','Validación comprueba el digest antes de promover.','Producción requiere un PR aprobado con los digests.']))+
@@ -125,7 +126,7 @@ const deck=[
  {section:'13 · COSTOS',title:'Operación bajo demanda',
   body:table(['Concepto','Tarifa o medida'],[['VM D2s v4','US$0.106 por hora de cómputo.'],
     ['Disco E6','US$5.28 por mes, más operaciones.'],['IPv4 Standard','US$0.005 por hora.'],
-    ['Cargos observados','US$0.40 antes de impuestos al corte del 9 de noviembre.'],
+    ['Cargos observados','US$0.40 antes de impuestos al cierre de producción del 9 de noviembre.'],
     ['Control','US$20/mes de presupuesto de aviso. El equipo controla el acumulado de US$100.']])+
     evidenceLine('La desasignación corta el cómputo. La IP y el disco permanecen.'),
   notes:'Identificar cargos observados y separar el estimado del reporte de facturación. Explicar los umbrales 50, 75 y 90%. Consulta docs/costs.md y la API oficial de precios Azure.'},
