@@ -1,13 +1,17 @@
 import { compose } from './local.mjs';
-import { poll, request } from '../tests/support/harness.mjs';
+import { api, poll, request } from '../tests/support/harness.mjs';
 import { kubectlClient, stopRemoteContainer } from './kubectl-client.mjs';
 
 const k8s=process.env.VET_TARGET==='k8s';
 const namespace=process.env.VET_NAMESPACE ?? 'vetnotify-dev';
 if (k8s && !/^vetnotify-(dev|prod)$/.test(namespace)) throw new Error('Namespace VetNotify obligatorio');
-export const devOnly = () => {
+export async function devOnly(version) {
   if (k8s && namespace!=='vetnotify-dev') throw new Error('La prueba de falla solo se ejecuta en vetnotify-dev');
-};
+  const active=version ?? await api('/version');
+  const allowed=k8s ? ['dev'] : ['local','test'];
+  if (!allowed.includes(active.environment)) throw new Error('La URL de la API no corresponde al entorno de prueba');
+  return active;
+}
 export function kube(args, capture=false) {
   if (!process.env.KUBECONFIG&&!process.env.VET_SSH_TARGET) throw new Error('Indica un contexto o SSH dedicado a VetNotify');
   return kubectlClient(['-n',namespace,...args],{capture});

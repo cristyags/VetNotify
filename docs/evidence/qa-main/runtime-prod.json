@@ -1,0 +1,76 @@
+{
+  "checkedAtUtc": "2026-11-09T19:24:28.4718296Z",
+  "dev": {
+    "namespace": "vetnotify-dev",
+    "nodePort": 31080,
+    "faultsEnabled": true,
+    "backend": "ghcr.io/cristyags/vetnotify-backend@sha256:4a52bb43f1b772fada00799c5ae5ae68e45b89287a2569bdeed9f237ae4b5ef8",
+    "web": "ghcr.io/cristyags/vetnotify-web@sha256:4fdfc4180bda44a258606ba8a8c4f5d71290174cf71943aedca8d266c37a6279",
+    "deploymentsReady": 14,
+    "postgresReady": true,
+    "pvc": [
+      {
+        "name": "data-postgres-0",
+        "uid": "ce559022-32f0-44b6-8a4a-313c6e29b0af",
+        "bound": true
+      },
+      {
+        "name": "grafana-data",
+        "uid": "78d9890a-5d5b-4d2a-a848-e03803aaf19f",
+        "bound": true
+      },
+      {
+        "name": "jaeger-data",
+        "uid": "e2b2d961-f167-43f9-96f2-664c39590098",
+        "bound": true
+      },
+      {
+        "name": "prometheus-data",
+        "uid": "38c99c6f-0540-4759-a214-895cd6e2f725",
+        "bound": true
+      }
+    ]
+  },
+  "prod": {
+    "namespace": "vetnotify-prod",
+    "nodePort": 31081,
+    "faultsEnabled": false,
+    "backend": "ghcr.io/cristyags/vetnotify-backend@sha256:4a52bb43f1b772fada00799c5ae5ae68e45b89287a2569bdeed9f237ae4b5ef8",
+    "web": "ghcr.io/cristyags/vetnotify-web@sha256:4fdfc4180bda44a258606ba8a8c4f5d71290174cf71943aedca8d266c37a6279",
+    "deploymentsReady": 14,
+    "postgresReady": true,
+    "pvc": [
+      {
+        "name": "data-postgres-0",
+        "uid": "ee8a7f80-eede-46d0-9d63-947dd01d6e50",
+        "bound": true
+      },
+      {
+        "name": "grafana-data",
+        "uid": "9c0060c0-6c49-45ad-a8a2-73f58c9617d1",
+        "bound": true
+      },
+      {
+        "name": "jaeger-data",
+        "uid": "417b7fdd-0bc6-47fd-8580-1f241cec0c88",
+        "bound": true
+      },
+      {
+        "name": "prometheus-data",
+        "uid": "1dfa8416-3030-4671-9ae5-b4864cbbc4c3",
+        "bound": true
+      }
+    ]
+  },
+  "distinctPvc": true,
+  "privateWebStatus": 200,
+  "privateReadyStatus": 200,
+  "privateVersion": {
+    "name": "VetNotify",
+    "version": "1.0.0",
+    "commit": "e1132db86bbf4e87b3855d17f1c7a562e7c834fe",
+    "image": "ghcr.io/cristyags/vetnotify-backend@sha256:4a52bb43f1b772fada00799c5ae5ae68e45b89287a2569bdeed9f237ae4b5ef8",
+    "environment": "prod"
+  },
+  "appCanReadSecrets": false
+}

@@ -42,7 +42,25 @@
 
 - Chrome pasó contra el FQDN público con el mismo commit. Confirmó ambos emisores, degradación, reproceso y bandeja a 360 px. Grafana cargó 10 paneles y Jaeger devolvió la traza del candidato tras reiniciar. [Chrome](evidence/ui-azure-check.json) · [Señales](evidence/senales-mw8hot0g-de1c12be.md).
 - Con la web restaurada, HTTPS devolvió 200 en `/` y `/health/ready`. Los dos digests coincidieron con GHCR y el servicio SQL temporal quedó retirado. Azure confirmó `PowerState/deallocated` a las 23:58 UTC del 8 de noviembre. Los discos, los volúmenes y la IP se conservan. [Cierre de Azure](evidence/azure-closeout.json).
-- Queda pendiente la aceptación de la invitación de `Jechev1` y una revisión independiente del PR de integración. El plan autenticado de Terraform en Actions requiere `main` y queda por ejecutar. Producción requiere la revisión adicional del PR de promoción. [Controles y pasos](ci-cd.md) · [Matriz](requirements-matrix.md).
+- En este punto faltaban la revisión de integración y la promoción. El avance posterior se registra en el QA del candidato de `main`. [Controles y pasos](ci-cd.md).
 - El costo estimado del escenario es US$9.61. Los cargos de los grupos aún no se muestran en la consulta. [Costos](costs.md).
 
 Para la defensa, inicia la VM con `az vm start -g rg-vetnotify-26a7d1 -n vetnotify-26a7d1` y comprueba `/health/ready` en el [FQDN de validación](https://vetnotify-26a7d1.mexicocentral.cloudapp.azure.com/health/ready). Las credenciales de Azure dev están en el archivo privado `work/vetnotify-azure/dev.env` del equipo que realizó el despliegue. Compose usa su propio `.env` local.
+
+## QA del candidato de main
+
+- `Jechev1` aprobó el commit `f721fa9` e integró el PR #1. CI y la publicación de `main` terminaron con éxito en `e1132db`. [PR #1](https://github.com/cristyags/VetNotify/pull/1) · [Publicación](https://github.com/cristyags/VetNotify/actions/runs/42558821440).
+- El primer intento de OIDC falló por el formato del sujeto. Terraform actualizó solo la credencial federada. Actions volvió a ejecutar el plan autenticado y obtuvo cero cambios. [Cadena de entrega](evidence/qa-main/entrega.json) · [Plan](https://github.com/cristyags/VetNotify/actions/runs/42560565344).
+- K3s importó los dos OCI exactos en `vetnotify-dev`. Pasaron P1-1 a P1-5, seguridad, reproceso, commit sin respuesta y cohorte madura con la web detenida. Chrome pasó contra el mismo digest. [Aceptación](evidence/qa-main/aceptacion-mw8r2bq4-51ea7b58.md) · [Sin frontend](evidence/qa-main/sin-web-mw8r1rcr-9e94605d.md) · [Chrome](evidence/ui-azure-main.json).
+- Se comprobó rollback, liveness, RBAC, persistencia de trazas, paneles y escaneo de los OCI. Se retiró el servicio SQL temporal. [Auditoría y QA](qa-cierre.md).
+- La promoción de los digests verificados quedó lista para revisión en el PR #2. El ensayo con el PR abierto comprobó el bloqueo efectivo de la autorización. [PR de promoción](https://github.com/cristyags/VetNotify/pull/2) · [Ensayo](evidence/qa-main/promocion-control.json).
+- El PR #3 en borrador registra la auditoría y la guarda de entorno. Los checks del commit que introdujo la guarda pasaron, incluida la aceptación sin frontend en Compose. [PR de QA](https://github.com/cristyags/VetNotify/pull/3) · [CI](https://github.com/cristyags/VetNotify/actions/runs/42562957036).
+- Azure confirmó `PowerState/deallocated` a las 04:47 UTC del 9 de noviembre. La última versión pública comprobada fue `dev` en `e1132db`. Producción espera la aprobación independiente del PR #2. [Cierre de este QA](evidence/qa-main/azure-closeout.json).
+
+## Producción verificada · 9 de noviembre de 2026
+
+- `Jechev1` aprobó el commit del manifiesto e integró el PR #2. Actions emitió la autorización para los dos OCI del candidato `e1132db`. [PR #2](https://github.com/cristyags/VetNotify/pull/2) · [Autorización](https://github.com/cristyags/VetNotify/actions/runs/42681915057).
+- Azure rechazó el arranque de B2as v2 por capacidad zonal. Terraform aplicó un plan guardado que cambió solo el tamaño a D2s v4. Azure confirmó el arranque y el plan autenticado posterior devolvió cero cambios. [Recuperación](evidence/qa-main/azure-start-recovery.json) · [Plan](https://github.com/cristyags/VetNotify/actions/runs/42681725794).
+- El FQDN público respondió en `prod` por HTTPS. Los 14 Deployments y PostgreSQL quedaron listos en cada namespace, con PVC separados. La VM quedó encendida para la entrega. [Producción](evidence/qa-main/produccion.json) · [Servicios listos](evidence/qa-main/runtime-prod.json) · [Acceso público](https://vetnotify-26a7d1.mexicocentral.cloudapp.azure.com).
+- Cuatro notificaciones por CLI y cuatro por Chrome llegaron a `delivered`. Se comprobaron cuatro recibos de correo simulado, cuatro entradas internas, aislamiento de credenciales y bandeja, y perfiles de fallo desactivados. [CLI](evidence/qa-main/cli-prod/demo-cli-mw9nien7-e297d078.md) · [Chrome](evidence/qa-main/ui-prod/results.json).
+- Prometheus mostró tres targets sanos. Grafana sirvió los diez paneles y recuperó en Jaeger una traza de cinco servicios. La facturación atribuida a ambos grupos al corte fue US$0.40. [Señales](evidence/qa-main/signals-prod.json) · [Costos](costs.md).

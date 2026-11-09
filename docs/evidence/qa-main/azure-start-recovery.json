@@ -1,0 +1,60 @@
+{
+  "initialAttempts": {
+    "action": "start",
+    "attempts": 2,
+    "sku": "Standard_B2as_v2",
+    "zone": "2",
+    "azureCode": "ZonalAllocationFailed"
+  },
+  "firstTerraformApply": {
+    "phase": "PowerOff before update",
+    "azureCode": "ZonalAllocationFailed",
+    "sizeAfterFailure": "Standard_B2as_v2",
+    "planHash": "a85b7cdae56a592623792e7af16184c3769260b82fac155622b3b09ce0daa5b7"
+  },
+  "recoveryDeallocate": {
+    "provisioning": "succeeded",
+    "power": "deallocated"
+  },
+  "savedPlan": {
+    "address": "azurerm_linux_virtual_machine.k3s",
+    "actions": [
+      "update"
+    ],
+    "changedProperties": [
+      "size"
+    ],
+    "added": 0,
+    "changed": 1,
+    "destroyed": 0
+  },
+  "applied": {
+    "verifiedAt": "2026-11-09T19:15:40.4677732Z",
+    "from": "Standard_B2as_v2",
+    "to": "Standard_D2s_v4",
+    "zone": "2",
+    "diskPreserved": true,
+    "nicPreserved": true,
+    "publicIpPreserved": true,
+    "provisioning": "Succeeded",
+    "planHash": "0e73a9591853f769e4d97ce430495e74d108cf9840861a1a753a6d71fc34e287"
+  },
+  "compute": {
+    "vcpus": 2,
+    "memoryMiB": 8192,
+    "tempDiskMiB": 0,
+    "payAsYouGoUsdPerHour": 0.106
+  },
+  "planAfterRecovery": "https://github.com/cristyags/VetNotify/actions/runs/42681725794",
+  "grafanaValidation": {
+    "oldPod": "grafana-57698c466b-86vc6",
+    "oldRestartCountObserved": 2,
+    "startupProbe": "connection refused",
+    "oldProcessLastMessage": "Shutdown started, System signal: terminated",
+    "recovery": "rollout restart deployment/grafana",
+    "newPod": "grafana-5954bb474f-z25xg",
+    "ready": true,
+    "restarts": 0,
+    "pvcUidPreserved": true
+  }
+}

@@ -1,11 +1,14 @@
 import { spawnSync } from 'node:child_process';
 import assert from 'node:assert/strict';
 import { api, evidence, get, login, receipt, runId, terminal } from '../tests/support/harness.mjs';
+import { devOnly } from './runtime.mjs';
 
 const run=runId('demo-cli');
+const smoke=process.argv.includes('--smoke');
 const report={title:'VetNotify · Dos clientes de consola',runId:run,start:new Date().toISOString(),cases:[]};
 try{
   report.version=await api('/version');
+  if(!smoke) await devOnly(report.version);
   const auth=await login();
   const results=[];
   for(const [client,event,recipient,user] of [
@@ -28,7 +31,7 @@ try{
   }
   assert.equal(new Set(results.map(r=>r.application)).size,2);
   report.cases.push({name:'Emisores CLI',state:'pasó',summary:'Dos procesos y credenciales; cuatro IDs, dos recibos y dos avisos internos.',results});
-  if(!process.argv.includes('--smoke')){
+  if(!smoke){
     const result=spawnSync(process.execPath,['tests/acceptance/run.mjs',...process.argv.slice(2)],
       {stdio:'inherit',env:process.env,timeout:510000});
     assert.equal(result.status,0,'Alguna prueba de aceptación falló');

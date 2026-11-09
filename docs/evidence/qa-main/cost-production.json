@@ -1,0 +1,10 @@
+{
+  "checkedAtUtc": "2026-11-09T19:09:15.0646720Z",
+  "source": "Azure Cost Management Query API 2025-03-01",
+  "type": "ActualCost",
+  "timeframe": "MonthToDate",
+  "groupFilter": ["rg-vetnotify-26a7d1", "rg-vetnotify-state-26a7d1"],
+  "columns": ["PreTaxCost", "Currency"],
+  "rows": [[0.404496851162942, "USD"]],
+  "budgetCeilingUsd": 100
+}

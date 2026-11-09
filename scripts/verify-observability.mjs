@@ -6,7 +6,7 @@ import { evidence, jaeger, poll, prom, runId } from '../tests/support/harness.mj
 import { compose } from './local.mjs';
 import { devOnly, kube } from './runtime.mjs';
 
-devOnly();
+await devOnly();
 const source=JSON.parse(await readFile(process.argv[2],'utf8'));
 const incident=source.cases.find(c=>c.name==='P1-5'&&c.state==='pasó');
 assert.ok(incident,'Se requiere evidencia P1-5 exitosa');

@@ -16,8 +16,30 @@ Los informes JSON conservan el entorno, la versión, las horas UTC y las comprob
 | Escaneo de imágenes de aplicación | [Hallazgos iniciales](container-scan.json) · [OCI corregidos](container-scan-corrected.json) |
 | Publicación con digests inmutables e importación en K3s | [GitHub Actions](https://github.com/cristyags/VetNotify/actions/runs/42535369639) · [Manifiesto de la corrida](github-release.json) |
 | TLS, readiness, retirada del servicio SQL de pruebas y desasignación | [Cierre de Azure](azure-closeout.json) |
+
+## Candidato de main
+
+| Comprobación | Evidencia |
+|---|---|
+| Integración revisada, OIDC corregido y publicación | [Cadena de entrega](qa-main/entrega.json) |
+| Aceptación con web y adaptadores a cero | [P1-1 a P1-5 y seguridad](qa-main/aceptacion-mw8r2bq4-51ea7b58.md) · [Web detenida y restaurada](qa-main/sin-web-mw8r1rcr-9e94605d.md) |
+| Verificación visual | [Resultado de Chrome](ui-azure-main.json) · [Capturas](ui-azure-main/) |
+| K3s y observabilidad | [Rollback](qa-main/rollback-mw8r97ia-49728e73.md) · [Liveness y RBAC](qa-main/k3s-mw8rahpp-ceb9b6f9.md) · [Dashboard y trazas](qa-main/senales-mw8r9iyy-83033550.md) |
+| Alcance de las pruebas y entrega | [Guarda de entorno](qa-main/guard-qa.json) · [Escaneo OCI](qa-main/oci-secrets.json) · [Retirada SQL](qa-main/sql-temporal.json) |
 | Protección de `main` con checks fallidos y posterior corrección | [Regla y bloqueo](github-gate-before.json) · [checks aprobados](github-gate-after.json) · [PR #1](https://github.com/cristyags/VetNotify/pull/1) |
+| Rechazo de autorización de producción con el PR de promoción abierto | [Resultado](qa-main/promocion-control.json) · [Actions](https://github.com/cristyags/VetNotify/actions/runs/42562425118) |
+| Desasignación al cerrar QA y estado de revisión | [Azure y GitHub](qa-main/azure-closeout.json) |
 
 Las capturas muestran datos ficticios de pruebas ejecutadas por Chrome. La suite completa de Azure usó un túnel SSH local hacia el mismo Caddy HTTPS con validación del certificado del FQDN. La prueba visual usó el FQDN público. La corrida directa de consola anterior registró timeouts y se conserva para comparar. [Corrida directa](aceptacion-mw8ha5w5-3d7d42ab.md).
 
 Para interpretar una incidencia, usa los IDs de correlación y las series del informe, junto con la consulta de logs y trazas de [observabilidad](../observability.md).
+
+## Producción
+
+| Comprobación | Evidencia |
+|---|---|
+| Aprobación, autorización y versión activa | [Registro de producción](qa-main/produccion.json) · [Actions](https://github.com/cristyags/VetNotify/actions/runs/42681915057) |
+| Capacidad zonal, cambio de tamaño y costos | [Recuperación](qa-main/azure-start-recovery.json) · [Plan autenticado](https://github.com/cristyags/VetNotify/actions/runs/42681725794) · [Cargos](qa-main/cost-production.json) |
+| Separación de namespaces y entrada HTTPS | [K3s](qa-main/runtime-prod.json) · [Gateway](qa-main/public-prod.json) |
+| Entregas de Agenda y Laboratorio | [Consola](qa-main/cli-prod/demo-cli-mw9nien7-e297d078.md) · [Chrome](qa-main/ui-prod/results.json) · [Capturas](qa-main/ui-prod/) |
+| Paneles, targets y traza de una entrega | [Señales](qa-main/signals-prod.json) |

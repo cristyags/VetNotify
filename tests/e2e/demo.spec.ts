@@ -33,6 +33,9 @@ async function state(page:Page,id:string) {
 }
 
 test('demostración visual real con dos emisores, fallos y bandeja aislada a 360 px',async({page,browser})=>{
+  const version=await page.request.get('/api/v1/version');
+  await expect(version).toBeOK();
+  expect((await version.json()).environment).toMatch(/^(local|test|dev)$/);
   const consoleErrors:string[]=[];
   const failedRequests:string[]=[];
   page.on('pageerror',error=>consoleErrors.push(error.message));

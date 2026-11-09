@@ -1,0 +1,26 @@
+{
+  "check": "reject-production-while-promotion-pr-is-open",
+  "observedAt": "2026-11-09T04:33:06Z",
+  "commit": "e1132db86bbf4e87b3855d17f1c7a562e7c834fe",
+  "releaseRun": 42558821440,
+  "promotionPr": 2,
+  "promotionPrHead": "1da6f187ba1aeac74ebfc77a318d6ffd88f1f94a",
+  "workflowRun": "https://github.com/cristyags/VetNotify/actions/runs/42562425118",
+  "releaseVerification": "success",
+  "productionAuthorization": "failure",
+  "failedStep": "Verify independently reviewed promotion PR",
+  "mergedIntoMainCheck": false,
+  "exitCode": 1,
+  "artifacts": 0,
+  "installerGuard": {
+    "failedAuthorizationRun": 42562425118,
+    "exitCode": 1,
+    "rejectedBeforeDeployment": true
+  },
+  "publicGatewayAfterRejection": {
+    "environment": "dev",
+    "commit": "e1132db86bbf4e87b3855d17f1c7a562e7c834fe",
+    "webStatus": 200,
+    "readinessStatus": 200
+  }
+}

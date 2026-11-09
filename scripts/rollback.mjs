@@ -3,12 +3,11 @@ import { api, evidence, expectStatus, get, login, payload, poll, runId, send, te
 import { devOnly, kube } from './runtime.mjs';
 
 if(process.env.VET_TARGET!=='k8s') throw new Error('Rollback requiere K3s de validación y KUBECONFIG dedicado.');
-devOnly();
+const version=await devOnly();
 const id=runId('rollback');
-const report={title:'VetNotify · Rollback de Deployment',runId:id,start:new Date().toISOString(),cases:[]};
+const report={title:'VetNotify · Rollback de Deployment',runId:id,start:new Date().toISOString(),version,cases:[]};
 let changed=false;
 try{
-  report.version=await api('/version');
   const auth=await login();
   const baseline=expectStatus(await send(payload(id)),202).id;
   await terminal(baseline,auth);

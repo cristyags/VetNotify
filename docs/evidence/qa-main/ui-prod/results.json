@@ -1,0 +1,78 @@
+{
+  "status": "passed",
+  "startedAt": "2026-11-09T19:25:21.738Z",
+  "finishedAt": "2026-11-09T19:25:31.421Z",
+  "baseURL": "https://vetnotify-26a7d1.mexicocentral.cloudapp.azure.com",
+  "version": {
+    "name": "VetNotify",
+    "version": "1.0.0",
+    "commit": "e1132db86bbf4e87b3855d17f1c7a562e7c834fe",
+    "image": "ghcr.io/cristyags/vetnotify-backend@sha256:4a52bb43f1b772fada00799c5ae5ae68e45b89287a2569bdeed9f237ae4b5ef8",
+    "environment": "prod"
+  },
+  "checked": [
+    {
+      "name": "fault control",
+      "status": 403,
+      "code": "faults_disabled"
+    },
+    {
+      "name": "agenda-veterinaria",
+      "delivered": [
+        {
+          "id": "438524f6-a115-4097-8d84-990d37ccdc1d",
+          "channel": "email",
+          "state": "delivered",
+          "traceId": "be31a83aaa27d0405cacb4915074cd4d"
+        },
+        {
+          "id": "dc79a109-d68f-4bca-afe7-d76c22b69aac",
+          "channel": "internal",
+          "state": "delivered",
+          "traceId": "be31a83aaa27d0405cacb4915074cd4d"
+        }
+      ],
+      "uiFaultControls": false
+    },
+    {
+      "name": "laboratorio-veterinario",
+      "delivered": [
+        {
+          "id": "4473bd17-c52d-4e72-8763-0e2916603113",
+          "channel": "email",
+          "state": "delivered",
+          "traceId": "84c7ce13b69980a2ce03cff89030e1d1"
+        },
+        {
+          "id": "0ca1a7f9-87a7-4ebe-98a1-022005db2892",
+          "channel": "internal",
+          "state": "delivered",
+          "traceId": "84c7ce13b69980a2ce03cff89030e1d1"
+        }
+      ],
+      "uiFaultControls": false
+    }
+  ],
+  "receipts": [
+    "438524f6-a115-4097-8d84-990d37ccdc1d",
+    "4473bd17-c52d-4e72-8763-0e2916603113"
+  ],
+  "security": {
+    "faultsDisabled": true,
+    "developmentKeyInProduction": 401,
+    "recipientIsolation": 404,
+    "sessionCookieSecure": true
+  },
+  "accessibility": {
+    "desktopViolations": [],
+    "mobileViolations": [],
+    "viewport": 360
+  },
+  "pageErrors": [],
+  "screenshots": [
+    "01-agenda.png",
+    "02-laboratorio.png",
+    "03-resumen.png",
+    "04-bandeja-360.png"
+  ]
+}
