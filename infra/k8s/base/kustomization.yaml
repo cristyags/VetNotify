@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources: [resources.yaml, ../../observability]
+generatorOptions:
+  disableNameSuffixHash: true
+configMapGenerator:
+  - name: vetnotify-gateway
+    files: [nginx.conf=gateway.conf]
+  - name: vetnotify-config
+    literals:
+      - VET_ENV=dev
+      - DEMO_FAULTS=true
+      - PUBLIC_ORIGIN=http://localhost:28080
+      - IMAGE_REF=local

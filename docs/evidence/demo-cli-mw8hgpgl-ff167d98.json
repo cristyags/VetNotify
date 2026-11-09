@@ -1,0 +1,46 @@
+{
+  "title": "VetNotify · Dos clientes de consola",
+  "runId": "demo-cli-mw8hgpgl-ff167d98",
+  "start": "2026-11-08T23:48:27.237Z",
+  "cases": [
+    {
+      "name": "Emisores CLI",
+      "state": "pasó",
+      "summary": "Dos procesos y credenciales; cuatro IDs, dos recibos y dos avisos internos.",
+      "results": [
+        {
+          "id": "2e82d9fb-6ec9-4467-8ece-0223e95e16dd",
+          "application": "agenda-veterinaria",
+          "channel": "email",
+          "state": "delivered"
+        },
+        {
+          "id": "6edd1626-55d3-488b-9aa3-15c653e59dad",
+          "application": "agenda-veterinaria",
+          "channel": "internal",
+          "state": "delivered"
+        },
+        {
+          "id": "596dfa3e-125b-4c19-8f12-44e7d4c21cd1",
+          "application": "laboratorio-veterinario",
+          "channel": "email",
+          "state": "delivered"
+        },
+        {
+          "id": "24745213-e1f4-4a4b-b12d-0e8a75dc0e46",
+          "application": "laboratorio-veterinario",
+          "channel": "internal",
+          "state": "delivered"
+        }
+      ]
+    }
+  ],
+  "version": {
+    "name": "VetNotify",
+    "version": "1.0.0",
+    "commit": "92e5a9af8cfd7c1c5c7d409fd77c126e6bb7c30b",
+    "image": "ghcr.io/cristyags/vetnotify-backend@sha256:bceee49a3f1dfeb5c2d7ecb5a81d6039cb7ddf2142c9f37cecc93e7dab00e0d9",
+    "environment": "dev"
+  },
+  "end": "2026-11-08T23:52:56.953Z"
+}

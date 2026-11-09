@@ -1,0 +1,63 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main, work/vetnotify]
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 24
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with: {persist-credentials: false, fetch-depth: 0}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with: {node-version: '24.22.2', cache: npm}
+      - run: npm ci --ignore-scripts
+      - run: npm run lint && npm run typecheck && npm test && npm run build
+      - run: npm audit --omit=dev --audit-level=moderate
+      - name: Scan tracked history
+        run: docker run --rm -v "$PWD:/repo:ro" ghcr.io/gitleaks/gitleaks:v8.30.1 git /repo --redact --no-banner
+      - run: npx playwright install --with-deps chromium
+      - run: npm run bootstrap-local && npm run up-full
+      - name: Check Prometheus rules
+        run: docker compose exec -T prometheus promtool check rules /etc/prometheus/rules.yaml
+      - name: Visual and headless acceptance
+        env: {EVIDENCE_DIR: .runtime/ci-evidence}
+        run: |
+          npm run demo-ui
+          npm run verify-no-frontend
+          npm run test:ttl
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        if: always()
+        with:
+          name: scenario-evidence
+          path: .runtime/ci-evidence/
+          if-no-files-found: warn
+          include-hidden-files: true
+          retention-days: 14
+      - name: Stop isolated stack
+        if: always()
+        run: docker compose --profile web --profile observability down
+  iac:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with: {persist-credentials: false}
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4
+        with: {terraform_version: '1.16.5', terraform_wrapper: false}
+      - run: terraform fmt -check -recursive infra/terraform
+      - name: Validate without Azure credentials
+        run: |
+          for module in bootstrap main; do
+            terraform -chdir=infra/terraform/"$module" init -backend=false -input=false -lockfile=readonly
+            terraform -chdir=infra/terraform/"$module" validate
+          done
+      - run: |
+          kubectl kustomize infra/k8s/overlays/dev > "$RUNNER_TEMP/vetnotify-dev.yaml"
+          kubectl kustomize infra/k8s/overlays/prod > "$RUNNER_TEMP/vetnotify-prod.yaml"

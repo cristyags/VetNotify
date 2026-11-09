@@ -1,0 +1,2280 @@
+{
+  "title": "VetNotify · Aceptación del Escenario 1",
+  "runId": "aceptacion-mw8ha5w5-3d7d42ab",
+  "start": "2026-11-08T23:43:21.942Z",
+  "cases": [
+    {
+      "name": "P1-1",
+      "state": "falló",
+      "start": "2026-11-08T23:43:22.705Z",
+      "end": "2026-11-08T23:43:37.927Z",
+      "summary": "The operation was aborted due to timeout"
+    },
+    {
+      "name": "P1-2",
+      "state": "pasó",
+      "start": "2026-11-08T23:43:37.928Z",
+      "end": "2026-11-08T23:43:52.964Z",
+      "summary": "503/503/éxito y 503 sostenido con tres llamadas; la bandeja entregó durante el fallo.",
+      "id": "3007d572-95d8-4995-88ca-3516ef654bb5",
+      "inside": "0d33bc78-841b-43e4-acd9-497713dd9085",
+      "temporary": {
+        "id": "112ec54f-3904-4d44-adb9-7c0443a71252",
+        "tries": [
+          {
+            "id": "e0372b5e-62c2-4af6-adf9-dfd8879d671a",
+            "number": 1,
+            "worker_id": "worker-email-c8cbcb997-89k7v-email",
+            "started_at": "2026-11-08T23:43:38.100Z",
+            "finished_at": "2026-11-08T23:43:38.116Z",
+            "duration_ms": 16.24,
+            "outcome": "transient",
+            "code": "provider_http_503",
+            "receipt_id": null,
+            "trace_id": "c3b3bd16ce585a51a17311599bac7be9",
+            "span_id": "31052e3d2cc4f1a2"
+          },
+          {
+            "id": "aa74191f-bcab-4c7c-b7eb-a3cff61a3933",
+            "number": 2,
+            "worker_id": "worker-email-c8cbcb997-89k7v-email",
+            "started_at": "2026-11-08T23:43:40.237Z",
+            "finished_at": "2026-11-08T23:43:40.249Z",
+            "duration_ms": 11.96,
+            "outcome": "transient",
+            "code": "provider_http_503",
+            "receipt_id": null,
+            "trace_id": "c3b3bd16ce585a51a17311599bac7be9",
+            "span_id": "2b4507aa57832c96"
+          },
+          {
+            "id": "152b3702-0639-41f6-9c3e-4e136b8734f5",
+            "number": 3,
+            "worker_id": "worker-email-c8cbcb997-89k7v-email",
+            "started_at": "2026-11-08T23:43:44.328Z",
+            "finished_at": "2026-11-08T23:43:44.340Z",
+            "duration_ms": 11.85,
+            "outcome": "delivered",
+            "code": "provider_accepted",
+            "receipt_id": "a06417cd-9e7a-4073-9688-8614cb55fb8c",
+            "trace_id": "c3b3bd16ce585a51a17311599bac7be9",
+            "span_id": "f55d0d83d15a50e0"
+          }
+        ]
+      },
+      "tries": [
+        {
+          "id": "774037cd-5271-4284-82b4-3a57da7728eb",
+          "number": 1,
+          "worker_id": "worker-email-c8cbcb997-89k7v-email",
+          "started_at": "2026-11-08T23:43:45.331Z",
+          "finished_at": "2026-11-08T23:43:45.344Z",
+          "duration_ms": 13.02,
+          "outcome": "transient",
+          "code": "provider_http_503",
+          "receipt_id": null,
+          "trace_id": "2787ad3006279e12c76a9bcda14118c0",
+          "span_id": "43a4a492c5af8516"
+        },
+        {
+          "id": "edc75c3b-1f14-477b-8cef-fe380ec5814e",
+          "number": 2,
+          "worker_id": "worker-email-c8cbcb997-89k7v-email",
+          "started_at": "2026-11-08T23:43:47.451Z",
+          "finished_at": "2026-11-08T23:43:47.462Z",
+          "duration_ms": 11.54,
+          "outcome": "transient",
+          "code": "provider_http_503",
+          "receipt_id": null,
+          "trace_id": "2787ad3006279e12c76a9bcda14118c0",
+          "span_id": "bb914eda51802216"
+        },
+        {
+          "id": "157474ae-d387-49cd-b2a7-82b762a1e200",
+          "number": 3,
+          "worker_id": "worker-email-c8cbcb997-89k7v-email",
+          "started_at": "2026-11-08T23:43:51.568Z",
+          "finished_at": "2026-11-08T23:43:51.579Z",
+          "duration_ms": 10.79,
+          "outcome": "transient",
+          "code": "provider_http_503",
+          "receipt_id": null,
+          "trace_id": "2787ad3006279e12c76a9bcda14118c0",
+          "span_id": "2e8e4443ffa924aa"
+        }
+      ],
+      "waits": [
+        2107,
+        4106
+      ]
+    },
+    {
+      "name": "P1-3",
+      "state": "falló",
+      "start": "2026-11-08T23:43:52.965Z",
+      "end": "2026-11-08T23:44:01.106Z",
+      "summary": "The operation was aborted due to timeout"
+    },
+    {
+      "name": "P1-4",
+      "state": "pasó",
+      "start": "2026-11-08T23:44:01.106Z",
+      "end": "2026-11-08T23:45:21.148Z",
+      "summary": "Worker terminado tras reclamar con pendientes; lease recuperado, token viejo rechazado y PostgreSQL/API reiniciados.",
+      "killed": {
+        "podUid": "a6e3f37f-7df0-42f3-a982-e060ef2f2fd0",
+        "containerId": "0c701537b4d5fe80abaa2e7a0eb1c9ff0d6dbbcb69384d8680f69e1d14cfbd14",
+        "method": "cri-stop",
+        "restartsBefore": 0
+      },
+      "ids": [
+        "c61730e7-92ea-4bd7-ae96-3b320637dd05",
+        "7140d59c-8f1c-4acb-acd4-d10e725a085f",
+        "d84156fd-6dc6-4e73-8fbd-472665dcc602",
+        "4f49d710-aea8-4863-9168-e2085c366af5",
+        "38c5b002-c28c-4cf7-b0eb-f004845cf8ac",
+        "92e44558-f323-4b6f-b9eb-3babe65e5a24"
+      ],
+      "leaseNotification": "38c5b002-c28c-4cf7-b0eb-f004845cf8ac",
+      "history": [
+        {
+          "id": "4424c043-6a9f-4950-bb28-9469b53f0617",
+          "number": 1,
+          "worker_id": "worker-email-ff7cd7488-kfbcr-email",
+          "started_at": "2026-11-08T23:44:09.713Z",
+          "finished_at": "2026-11-08T23:44:27.769Z",
+          "duration_ms": 18056.46,
+          "outcome": "uncertain",
+          "code": "lease_expired",
+          "receipt_id": null,
+          "trace_id": null,
+          "span_id": null
+        },
+        {
+          "id": "b56b5231-9ff1-452a-9967-7aba2ab69b9d",
+          "number": 2,
+          "worker_id": "worker-email-ff7cd7488-kfbcr-email",
+          "started_at": "2026-11-08T23:44:29.900Z",
+          "finished_at": "2026-11-08T23:44:29.918Z",
+          "duration_ms": 18.56,
+          "outcome": "delivered",
+          "code": "provider_accepted",
+          "receipt_id": "0757cecd-1bfe-4c59-80da-4a5924ef5a02",
+          "trace_id": "651c83a0e95793f93eac0565854c7aa5",
+          "span_id": "b02d5696e1692204"
+        }
+      ],
+      "replayed": "c61730e7-92ea-4bd7-ae96-3b320637dd05",
+      "postRestartStates": [
+        "delivered",
+        "delivered",
+        "delivered",
+        "delivered",
+        "delivered",
+        "delivered"
+      ],
+      "gatewayDuringOutage": 502,
+      "unavailableWrites": 0,
+      "controlledTiming": {
+        "providerTimeoutMs": 12000,
+        "leaseMs": 18000
+      }
+    },
+    {
+      "name": "P1-5",
+      "state": "pasó",
+      "start": "2026-11-08T23:45:21.149Z",
+      "end": "2026-11-08T23:47:35.195Z",
+      "summary": "24 correos agotaron 3 intentos; canal interno disponible. Traza de 3 servicios, alerta firing y retorno normal.",
+      "hypothesis": "Un 503 sostenido afecta solo a correo, aumenta los reintentos y conserva las aceptaciones.",
+      "incidentStart": "2026-11-08T23:45:22.517Z",
+      "restoredAt": "2026-11-08T23:45:49.809Z",
+      "before": {
+        "at": "2026-11-08T23:45:22.517Z",
+        "values": {
+          "vetnotify_final_2m": [
+            {
+              "metric": {
+                "__name__": "vetnotify_final_2m",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "outcome": "failed"
+              },
+              "value": [
+                1794181521.572,
+                "1"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_final_2m",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "outcome": "all"
+              },
+              "value": [
+                1794181521.572,
+                "9"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_final_2m",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "outcome": "failed"
+              },
+              "value": [
+                1794181521.572,
+                "0"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_final_2m",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "outcome": "all"
+              },
+              "value": [
+                1794181521.572,
+                "15"
+              ]
+            }
+          ],
+          "vetnotify_queue_jobs": [
+            {
+              "metric": {
+                "__name__": "vetnotify_queue_jobs",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "state": "pending"
+              },
+              "value": [
+                1794181521.697,
+                "0"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_queue_jobs",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "state": "processing"
+              },
+              "value": [
+                1794181521.697,
+                "0"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_queue_jobs",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "state": "pending"
+              },
+              "value": [
+                1794181521.697,
+                "0"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_queue_jobs",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "state": "processing"
+              },
+              "value": [
+                1794181521.697,
+                "0"
+              ]
+            }
+          ],
+          "vetnotify_retries_total": [
+            {
+              "metric": {
+                "__name__": "vetnotify_retries_total",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify"
+              },
+              "value": [
+                1794181521.684,
+                "337"
+              ]
+            }
+          ],
+          "vetnotify_sli_population": [
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_population",
+                "app_slug": "all",
+                "channel": "all",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181521.685,
+                "54"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_population",
+                "app_slug": "all",
+                "channel": "all",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "internal_5s"
+              },
+              "value": [
+                1794181521.685,
+                "34"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_population",
+                "app_slug": "agenda-veterinaria",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "internal_5s"
+              },
+              "value": [
+                1794181521.685,
+                "32"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_population",
+                "app_slug": "agenda-veterinaria",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181521.685,
+                "32"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_population",
+                "app_slug": "laboratorio-veterinario",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "internal_5s"
+              },
+              "value": [
+                1794181521.685,
+                "2"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_population",
+                "app_slug": "agenda-veterinaria",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181521.685,
+                "18"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_population",
+                "app_slug": "laboratorio-veterinario",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181521.685,
+                "2"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_population",
+                "app_slug": "laboratorio-veterinario",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181521.685,
+                "2"
+              ]
+            }
+          ],
+          "vetnotify_sli_good": [
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_good",
+                "app_slug": "all",
+                "channel": "all",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181521.686,
+                "52"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_good",
+                "app_slug": "all",
+                "channel": "all",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "internal_5s"
+              },
+              "value": [
+                1794181521.686,
+                "34"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_good",
+                "app_slug": "agenda-veterinaria",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "internal_5s"
+              },
+              "value": [
+                1794181521.686,
+                "32"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_good",
+                "app_slug": "agenda-veterinaria",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181521.686,
+                "32"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_good",
+                "app_slug": "laboratorio-veterinario",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "internal_5s"
+              },
+              "value": [
+                1794181521.686,
+                "2"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_good",
+                "app_slug": "agenda-veterinaria",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181521.686,
+                "16"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_good",
+                "app_slug": "laboratorio-veterinario",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181521.686,
+                "2"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_good",
+                "app_slug": "laboratorio-veterinario",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181521.686,
+                "2"
+              ]
+            }
+          ],
+          "vetnotify_probe_good_total": [
+            {
+              "metric": {
+                "__name__": "vetnotify_probe_good_total",
+                "environment": "dev",
+                "instance": "probe:8080",
+                "job": "outside-probe"
+              },
+              "value": [
+                1794181521.687,
+                "4"
+              ]
+            }
+          ],
+          "vetnotify_probe_started_total": [
+            {
+              "metric": {
+                "__name__": "vetnotify_probe_started_total",
+                "environment": "dev",
+                "instance": "probe:8080",
+                "job": "outside-probe"
+              },
+              "value": [
+                1794181521.702,
+                "4"
+              ]
+            }
+          ],
+          "vetnotify_api_resident_memory_bytes": [
+            {
+              "metric": {
+                "__name__": "vetnotify_api_resident_memory_bytes",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify"
+              },
+              "value": [
+                1794181521.692,
+                "103038976"
+              ]
+            }
+          ],
+          "node_memory_MemAvailable_bytes": [
+            {
+              "metric": {
+                "__name__": "node_memory_MemAvailable_bytes",
+                "instance": "node-exporter:9100",
+                "job": "node"
+              },
+              "value": [
+                1794181521.69,
+                "6304215040"
+              ]
+            }
+          ],
+          "1-avg(rate(node_cpu_seconds_total{mode=\"idle\"}[2m]))": [
+            {
+              "metric": {},
+              "value": [
+                1794181521.705,
+                "0.21126086956521806"
+              ]
+            }
+          ]
+        }
+      },
+      "degraded": {
+        "at": "2026-11-08T23:45:49.414Z",
+        "values": {
+          "vetnotify_final_2m": [
+            {
+              "metric": {
+                "__name__": "vetnotify_final_2m",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "outcome": "failed"
+              },
+              "value": [
+                1794181548.487,
+                "25"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_final_2m",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "outcome": "all"
+              },
+              "value": [
+                1794181548.487,
+                "33"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_final_2m",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "outcome": "failed"
+              },
+              "value": [
+                1794181548.487,
+                "0"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_final_2m",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "outcome": "all"
+              },
+              "value": [
+                1794181548.487,
+                "6"
+              ]
+            }
+          ],
+          "vetnotify_queue_jobs": [
+            {
+              "metric": {
+                "__name__": "vetnotify_queue_jobs",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "state": "pending"
+              },
+              "value": [
+                1794181548.593,
+                "0"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_queue_jobs",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "state": "processing"
+              },
+              "value": [
+                1794181548.593,
+                "0"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_queue_jobs",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "state": "pending"
+              },
+              "value": [
+                1794181548.593,
+                "0"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_queue_jobs",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "state": "processing"
+              },
+              "value": [
+                1794181548.593,
+                "0"
+              ]
+            }
+          ],
+          "vetnotify_retries_total": [
+            {
+              "metric": {
+                "__name__": "vetnotify_retries_total",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify"
+              },
+              "value": [
+                1794181548.589,
+                "385"
+              ]
+            }
+          ],
+          "vetnotify_sli_population": [
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_population",
+                "app_slug": "all",
+                "channel": "all",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181548.589,
+                "54"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_population",
+                "app_slug": "all",
+                "channel": "all",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "internal_5s"
+              },
+              "value": [
+                1794181548.589,
+                "35"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_population",
+                "app_slug": "agenda-veterinaria",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "internal_5s"
+              },
+              "value": [
+                1794181548.589,
+                "33"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_population",
+                "app_slug": "agenda-veterinaria",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181548.589,
+                "32"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_population",
+                "app_slug": "laboratorio-veterinario",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "internal_5s"
+              },
+              "value": [
+                1794181548.589,
+                "2"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_population",
+                "app_slug": "agenda-veterinaria",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181548.589,
+                "18"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_population",
+                "app_slug": "laboratorio-veterinario",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181548.589,
+                "2"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_population",
+                "app_slug": "laboratorio-veterinario",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181548.589,
+                "2"
+              ]
+            }
+          ],
+          "vetnotify_sli_good": [
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_good",
+                "app_slug": "all",
+                "channel": "all",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181548.595,
+                "52"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_good",
+                "app_slug": "all",
+                "channel": "all",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "internal_5s"
+              },
+              "value": [
+                1794181548.595,
+                "35"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_good",
+                "app_slug": "agenda-veterinaria",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "internal_5s"
+              },
+              "value": [
+                1794181548.595,
+                "33"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_good",
+                "app_slug": "agenda-veterinaria",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181548.595,
+                "32"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_good",
+                "app_slug": "laboratorio-veterinario",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "internal_5s"
+              },
+              "value": [
+                1794181548.595,
+                "2"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_good",
+                "app_slug": "agenda-veterinaria",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181548.595,
+                "16"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_good",
+                "app_slug": "laboratorio-veterinario",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181548.595,
+                "2"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_good",
+                "app_slug": "laboratorio-veterinario",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181548.595,
+                "2"
+              ]
+            }
+          ],
+          "vetnotify_probe_good_total": [
+            {
+              "metric": {
+                "__name__": "vetnotify_probe_good_total",
+                "environment": "dev",
+                "instance": "probe:8080",
+                "job": "outside-probe"
+              },
+              "value": [
+                1794181548.59,
+                "4"
+              ]
+            }
+          ],
+          "vetnotify_probe_started_total": [
+            {
+              "metric": {
+                "__name__": "vetnotify_probe_started_total",
+                "environment": "dev",
+                "instance": "probe:8080",
+                "job": "outside-probe"
+              },
+              "value": [
+                1794181548.591,
+                "4"
+              ]
+            }
+          ],
+          "vetnotify_api_resident_memory_bytes": [
+            {
+              "metric": {
+                "__name__": "vetnotify_api_resident_memory_bytes",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify"
+              },
+              "value": [
+                1794181548.59,
+                "104927232"
+              ]
+            }
+          ],
+          "node_memory_MemAvailable_bytes": [
+            {
+              "metric": {
+                "__name__": "node_memory_MemAvailable_bytes",
+                "instance": "node-exporter:9100",
+                "job": "node"
+              },
+              "value": [
+                1794181548.594,
+                "6318604288"
+              ]
+            }
+          ],
+          "1-avg(rate(node_cpu_seconds_total{mode=\"idle\"}[2m]))": [
+            {
+              "metric": {},
+              "value": [
+                1794181548.592,
+                "0.22999999999999843"
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "at": "2026-11-08T23:47:34.381Z",
+        "values": {
+          "vetnotify_final_2m": [
+            {
+              "metric": {
+                "__name__": "vetnotify_final_2m",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "outcome": "failed"
+              },
+              "value": [
+                1794181653.458,
+                "0"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_final_2m",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "outcome": "all"
+              },
+              "value": [
+                1794181653.458,
+                "1"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_final_2m",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "outcome": "failed"
+              },
+              "value": [
+                1794181653.458,
+                "0"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_final_2m",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "outcome": "all"
+              },
+              "value": [
+                1794181653.458,
+                "2"
+              ]
+            }
+          ],
+          "vetnotify_queue_jobs": [
+            {
+              "metric": {
+                "__name__": "vetnotify_queue_jobs",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "state": "pending"
+              },
+              "value": [
+                1794181653.558,
+                "0"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_queue_jobs",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "state": "processing"
+              },
+              "value": [
+                1794181653.558,
+                "0"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_queue_jobs",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "state": "pending"
+              },
+              "value": [
+                1794181653.558,
+                "0"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_queue_jobs",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "state": "processing"
+              },
+              "value": [
+                1794181653.558,
+                "0"
+              ]
+            }
+          ],
+          "vetnotify_retries_total": [
+            {
+              "metric": {
+                "__name__": "vetnotify_retries_total",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify"
+              },
+              "value": [
+                1794181653.557,
+                "385"
+              ]
+            }
+          ],
+          "vetnotify_sli_population": [
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_population",
+                "app_slug": "all",
+                "channel": "all",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181653.565,
+                "76"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_population",
+                "app_slug": "all",
+                "channel": "all",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "internal_5s"
+              },
+              "value": [
+                1794181653.565,
+                "33"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_population",
+                "app_slug": "agenda-veterinaria",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "internal_5s"
+              },
+              "value": [
+                1794181653.565,
+                "31"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_population",
+                "app_slug": "agenda-veterinaria",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181653.565,
+                "30"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_population",
+                "app_slug": "laboratorio-veterinario",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "internal_5s"
+              },
+              "value": [
+                1794181653.565,
+                "2"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_population",
+                "app_slug": "agenda-veterinaria",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181653.565,
+                "42"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_population",
+                "app_slug": "laboratorio-veterinario",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181653.565,
+                "2"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_population",
+                "app_slug": "laboratorio-veterinario",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181653.565,
+                "2"
+              ]
+            }
+          ],
+          "vetnotify_sli_good": [
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_good",
+                "app_slug": "all",
+                "channel": "all",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181653.565,
+                "51"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_good",
+                "app_slug": "all",
+                "channel": "all",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "internal_5s"
+              },
+              "value": [
+                1794181653.565,
+                "33"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_good",
+                "app_slug": "agenda-veterinaria",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "internal_5s"
+              },
+              "value": [
+                1794181653.565,
+                "31"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_good",
+                "app_slug": "agenda-veterinaria",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181653.565,
+                "30"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_good",
+                "app_slug": "laboratorio-veterinario",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "internal_5s"
+              },
+              "value": [
+                1794181653.565,
+                "2"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_good",
+                "app_slug": "agenda-veterinaria",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181653.565,
+                "17"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_good",
+                "app_slug": "laboratorio-veterinario",
+                "channel": "email",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181653.565,
+                "2"
+              ]
+            },
+            {
+              "metric": {
+                "__name__": "vetnotify_sli_good",
+                "app_slug": "laboratorio-veterinario",
+                "channel": "internal",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify",
+                "sli": "initial_30s"
+              },
+              "value": [
+                1794181653.565,
+                "2"
+              ]
+            }
+          ],
+          "vetnotify_probe_good_total": [
+            {
+              "metric": {
+                "__name__": "vetnotify_probe_good_total",
+                "environment": "dev",
+                "instance": "probe:8080",
+                "job": "outside-probe"
+              },
+              "value": [
+                1794181653.563,
+                "6"
+              ]
+            }
+          ],
+          "vetnotify_probe_started_total": [
+            {
+              "metric": {
+                "__name__": "vetnotify_probe_started_total",
+                "environment": "dev",
+                "instance": "probe:8080",
+                "job": "outside-probe"
+              },
+              "value": [
+                1794181653.564,
+                "6"
+              ]
+            }
+          ],
+          "vetnotify_api_resident_memory_bytes": [
+            {
+              "metric": {
+                "__name__": "vetnotify_api_resident_memory_bytes",
+                "environment": "dev",
+                "instance": "api:8080",
+                "job": "vetnotify"
+              },
+              "value": [
+                1794181653.566,
+                "101199872"
+              ]
+            }
+          ],
+          "node_memory_MemAvailable_bytes": [
+            {
+              "metric": {
+                "__name__": "node_memory_MemAvailable_bytes",
+                "instance": "node-exporter:9100",
+                "job": "node"
+              },
+              "value": [
+                1794181653.564,
+                "6306488320"
+              ]
+            }
+          ],
+          "1-avg(rate(node_cpu_seconds_total{mode=\"idle\"}[2m]))": [
+            {
+              "metric": {},
+              "value": [
+                1794181653.568,
+                "0.1030000000000002"
+              ]
+            }
+          ]
+        }
+      },
+      "firing": [
+        {
+          "labels": {
+            "alertname": "VetNotifyDeliveryDegraded",
+            "channel": "email",
+            "environment": "dev",
+            "instance": "api:8080",
+            "job": "vetnotify",
+            "severity": "warning"
+          },
+          "annotations": {
+            "summary": "Más de 20% de fallos finales del canal en los últimos 2 min"
+          },
+          "state": "firing",
+          "activeAt": "2026-11-08T23:45:32.620046737Z",
+          "value": "7.575757575757576e-01"
+        }
+      ],
+      "resolvedAt": "2026-11-08T23:47:34.381Z",
+      "failed": [
+        "b82dc15f-89cb-458e-8969-357f4c2f0497",
+        "59b39591-9693-474b-8808-c105f668cb0c",
+        "4ac23379-de4d-49b9-ad56-45f3cdb8c7f7",
+        "5a3cc297-1a75-443a-a34e-03e54e0e06d0",
+        "c486b3dd-18ea-455c-9cda-1cabbb2233cf",
+        "07ae5fd7-7e2d-4e94-a59f-f7bb54ea0fb7",
+        "a0a64a0b-1b48-411c-87e9-4577ccd30171",
+        "e8fcce34-c21e-4354-8782-7900e4b4ad1b",
+        "d0714e04-750d-4839-a136-07e32c46b228",
+        "bf99602d-548c-47f6-9904-bd84bb10ec2b",
+        "da1b8e52-c20c-47e5-a0c9-01d5ac43b255",
+        "40920da1-f6d7-442a-938d-0b3f4b3a8c33",
+        "e7cc12a8-87d9-4ebe-a454-7765c1bfbdc6",
+        "625fe8b8-2398-4076-97bf-aa39c8403456",
+        "d788b3a4-1ddb-4d03-a117-9ba4bfc47e00",
+        "72ff3e4a-9d5e-4bd6-bf34-a9f926b8788a",
+        "db178b87-2e34-43a3-9b5a-82f156b2744d",
+        "eb600f9b-305a-48af-85e7-beeaed7d870b",
+        "1cd46e77-245c-466e-913d-eb867e2b5690",
+        "60d88fde-9208-4904-94e7-3fb8e6edcd51",
+        "9f631b6c-639b-431e-922f-e8d12eb7bf24",
+        "356f4374-3f59-43f4-9344-ca52fb297ce9",
+        "5d45d0a3-af78-490d-bba2-638384e4e65a",
+        "96e5cf5a-2c91-4890-8529-30074721dc79"
+      ],
+      "baselineId": "28576cdb-8fa6-4a52-b9c5-e3db99405a94",
+      "inFlight": "46438d28-e038-43ad-a85e-3f67bbb49244",
+      "afterId": "4285c7f5-0aca-4019-a46f-c58af2e2a1c5",
+      "manualDerivedId": "a01b12a2-ff9a-440d-a353-7a18d566c97c",
+      "chosen": {
+        "id": "b82dc15f-89cb-458e-8969-357f4c2f0497",
+        "correlationId": "5daf56e0-a830-46bf-ade6-110aebfafb76",
+        "traceId": "1e66a472fcd63828972596ebb8a713a6"
+      },
+      "timeline": [
+        {
+          "from_state": null,
+          "to_state": "accepted",
+          "at": "2026-11-08T23:45:22.020Z",
+          "reason": "durable_acceptance",
+          "actor": "agenda-veterinaria",
+          "correlation_id": "5daf56e0-a830-46bf-ade6-110aebfafb76"
+        },
+        {
+          "from_state": "accepted",
+          "to_state": "pending",
+          "at": "2026-11-08T23:45:22.021Z",
+          "reason": "job_queued",
+          "actor": "api",
+          "correlation_id": "5daf56e0-a830-46bf-ade6-110aebfafb76"
+        },
+        {
+          "from_state": "pending",
+          "to_state": "processing",
+          "at": "2026-11-08T23:45:22.114Z",
+          "reason": "attempt_claimed",
+          "actor": "worker-email-c8cbcb997-5s7xn-email",
+          "correlation_id": "5daf56e0-a830-46bf-ade6-110aebfafb76"
+        },
+        {
+          "from_state": "processing",
+          "to_state": "pending",
+          "at": "2026-11-08T23:45:22.130Z",
+          "reason": "retry_scheduled",
+          "actor": "worker-email-c8cbcb997-5s7xn-email",
+          "correlation_id": "5daf56e0-a830-46bf-ade6-110aebfafb76"
+        },
+        {
+          "from_state": "pending",
+          "to_state": "processing",
+          "at": "2026-11-08T23:45:24.205Z",
+          "reason": "attempt_claimed",
+          "actor": "worker-email-c8cbcb997-5s7xn-email",
+          "correlation_id": "5daf56e0-a830-46bf-ade6-110aebfafb76"
+        },
+        {
+          "from_state": "processing",
+          "to_state": "pending",
+          "at": "2026-11-08T23:45:24.215Z",
+          "reason": "retry_scheduled",
+          "actor": "worker-email-c8cbcb997-5s7xn-email",
+          "correlation_id": "5daf56e0-a830-46bf-ade6-110aebfafb76"
+        },
+        {
+          "from_state": "pending",
+          "to_state": "processing",
+          "at": "2026-11-08T23:45:28.266Z",
+          "reason": "attempt_claimed",
+          "actor": "worker-email-c8cbcb997-5s7xn-email",
+          "correlation_id": "5daf56e0-a830-46bf-ade6-110aebfafb76"
+        },
+        {
+          "from_state": "processing",
+          "to_state": "failed",
+          "at": "2026-11-08T23:45:28.277Z",
+          "reason": "provider_http_503",
+          "actor": "worker-email-c8cbcb997-5s7xn-email",
+          "correlation_id": "5daf56e0-a830-46bf-ade6-110aebfafb76"
+        }
+      ],
+      "tries": [
+        {
+          "id": "4406e61f-362d-45c0-b901-33fddd2f1284",
+          "number": 1,
+          "worker_id": "worker-email-c8cbcb997-5s7xn-email",
+          "started_at": "2026-11-08T23:45:22.113Z",
+          "finished_at": "2026-11-08T23:45:22.130Z",
+          "duration_ms": 16.91,
+          "outcome": "transient",
+          "code": "provider_http_503",
+          "receipt_id": null,
+          "trace_id": "1e66a472fcd63828972596ebb8a713a6",
+          "span_id": "90631baec71f5c17"
+        },
+        {
+          "id": "858c2f4b-8c6f-45b3-99f4-87277b20f791",
+          "number": 2,
+          "worker_id": "worker-email-c8cbcb997-5s7xn-email",
+          "started_at": "2026-11-08T23:45:24.204Z",
+          "finished_at": "2026-11-08T23:45:24.215Z",
+          "duration_ms": 10.43,
+          "outcome": "transient",
+          "code": "provider_http_503",
+          "receipt_id": null,
+          "trace_id": "1e66a472fcd63828972596ebb8a713a6",
+          "span_id": "44a926a6433d6528"
+        },
+        {
+          "id": "81bd8b89-ebef-4d98-87b4-42cee719825f",
+          "number": 3,
+          "worker_id": "worker-email-c8cbcb997-5s7xn-email",
+          "started_at": "2026-11-08T23:45:28.266Z",
+          "finished_at": "2026-11-08T23:45:28.276Z",
+          "duration_ms": 10.52,
+          "outcome": "transient",
+          "code": "provider_http_503",
+          "receipt_id": null,
+          "trace_id": "1e66a472fcd63828972596ebb8a713a6",
+          "span_id": "ecf92f0cbb5a5a2d"
+        }
+      ],
+      "provider": {
+        "notification_id": "b82dc15f-89cb-458e-8969-357f4c2f0497",
+        "calls": 3,
+        "receipt_id": null,
+        "accepted_at": null,
+        "history": [
+          {
+            "call_no": 1,
+            "mode": "always_503",
+            "result": "temporary_unavailable",
+            "at": "2026-11-08T23:45:22.123475+00:00"
+          },
+          {
+            "call_no": 2,
+            "mode": "always_503",
+            "result": "temporary_unavailable",
+            "at": "2026-11-08T23:45:24.21151+00:00"
+          },
+          {
+            "call_no": 3,
+            "mode": "always_503",
+            "result": "temporary_unavailable",
+            "at": "2026-11-08T23:45:28.273177+00:00"
+          }
+        ]
+      },
+      "logs": [
+        {
+          "level": 30,
+          "time": "2026-11-08T23:45:21.045Z",
+          "service": "vetnotify-api",
+          "environment": "dev",
+          "trace_id": "9692ae010a3531a3f5dbc6d200e719fe",
+          "span_id": "db07da8a4d3be211",
+          "operation": "acceptance",
+          "result": "committed",
+          "transitions": [
+            "accepted",
+            "pending"
+          ],
+          "notification_id": "28576cdb-8fa6-4a52-b9c5-e3db99405a94",
+          "correlation_id": "64e16550-b0b0-4df2-9ef2-286186e692f6",
+          "application": "agenda-veterinaria",
+          "channel": "email",
+          "msg": "Recepción durable"
+        },
+        {
+          "level": 30,
+          "time": "2026-11-08T23:45:21.096Z",
+          "service": "vetnotify-worker-email",
+          "environment": "dev",
+          "notification_id": "28576cdb-8fa6-4a52-b9c5-e3db99405a94",
+          "attempt_id": "4fd40bfa-2f70-40c8-b167-90e580b7159c",
+          "number": 1,
+          "application": "agenda-veterinaria",
+          "channel": "email",
+          "correlation_id": "64e16550-b0b0-4df2-9ef2-286186e692f6",
+          "trace_id": "9692ae010a3531a3f5dbc6d200e719fe",
+          "span_id": "2159d8d902ea3e6e",
+          "operation": "attempt_claimed",
+          "result": "processing"
+        },
+        {
+          "level": 30,
+          "time": "2026-11-08T23:45:21.186Z",
+          "service": "vetnotify-email-simulator",
+          "environment": "dev",
+          "trace_id": "9692ae010a3531a3f5dbc6d200e719fe",
+          "span_id": "6e63833acd07cf10",
+          "operation": "simulator_delivery",
+          "result": "accepted",
+          "notification_id": "28576cdb-8fa6-4a52-b9c5-e3db99405a94",
+          "correlation_id": "64e16550-b0b0-4df2-9ef2-286186e692f6",
+          "call": 1,
+          "receipt_id": "f714200e-b971-4488-a8c2-d3023fe73cc5"
+        },
+        {
+          "level": 30,
+          "time": "2026-11-08T23:45:21.262Z",
+          "service": "vetnotify-worker-email",
+          "environment": "dev",
+          "notification_id": "28576cdb-8fa6-4a52-b9c5-e3db99405a94",
+          "attempt_id": "4fd40bfa-2f70-40c8-b167-90e580b7159c",
+          "number": 1,
+          "application": "agenda-veterinaria",
+          "channel": "email",
+          "correlation_id": "64e16550-b0b0-4df2-9ef2-286186e692f6",
+          "trace_id": "9692ae010a3531a3f5dbc6d200e719fe",
+          "span_id": "2159d8d902ea3e6e",
+          "operation": "attempt_finished",
+          "result": "delivered",
+          "outcome": "delivered",
+          "code": "provider_accepted",
+          "receipt_id": "f714200e-b971-4488-a8c2-d3023fe73cc5"
+        },
+        {
+          "level": 30,
+          "time": "2026-11-08T23:45:22.025Z",
+          "service": "vetnotify-api",
+          "environment": "dev",
+          "trace_id": "1e66a472fcd63828972596ebb8a713a6",
+          "span_id": "d1932c49f6b12e4f",
+          "operation": "acceptance",
+          "result": "committed",
+          "transitions": [
+            "accepted",
+            "pending"
+          ],
+          "notification_id": "b82dc15f-89cb-458e-8969-357f4c2f0497",
+          "correlation_id": "5daf56e0-a830-46bf-ade6-110aebfafb76",
+          "application": "agenda-veterinaria",
+          "channel": "email",
+          "msg": "Recepción durable"
+        },
+        {
+          "level": 30,
+          "time": "2026-11-08T23:45:22.117Z",
+          "service": "vetnotify-worker-email",
+          "environment": "dev",
+          "notification_id": "b82dc15f-89cb-458e-8969-357f4c2f0497",
+          "attempt_id": "4406e61f-362d-45c0-b901-33fddd2f1284",
+          "number": 1,
+          "application": "agenda-veterinaria",
+          "channel": "email",
+          "correlation_id": "5daf56e0-a830-46bf-ade6-110aebfafb76",
+          "trace_id": "1e66a472fcd63828972596ebb8a713a6",
+          "span_id": "90631baec71f5c17",
+          "operation": "attempt_claimed",
+          "result": "processing"
+        },
+        {
+          "level": 30,
+          "time": "2026-11-08T23:45:22.126Z",
+          "service": "vetnotify-email-simulator",
+          "environment": "dev",
+          "trace_id": "1e66a472fcd63828972596ebb8a713a6",
+          "span_id": "90f712675928c609",
+          "operation": "simulator_delivery",
+          "result": "temporary_unavailable",
+          "notification_id": "b82dc15f-89cb-458e-8969-357f4c2f0497",
+          "correlation_id": "5daf56e0-a830-46bf-ade6-110aebfafb76",
+          "call": 1,
+          "receipt_id": null
+        },
+        {
+          "level": 30,
+          "time": "2026-11-08T23:45:22.133Z",
+          "service": "vetnotify-worker-email",
+          "environment": "dev",
+          "notification_id": "b82dc15f-89cb-458e-8969-357f4c2f0497",
+          "attempt_id": "4406e61f-362d-45c0-b901-33fddd2f1284",
+          "number": 1,
+          "application": "agenda-veterinaria",
+          "channel": "email",
+          "correlation_id": "5daf56e0-a830-46bf-ade6-110aebfafb76",
+          "trace_id": "1e66a472fcd63828972596ebb8a713a6",
+          "span_id": "90631baec71f5c17",
+          "operation": "attempt_finished",
+          "result": "pending",
+          "outcome": "transient",
+          "code": "provider_http_503"
+        },
+        {
+          "level": 30,
+          "time": "2026-11-08T23:45:22.896Z",
+          "service": "vetnotify-api",
+          "environment": "dev",
+          "trace_id": "b272ba70a439e9c238e5485ded225ae3",
+          "span_id": "7d2d8c05f701c232",
+          "operation": "acceptance",
+          "result": "committed",
+          "transitions": [
+            "accepted",
+            "pending"
+          ],
+          "notification_id": "46438d28-e038-43ad-a85e-3f67bbb49244",
+          "correlation_id": "f18e72f0-2fc4-4640-8fea-4dab432c426f",
+          "application": "agenda-veterinaria",
+          "channel": "internal",
+          "msg": "Recepción durable"
+        },
+        {
+          "level": 30,
+          "time": "2026-11-08T23:45:23.026Z",
+          "service": "vetnotify-worker-internal",
+          "environment": "dev",
+          "notification_id": "46438d28-e038-43ad-a85e-3f67bbb49244",
+          "attempt_id": "c4ba7088-501c-4369-941c-6661db353087",
+          "number": 1,
+          "application": "agenda-veterinaria",
+          "channel": "internal",
+          "correlation_id": "f18e72f0-2fc4-4640-8fea-4dab432c426f",
+          "trace_id": "b272ba70a439e9c238e5485ded225ae3",
+          "span_id": "628a74bdfef0cf9e",
+          "operation": "attempt_claimed",
+          "result": "processing"
+        },
+        {
+          "level": 30,
+          "time": "2026-11-08T23:45:23.030Z",
+          "service": "vetnotify-worker-internal",
+          "environment": "dev",
+          "notification_id": "46438d28-e038-43ad-a85e-3f67bbb49244",
+          "attempt_id": "c4ba7088-501c-4369-941c-6661db353087",
+          "number": 1,
+          "application": "agenda-veterinaria",
+          "channel": "internal",
+          "correlation_id": "f18e72f0-2fc4-4640-8fea-4dab432c426f",
+          "trace_id": "b272ba70a439e9c238e5485ded225ae3",
+          "span_id": "628a74bdfef0cf9e",
+          "operation": "attempt_finished",
+          "result": "delivered",
+          "outcome": "delivered",
+          "code": "inbox_persisted"
+        },
+        {
+          "level": 30,
+          "time": "2026-11-08T23:45:24.207Z",
+          "service": "vetnotify-worker-email",
+          "environment": "dev",
+          "notification_id": "b82dc15f-89cb-458e-8969-357f4c2f0497",
+          "attempt_id": "858c2f4b-8c6f-45b3-99f4-87277b20f791",
+          "number": 2,
+          "application": "agenda-veterinaria",
+          "channel": "email",
+          "correlation_id": "5daf56e0-a830-46bf-ade6-110aebfafb76",
+          "trace_id": "1e66a472fcd63828972596ebb8a713a6",
+          "span_id": "44a926a6433d6528",
+          "operation": "attempt_claimed",
+          "result": "processing"
+        },
+        {
+          "level": 30,
+          "time": "2026-11-08T23:45:24.213Z",
+          "service": "vetnotify-email-simulator",
+          "environment": "dev",
+          "trace_id": "1e66a472fcd63828972596ebb8a713a6",
+          "span_id": "5d7838eee604410a",
+          "operation": "simulator_delivery",
+          "result": "temporary_unavailable",
+          "notification_id": "b82dc15f-89cb-458e-8969-357f4c2f0497",
+          "correlation_id": "5daf56e0-a830-46bf-ade6-110aebfafb76",
+          "call": 2,
+          "receipt_id": null
+        },
+        {
+          "level": 30,
+          "time": "2026-11-08T23:45:24.217Z",
+          "service": "vetnotify-worker-email",
+          "environment": "dev",
+          "notification_id": "b82dc15f-89cb-458e-8969-357f4c2f0497",
+          "attempt_id": "858c2f4b-8c6f-45b3-99f4-87277b20f791",
+          "number": 2,
+          "application": "agenda-veterinaria",
+          "channel": "email",
+          "correlation_id": "5daf56e0-a830-46bf-ade6-110aebfafb76",
+          "trace_id": "1e66a472fcd63828972596ebb8a713a6",
+          "span_id": "44a926a6433d6528",
+          "operation": "attempt_finished",
+          "result": "pending",
+          "outcome": "transient",
+          "code": "provider_http_503"
+        },
+        {
+          "level": 30,
+          "time": "2026-11-08T23:45:28.269Z",
+          "service": "vetnotify-worker-email",
+          "environment": "dev",
+          "notification_id": "b82dc15f-89cb-458e-8969-357f4c2f0497",
+          "attempt_id": "81bd8b89-ebef-4d98-87b4-42cee719825f",
+          "number": 3,
+          "application": "agenda-veterinaria",
+          "channel": "email",
+          "correlation_id": "5daf56e0-a830-46bf-ade6-110aebfafb76",
+          "trace_id": "1e66a472fcd63828972596ebb8a713a6",
+          "span_id": "ecf92f0cbb5a5a2d",
+          "operation": "attempt_claimed",
+          "result": "processing"
+        },
+        {
+          "level": 30,
+          "time": "2026-11-08T23:45:28.275Z",
+          "service": "vetnotify-email-simulator",
+          "environment": "dev",
+          "trace_id": "1e66a472fcd63828972596ebb8a713a6",
+          "span_id": "00e19986cf986de0",
+          "operation": "simulator_delivery",
+          "result": "temporary_unavailable",
+          "notification_id": "b82dc15f-89cb-458e-8969-357f4c2f0497",
+          "correlation_id": "5daf56e0-a830-46bf-ade6-110aebfafb76",
+          "call": 3,
+          "receipt_id": null
+        },
+        {
+          "level": 30,
+          "time": "2026-11-08T23:45:28.279Z",
+          "service": "vetnotify-worker-email",
+          "environment": "dev",
+          "notification_id": "b82dc15f-89cb-458e-8969-357f4c2f0497",
+          "attempt_id": "81bd8b89-ebef-4d98-87b4-42cee719825f",
+          "number": 3,
+          "application": "agenda-veterinaria",
+          "channel": "email",
+          "correlation_id": "5daf56e0-a830-46bf-ade6-110aebfafb76",
+          "trace_id": "1e66a472fcd63828972596ebb8a713a6",
+          "span_id": "ecf92f0cbb5a5a2d",
+          "operation": "attempt_finished",
+          "result": "failed",
+          "outcome": "transient",
+          "code": "provider_http_503"
+        },
+        {
+          "level": 30,
+          "time": "2026-11-08T23:45:49.413Z",
+          "service": "vetnotify-api",
+          "environment": "dev",
+          "trace_id": "694e8d4935beffd918664089a81f530b",
+          "span_id": "7db9cf50b02d9e41",
+          "operation": "acceptance",
+          "result": "committed",
+          "transitions": [
+            "accepted",
+            "pending"
+          ],
+          "notification_id": "4285c7f5-0aca-4019-a46f-c58af2e2a1c5",
+          "correlation_id": "50820847-1f6b-4cae-8e66-3c5404b11263",
+          "application": "agenda-veterinaria",
+          "channel": "email",
+          "msg": "Recepción durable"
+        },
+        {
+          "level": 30,
+          "time": "2026-11-08T23:45:49.553Z",
+          "service": "vetnotify-worker-email",
+          "environment": "dev",
+          "notification_id": "4285c7f5-0aca-4019-a46f-c58af2e2a1c5",
+          "attempt_id": "82c60f51-7de3-4ca5-bb8f-a6541bfe46ee",
+          "number": 1,
+          "application": "agenda-veterinaria",
+          "channel": "email",
+          "correlation_id": "50820847-1f6b-4cae-8e66-3c5404b11263",
+          "trace_id": "694e8d4935beffd918664089a81f530b",
+          "span_id": "6c6952e49761cbb0",
+          "operation": "attempt_claimed",
+          "result": "processing"
+        },
+        {
+          "level": 30,
+          "time": "2026-11-08T23:45:49.559Z",
+          "service": "vetnotify-email-simulator",
+          "environment": "dev",
+          "trace_id": "694e8d4935beffd918664089a81f530b",
+          "span_id": "a0178274475b99f2",
+          "operation": "simulator_delivery",
+          "result": "accepted",
+          "notification_id": "4285c7f5-0aca-4019-a46f-c58af2e2a1c5",
+          "correlation_id": "50820847-1f6b-4cae-8e66-3c5404b11263",
+          "call": 1,
+          "receipt_id": "229954d0-0a09-4bd0-85ca-546471807d3d"
+        },
+        {
+          "level": 30,
+          "time": "2026-11-08T23:45:49.564Z",
+          "service": "vetnotify-worker-email",
+          "environment": "dev",
+          "notification_id": "4285c7f5-0aca-4019-a46f-c58af2e2a1c5",
+          "attempt_id": "82c60f51-7de3-4ca5-bb8f-a6541bfe46ee",
+          "number": 1,
+          "application": "agenda-veterinaria",
+          "channel": "email",
+          "correlation_id": "50820847-1f6b-4cae-8e66-3c5404b11263",
+          "trace_id": "694e8d4935beffd918664089a81f530b",
+          "span_id": "6c6952e49761cbb0",
+          "operation": "attempt_finished",
+          "result": "delivered",
+          "outcome": "delivered",
+          "code": "provider_accepted",
+          "receipt_id": "229954d0-0a09-4bd0-85ca-546471807d3d"
+        }
+      ],
+      "trace": {
+        "traceId": "1e66a472fcd63828972596ebb8a713a6",
+        "services": [
+          "vetnotify-api",
+          "vetnotify-worker-email",
+          "vetnotify-email-simulator"
+        ],
+        "spans": [
+          {
+            "name": "notification.accept",
+            "id": "d1932c49f6b12e4f",
+            "at": 1794181522017000,
+            "durationUs": 7918,
+            "service": "vetnotify-api",
+            "parents": []
+          },
+          {
+            "name": "email.provider.send",
+            "id": "867923a2794b8470",
+            "at": 1794181522117000,
+            "durationUs": 11728,
+            "service": "vetnotify-worker-email",
+            "parents": [
+              "90631baec71f5c17"
+            ]
+          },
+          {
+            "name": "notification.deliver",
+            "id": "90631baec71f5c17",
+            "at": 1794181522117000,
+            "durationUs": 16254,
+            "service": "vetnotify-worker-email",
+            "parents": [
+              "d1932c49f6b12e4f"
+            ]
+          },
+          {
+            "name": "notification.deliver",
+            "id": "44a926a6433d6528",
+            "at": 1794181524207000,
+            "durationUs": 9658,
+            "service": "vetnotify-worker-email",
+            "parents": [
+              "d1932c49f6b12e4f"
+            ]
+          },
+          {
+            "name": "email.provider.send",
+            "id": "0199280c4f24801b",
+            "at": 1794181524208000,
+            "durationUs": 6193,
+            "service": "vetnotify-worker-email",
+            "parents": [
+              "44a926a6433d6528"
+            ]
+          },
+          {
+            "name": "email.provider.send",
+            "id": "38343edf99869835",
+            "at": 1794181528269000,
+            "durationUs": 6520,
+            "service": "vetnotify-worker-email",
+            "parents": [
+              "ecf92f0cbb5a5a2d"
+            ]
+          },
+          {
+            "name": "notification.deliver",
+            "id": "ecf92f0cbb5a5a2d",
+            "at": 1794181528269000,
+            "durationUs": 10100,
+            "service": "vetnotify-worker-email",
+            "parents": [
+              "d1932c49f6b12e4f"
+            ]
+          },
+          {
+            "name": "email.simulator.accept",
+            "id": "90f712675928c609",
+            "at": 1794181522120000,
+            "durationUs": 6234,
+            "service": "vetnotify-email-simulator",
+            "parents": [
+              "867923a2794b8470"
+            ]
+          },
+          {
+            "name": "email.simulator.accept",
+            "id": "5d7838eee604410a",
+            "at": 1794181524209000,
+            "durationUs": 4854,
+            "service": "vetnotify-email-simulator",
+            "parents": [
+              "0199280c4f24801b"
+            ]
+          },
+          {
+            "name": "email.simulator.accept",
+            "id": "00e19986cf986de0",
+            "at": 1794181528270000,
+            "durationUs": 5485,
+            "service": "vetnotify-email-simulator",
+            "parents": [
+              "38343edf99869835"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Seguridad y acceso cruzado",
+      "state": "pasó",
+      "start": "2026-11-08T23:47:35.196Z",
+      "end": "2026-11-08T23:47:38.881Z",
+      "summary": "401/403/404, CSRF, origen, revocación y cero escrituras por entradas inválidas.",
+      "id": "10e19316-3cdb-4231-b14f-2c5a66bcaf62"
+    },
+    {
+      "name": "Reproceso y resultado ambiguo",
+      "state": "pasó",
+      "start": "2026-11-08T23:47:38.881Z",
+      "end": "2026-11-08T23:47:53.788Z",
+      "summary": "Timeout ambiguo deduplicado por simulador; reproceso autorizado crea una sola derivada auditada.",
+      "id": "6634a16c-129c-4e62-b3bc-90fca9494b0a",
+      "original": "f704dddf-4172-4aee-9cd9-3ef56af95226",
+      "ambiguous": {
+        "id": "3f19cfc3-6388-4d02-891f-d94f6069a3da",
+        "tries": [
+          {
+            "id": "49effdff-ae5e-4983-aafc-4b6d7fc62df4",
+            "number": 1,
+            "worker_id": "worker-email-c8cbcb997-5s7xn-email",
+            "started_at": "2026-11-08T23:47:38.385Z",
+            "finished_at": "2026-11-08T23:47:40.391Z",
+            "duration_ms": 2006.64,
+            "outcome": "uncertain",
+            "code": "provider_timeout",
+            "receipt_id": null,
+            "trace_id": "145395f11980945920f9f05a248e663b",
+            "span_id": "0e282ad813aab0ab"
+          },
+          {
+            "id": "ef0db488-2113-4f1c-80d9-1f80239bc272",
+            "number": 2,
+            "worker_id": "worker-email-c8cbcb997-5s7xn-email",
+            "started_at": "2026-11-08T23:47:42.497Z",
+            "finished_at": "2026-11-08T23:47:42.508Z",
+            "duration_ms": 10.4,
+            "outcome": "delivered",
+            "code": "provider_accepted",
+            "receipt_id": "6e81cbac-ec67-4bf9-8689-bc8bb2fca138",
+            "trace_id": "145395f11980945920f9f05a248e663b",
+            "span_id": "6894838e9bf3b244"
+          }
+        ],
+        "provider": {
+          "notification_id": "3f19cfc3-6388-4d02-891f-d94f6069a3da",
+          "calls": 2,
+          "receipt_id": "6e81cbac-ec67-4bf9-8689-bc8bb2fca138",
+          "accepted_at": "2026-11-08T23:47:38.390Z",
+          "history": [
+            {
+              "call_no": 1,
+              "mode": "accepted_then_timeout",
+              "result": "accepted_response_delayed",
+              "at": "2026-11-08T23:47:38.391216+00:00"
+            },
+            {
+              "call_no": 2,
+              "mode": "accepted_then_timeout",
+              "result": "deduplicated",
+              "at": "2026-11-08T23:47:42.505013+00:00"
+            }
+          ]
+        }
+      },
+      "chain": [
+        {
+          "id": "f704dddf-4172-4aee-9cd9-3ef56af95226",
+          "state": "failed",
+          "parent_notification_id": null
+        },
+        {
+          "id": "6634a16c-129c-4e62-b3bc-90fca9494b0a",
+          "state": "delivered",
+          "parent_notification_id": "f704dddf-4172-4aee-9cd9-3ef56af95226"
+        }
+      ]
+    },
+    {
+      "name": "Commit sin respuesta y cohorte madura",
+      "state": "pasó",
+      "start": "2026-11-08T23:47:53.789Z",
+      "end": "2026-11-08T23:47:55.928Z",
+      "summary": "Replay recuperó el ID confirmado; un pendiente y un fallo originales siguen en la cohorte.",
+      "transport": {
+        "id": "f636e1dc-eb58-430f-a72b-098402df66bc",
+        "location": "/api/v1/notifications/f636e1dc-eb58-430f-a72b-098402df66bc"
+      },
+      "cohort": {
+        "population": 3,
+        "good": 1,
+        "bad": 2,
+        "errorBudget": 0
+      }
+    }
+  ],
+  "version": {
+    "name": "VetNotify",
+    "version": "1.0.0",
+    "commit": "92e5a9af8cfd7c1c5c7d409fd77c126e6bb7c30b",
+    "image": "ghcr.io/cristyags/vetnotify-backend@sha256:bceee49a3f1dfeb5c2d7ecb5a81d6039cb7ddf2142c9f37cecc93e7dab00e0d9",
+    "environment": "dev"
+  },
+  "end": "2026-11-08T23:47:55.929Z"
+}

@@ -1,0 +1,79 @@
+<!doctype html><html lang="es"><meta charset="UTF-8"><title>VetNotify · Defensa</title><style>
+@page{size:1280px 720px;margin:0}
+*{box-sizing:border-box}
+body{margin:0;background:#e4ecee;color:#16323a;font-family:"Segoe UI",Arial,sans-serif}
+.slide{width:1280px;height:720px;padding:58px 72px 47px;margin:24px auto;display:flex;flex-direction:column;background:#fff;position:relative}
+.slide::before{content:"";height:7px;width:100%;position:absolute;top:0;left:0;background:#0f766e}
+.slide .kicker{color:#17675d;font-size:16px;font-weight:740;letter-spacing:.12em;margin:0 0 16px}
+h1{font-size:49px;letter-spacing:-.048em;line-height:1.08;margin:0 0 30px}
+h2{font-size:28px;letter-spacing:-.028em;margin:0 0 11px}
+h2:not(:first-child){margin-top:28px}
+p,li,td,th{font-size:23px;line-height:1.42}
+p{margin:0 0 18px}
+ul{margin:0;padding-left:24px}
+li{padding-left:4px;margin-bottom:14px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.split>div{min-width:0}
+table{width:100%;border-collapse:collapse;margin-top:6px}
+th{text-align:left;background:#e8f5f1;color:#125e55;font-weight:700}
+td,th{border-bottom:1px solid #dbe6e8;padding:12px 17px;vertical-align:top}
+td:first-child{font-weight:670;min-width:240px}
+.source{font-size:17px;color:#52636b;border-top:1px solid #dde5e8;padding-top:13px;margin-top:21px;line-height:1.35}
+.diagram{display:block;width:100%;height:407px;object-fit:contain;object-position:left center}
+.evidence-image{width:100%;max-height:370px;object-fit:contain;object-position:top left;border:1px solid #dde5e8}
+.signals-grid{display:grid;grid-template-columns:350px 1fr;gap:26px;align-items:start}
+.signals-crop{height:345px;overflow:hidden;border-radius:8px;background:#141619}
+.signals-crop img{display:block;width:100%;height:auto}
+.foot{position:absolute;bottom:24px;left:72px;right:72px;display:flex;justify-content:space-between;font-size:14px;color:#52636b}
+.cover{background:#103e42;color:#fff;justify-content:center}
+.cover::before{height:0}
+.cover .kicker,.cover .foot{color:#b6e2d9}
+.cover h1{font-size:116px;margin-bottom:18px;font-weight:670;letter-spacing:-.065em}
+.cover p{font-size:35px;color:#e8f5f1}
+.cover .course{font-size:19px;color:#b6e2d9;margin-top:27px}
+@media print{body{background:#fff}.slide{margin:0;break-after:page;print-color-adjust:exact;-webkit-print-color-adjust:exact}.slide:last-child{break-after:auto}}
+</style><body><section class="slide cover" aria-label="Diapositiva 1">
+<div class="kicker">PROYECTO DE CÁTEDRA</div><h1>VetNotify</h1><div><p>Notificaciones multicanal para operaciones veterinarias</p><p class="course">DevOps y Métricas de Software · Escenario 1</p></div>
+<div class="foot"><span>VetNotify</span><span>01 / 15</span></div></section>
+<section class="slide" aria-label="Diapositiva 2">
+<div class="kicker">01 · DOMINIO</div><h1>Dos aplicaciones, dos canales</h1><div><div class="split"><div><h2>Agenda Veterinaria</h2><p>Confirma, reprograma o cancela citas.</p><h2>Laboratorio Veterinario</h2><p>Informa que llegó una muestra o que hay un resultado ficticio.</p></div><div><h2>Correo de prueba</h2><p>El simulador guarda un recibo verificable.</p><h2>Bandeja interna</h2><p>El destinatario consulta sus avisos persistentes.</p></div></div><div class="source">Cada aplicación usa una credencial de máquina propia.</div></div>
+<div class="foot"><span>VetNotify</span><span>02 / 15</span></div></section>
+<section class="slide" aria-label="Diapositiva 3">
+<div class="kicker">02 · ARQUITECTURA</div><h1>Componentes y límites de confianza</h1><div><img class="diagram" src="../docs/diagrams/arquitectura.svg" alt="Arquitectura editable en Mermaid"><div class="source">Caddy y gateway separan la API de la web. El PVC conserva PostgreSQL tras recrear el Pod.</div></div>
+<div class="foot"><span>VetNotify</span><span>03 / 15</span></div></section>
+<section class="slide" aria-label="Diapositiva 4">
+<div class="kicker">03 · CONTRATO</div><h1>Aceptación durable</h1><div><table><thead><tr><th>Paso</th><th>Registro</th></tr></thead><tbody><tr><td>Identidad</td><td>La clave de máquina identifica el origen.</td></tr><tr><td>Transacción</td><td>Inserta notificación, trabajo e historial accepted/pending.</td></tr><tr><td>Respuesta</td><td>HTTP 202, Location e ID después del commit.</td></tr><tr><td>Efecto</td><td>Un worker registra el recibo de correo o la entrada de bandeja.</td></tr></tbody></table><div class="source">Una falla de PostgreSQL produce 503 en la API directa.</div></div>
+<div class="foot"><span>VetNotify</span><span>04 / 15</span></div></section>
+<section class="slide" aria-label="Diapositiva 5">
+<div class="kicker">04 · CONSISTENCIA</div><h1>Idempotencia y reintentos</h1><div><div class="split"><div><h2>Recepción</h2><ul><li>Alcance por aplicación, canal y clave.</li><li>Un replay devuelve el ID original.</li><li>Payload distinto con la misma clave responde 409.</li><li>TTL de 24 h desde la primera aceptación.</li></ul></div><div><h2>Entrega</h2><ul><li>Máximo de tres intentos por ID.</li><li>Espera persistida de 2 s y luego 4 s.</li><li>HTTP 503 vuelve a la cola.</li><li>Rechazo permanente termina tras un intento.</li></ul></div></div></div>
+<div class="foot"><span>VetNotify</span><span>05 / 15</span></div></section>
+<section class="slide" aria-label="Diapositiva 6">
+<div class="kicker">05 · RECUPERACIÓN</div><h1>Leases y reproceso explícito</h1><div><div class="split"><div><h2>Caída del worker</h2><p>El intento ya tiene número y token en PostgreSQL.</p><p>Al vencer el lease, otro worker conserva el contador y recupera la operación.</p></div><div><h2>Orden del operador</h2><p>Una derivada recibe su propio ID, trabajo y auditoría.</p><p>La original conserva el fallo y el historial para el análisis.</p></div></div><div class="source">El token vencido pierde el derecho de aplicar resultados.</div></div>
+<div class="foot"><span>VetNotify</span><span>06 / 15</span></div></section>
+<section class="slide" aria-label="Diapositiva 7">
+<div class="kicker">06 · INFRAESTRUCTURA</div><h1>Terraform y K3s en Azure</h1><div><table><thead><tr><th>Decisión</th><th>Configuración</th></tr></thead><tbody><tr><td>Cómputo</td><td>VM B2as v2, 2 vCPU y 8 GiB en México Central.</td></tr><tr><td>Estado</td><td>Blob privado con OAuth, lease y versiones.</td></tr><tr><td>Arranque</td><td>Cloud-init instala K3s y Caddy con versiones fijadas.</td></tr><tr><td>Persistencia</td><td>PVC local-path para PostgreSQL, Prometheus, Grafana y Jaeger.</td></tr></tbody></table></div>
+<div class="foot"><span>VetNotify</span><span>07 / 15</span></div></section>
+<section class="slide" aria-label="Diapositiva 8">
+<div class="kicker">07 · CI/CD</div><h1>Checks, revisión y digests</h1><div><div class="split"><div><h2>Integración</h2><ul><li>verify prueba código, API y navegador.</li><li>iac valida Terraform y Kustomize.</li><li>main exige checks y revisión independiente.</li></ul></div><div><h2>Publicación y promoción</h2><ul><li>GHCR vincula la imagen con commit y workflow.</li><li>Validación comprueba el digest antes de promover.</li><li>Producción requiere un PR aprobado con los digests.</li></ul></div></div><div class="source">Estado de la promoción y de GitHub en docs/STATUS.md.</div></div>
+<div class="foot"><span>VetNotify</span><span>08 / 15</span></div></section>
+<section class="slide" aria-label="Diapositiva 9">
+<div class="kicker">08 · OPERACIÓN</div><h1>Ambientes, acceso y salud</h1><div><table><thead><tr><th>Control</th><th>Efecto</th></tr></thead><tbody><tr><td>Namespaces dev/prod</td><td>Configuración, base, PVC y secretos separados.</td></tr><tr><td>TLS y NSG</td><td>Caddy sirve HTTPS. SSH tiene una IP autorizada.</td></tr><tr><td>Readiness</td><td>Sin base disponible, Kubernetes retira el endpoint.</td></tr><tr><td>Liveness</td><td>El kubelet reinicia un contenedor que falla la probe.</td></tr></tbody></table></div>
+<div class="foot"><span>VetNotify</span><span>09 / 15</span></div></section>
+<section class="slide" aria-label="Diapositiva 10">
+<div class="kicker">09 · MÉTRICAS</div><h1>Cohortes y presupuestos</h1><div><table><thead><tr><th>Indicador</th><th>Población y objetivo</th></tr></thead><tbody><tr><td>Entrega inicial en 30 s</td><td>Originales de ambos canales. Meta 95% en 15 min.</td></tr><tr><td>Bandeja en 5 s</td><td>Originales internos. Meta 99% en 15 min.</td></tr><tr><td>Aceptación durable</td><td>Peticiones válidas de la sonda con lectura persistente / total válido.</td></tr></tbody></table><div class="source">Ventana de aceptación [t − W − D, t − D). Los pendientes vencidos cuentan en N.</div></div>
+<div class="foot"><span>VetNotify</span><span>10 / 15</span></div></section>
+<section class="slide" aria-label="Diapositiva 11">
+<div class="kicker">10 · SEÑALES</div><h1>Dashboard de operación</h1><div><div class="signals-grid"><ul><li>Resultados y tamaño de la cohorte.</li><li>P95 de entrega y espera.</li><li>Pendientes, latidos y capacidad.</li><li>Fallos y reintentos por canal.</li></ul><div class="signals-crop"><img class="" src="../docs/evidence/signals-azure/grafana.png" alt="Vista de cuatro paneles del dashboard en Grafana"></div></div><div class="source">Vista del dashboard de 10 paneles. Prometheus recopila cada 5 s.</div></div>
+<div class="foot"><span>VetNotify</span><span>11 / 15</span></div></section>
+<section class="slide" aria-label="Diapositiva 12">
+<div class="kicker">11 · INCIDENTE</div><h1>Degradación controlada de correo</h1><div><table><thead><tr><th>UTC</th><th>Observación</th></tr></thead><tbody><tr><td>23:50:22</td><td>Se activó HTTP 503 sostenido para correo.</td></tr><tr><td>23:50:32</td><td>La condición superó el umbral. Prometheus observó firing con 73.5% de fallos.</td></tr><tr><td>23:50:50</td><td>Se restauró el modo sano y un correo nuevo se entregó.</td></tr><tr><td>23:52:35</td><td>La alerta volvió a normal al salir los fallos de la ventana.</td></tr></tbody></table><div class="source">24 correos fallaron tras tres intentos. Un aviso interno se entregó durante el incidente.</div></div>
+<div class="foot"><span>VetNotify</span><span>12 / 15</span></div></section>
+<section class="slide" aria-label="Diapositiva 13">
+<div class="kicker">12 · ROLLBACK</div><h1>Recuperación de una versión</h1><div><div class="split"><div><h2>Diagnóstico</h2><p>Kubernetes reporta el error al intentar descargar una imagen de prueba inexistente.</p><p>Se revisan eventos, condiciones y el digest de la versión previa.</p></div><div><h2>Verificación</h2><p>Rollout undo devuelve el Deployment a su revisión anterior.</p><p>La prueba comprobó una entrega previa conservada y una nueva entrega exitosa.</p></div></div><div class="source">El rollback cambia el Deployment. PostgreSQL conserva el volumen.</div></div>
+<div class="foot"><span>VetNotify</span><span>13 / 15</span></div></section>
+<section class="slide" aria-label="Diapositiva 14">
+<div class="kicker">13 · COSTOS</div><h1>Operación bajo demanda</h1><div><table><thead><tr><th>Concepto</th><th>Tarifa o medida</th></tr></thead><tbody><tr><td>VM B2as v2</td><td>US$0.0827 por hora de cómputo.</td></tr><tr><td>Disco E6</td><td>US$5.28 por mes, más operaciones.</td></tr><tr><td>IPv4 Standard</td><td>US$0.005 por hora.</td></tr><tr><td>Control</td><td>US$20/mes de presupuesto de aviso. El equipo controla el acumulado de US$100.</td></tr></tbody></table><div class="source">La desasignación corta el cómputo. La IP y el disco permanecen.</div></div>
+<div class="foot"><span>VetNotify</span><span>14 / 15</span></div></section>
+<section class="slide" aria-label="Diapositiva 15">
+<div class="kicker">14 · RESULTADOS</div><h1>Dos recorridos verificados</h1><div><div class="split"><div><h2>Lote P1-1 · 100 notificaciones</h2><p>95 entregadas y 5 fallidas esperadas en el lote controlado.</p><ul><li>API comprobada con la web a cero en K3s.</li><li>Chrome recorrió ambos emisores y la bandeja a 360 px.</li></ul></div><div><img class="evidence-image" src="../docs/evidence/ui-azure/06-resumen.png" alt="Resumen de VetNotify con datos reales de prueba"></div></div><div class="source">La captura muestra el resumen acumulado de validación. La matriz y los guiones están en el repositorio.</div></div>
+<div class="foot"><span>VetNotify</span><span>15 / 15</span></div></section></body></html>

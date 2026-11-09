@@ -1,0 +1,53 @@
+name: Terraform autorizado
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [infra/terraform/**, .github/workflows/terraform-plan.yml]
+permissions:
+  id-token: write
+  contents: read
+concurrency:
+  group: vetnotify-terraform-state
+  cancel-in-progress: false
+jobs:
+  plan:
+    if: github.ref == 'refs/heads/main' && vars.AZURE_PLAN_CLIENT_ID != ''
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with: {persist-credentials: false}
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4
+        with: {terraform_version: '1.16.5', terraform_wrapper: false}
+      - uses: azure/login@a641126d1b8aa4d1fa005f4f92df94a3a4c4c906 # v3
+        with:
+          client-id: ${{ vars.AZURE_PLAN_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - name: Plan and emit resource-action summary
+        env:
+          TF_VARS: ${{ secrets.TF_INPUTS_JSON }}
+          TF_STORAGE: ${{ vars.TF_STORAGE_ACCOUNT }}
+          TF_GROUP: ${{ vars.TF_STORAGE_GROUP }}
+          ARM_RESOURCE_PROVIDER_REGISTRATIONS: none
+          ARM_USE_OIDC: 'true'
+          ARM_CLIENT_ID: ${{ vars.AZURE_PLAN_CLIENT_ID }}
+          ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+        run: |
+          set -euo pipefail
+          umask 077
+          trap 'rm -f "$RUNNER_TEMP/vetnotify.tfvars.json" "$RUNNER_TEMP/vetnotify.tfplan" "$RUNNER_TEMP/vetnotify-plan.log"' EXIT
+          printf '%s' "$TF_VARS" > "$RUNNER_TEMP/vetnotify.tfvars.json"
+          terraform -chdir=infra/terraform/main init -input=false -lockfile=readonly \
+            -backend-config="resource_group_name=$TF_GROUP" -backend-config="storage_account_name=$TF_STORAGE" \
+            -backend-config=container_name=tfstate -backend-config=key=main.tfstate \
+            -backend-config=use_azuread_auth=true -backend-config=use_oidc=true
+          if ! terraform -chdir=infra/terraform/main plan -input=false -lock-timeout=30s \
+            -var-file="$RUNNER_TEMP/vetnotify.tfvars.json" -out="$RUNNER_TEMP/vetnotify.tfplan" > "$RUNNER_TEMP/vetnotify-plan.log" 2>&1; then
+            echo 'Falló el plan. Diagnosticar desde el contexto autorizado.'
+            exit 1
+          fi
+          terraform -chdir=infra/terraform/main show -json "$RUNNER_TEMP/vetnotify.tfplan" \
+            | jq '{changes:[.resource_changes[] | select(.change.actions != ["no-op"]) | {address,actions:.change.actions}]}' \
+            | tee "$GITHUB_STEP_SUMMARY"

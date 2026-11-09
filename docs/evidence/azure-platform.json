@@ -1,0 +1,53 @@
+{
+  "at": "2026-11-08T23:03:09.8527908Z",
+  "vm": {
+    "location": "mexicocentral",
+    "size": "Standard_B2as_v2",
+    "statuses": [
+      "Provisioning succeeded",
+      "VM running"
+    ]
+  },
+  "budget": {
+    "amount": "20.0",
+    "thresholds": [
+      "50.0",
+      "75.0",
+      "90.0"
+    ],
+    "timeGrain": "Monthly"
+  },
+  "stateAccount": {
+    "allowBlobPublicAccess": false,
+    "allowSharedKeyAccess": false,
+    "httpsOnly": true,
+    "minimumTlsVersion": "TLS1_2",
+    "name": "vetnotifyst26a7d1"
+  },
+  "blobs": {
+    "bytes": 31666,
+    "name": "main.tfstate"
+  },
+  "anonymousStateHead": "409",
+  "rules": [
+    {
+      "access": "Allow",
+      "direction": "Inbound",
+      "name": "https-and-acme",
+      "port": "",
+      "ports": [
+        "80",
+        "443"
+      ]
+    },
+    {
+      "access": "Allow",
+      "direction": "Inbound",
+      "name": "ssh-admin",
+      "port": "22",
+      "ports": []
+    }
+  ],
+  "observedProjectCharges": "Sin filas de facturación en la consulta ActualCost filtrada por los dos grupos",
+  "certificateValidated": true
+}

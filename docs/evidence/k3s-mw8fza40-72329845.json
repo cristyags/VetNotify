@@ -1,0 +1,305 @@
+{
+  "title": "VetNotify · Evidencia operativa de K3s",
+  "runId": "k3s-mw8fza40-72329845",
+  "start": "2026-11-08T23:06:54.576Z",
+  "cases": [
+    {
+      "name": "DEV-09/10/11",
+      "state": "pasó",
+      "summary": "Nodo Ready, workloads por digest, PVC y capacidad observada. RBAC de release limita secretos.",
+      "nodes": [
+        {
+          "name": "vetnotify-26a7d1",
+          "version": "v1.35.2+k3s1",
+          "ready": "True",
+          "allocatable": {
+            "cpu": "2",
+            "ephemeral-storage": "62173523510",
+            "hugepages-1Gi": "0",
+            "hugepages-2Mi": "0",
+            "memory": "8122984Ki",
+            "pods": "110"
+          }
+        }
+      ],
+      "pods": [
+        {
+          "name": "agenda-585767448d-4q7pf",
+          "uid": "c6cc916c-6119-4ba5-8e40-108c9bc098b8",
+          "containers": [
+            {
+              "name": "agenda",
+              "ready": true,
+              "restarts": 0,
+              "image": "docker.io/library/vetnotify-backend:f7e1ff3720c56b42b096a56fa7559abb4fe773c5",
+              "imageID": "docker.io/library/vetnotify-backend@sha256:07cbb0df9ecea050a8005e8349c3bebc5d2aed8d66ac79dd3f04ad6106847f97"
+            }
+          ]
+        },
+        {
+          "name": "api-5555877697-c7l42",
+          "uid": "f461c96b-99cc-4294-909c-71e5aaf26417",
+          "containers": [
+            {
+              "name": "api",
+              "ready": true,
+              "restarts": 0,
+              "image": "docker.io/library/vetnotify-backend:f7e1ff3720c56b42b096a56fa7559abb4fe773c5",
+              "imageID": "docker.io/library/vetnotify-backend@sha256:07cbb0df9ecea050a8005e8349c3bebc5d2aed8d66ac79dd3f04ad6106847f97"
+            }
+          ]
+        },
+        {
+          "name": "collector-f9f8998-dzcmq",
+          "uid": "01cb349f-8888-404e-b57a-a060d43413c9",
+          "containers": [
+            {
+              "name": "collector",
+              "ready": true,
+              "restarts": 0,
+              "image": "docker.io/otel/opentelemetry-collector:0.160.0",
+              "imageID": "docker.io/otel/opentelemetry-collector@sha256:e495787f07dbe432ce763ebaf5bc3d113850e9eee2250ade7a3da6a882d0d69a"
+            }
+          ]
+        },
+        {
+          "name": "gateway-77d9d8556c-7r5ck",
+          "uid": "6d7bb4f9-2f85-4563-92cf-4825283f3912",
+          "containers": [
+            {
+              "name": "gateway",
+              "ready": true,
+              "restarts": 0,
+              "image": "docker.io/library/nginx:1.30.4-alpine",
+              "imageID": "docker.io/library/nginx@sha256:dc5069ad14f19660b141b21236140b91656bf89bbc3e2417c70ae650cd66104c"
+            }
+          ]
+        },
+        {
+          "name": "grafana-7f7c676ff4-4jcks",
+          "uid": "19fbd259-61ad-4b20-9c23-ee24679a19d8",
+          "containers": [
+            {
+              "name": "grafana",
+              "ready": true,
+              "restarts": 0,
+              "image": "docker.io/grafana/grafana:13.2.4",
+              "imageID": "docker.io/grafana/grafana@sha256:dbbc38ea21103cefb50396340cd88afec779c7e070b0a7bf5a75b4ce46651d3f"
+            }
+          ]
+        },
+        {
+          "name": "jaeger-6794757b74-w55b5",
+          "uid": "71d93f9c-4ac5-45b2-a7ed-856a93d68a11",
+          "containers": [
+            {
+              "name": "jaeger",
+              "ready": true,
+              "restarts": 0,
+              "image": "cr.jaegertracing.io/jaegertracing/jaeger:2.22.0",
+              "imageID": "cr.jaegertracing.io/jaegertracing/jaeger@sha256:836b967b5abcf1f7758066aa6b348619267a2f1459f72d472840570f9bd88a17"
+            }
+          ]
+        },
+        {
+          "name": "laboratorio-554d6c556f-lrkw8",
+          "uid": "7093d673-e16c-4bf1-9856-b6b1cde27405",
+          "containers": [
+            {
+              "name": "laboratorio",
+              "ready": true,
+              "restarts": 0,
+              "image": "docker.io/library/vetnotify-backend:f7e1ff3720c56b42b096a56fa7559abb4fe773c5",
+              "imageID": "docker.io/library/vetnotify-backend@sha256:07cbb0df9ecea050a8005e8349c3bebc5d2aed8d66ac79dd3f04ad6106847f97"
+            }
+          ]
+        },
+        {
+          "name": "node-exporter-64466bdfd9-689rl",
+          "uid": "2c785367-e11e-4e1d-adac-49dba9ad9c3f",
+          "containers": [
+            {
+              "name": "node-exporter",
+              "ready": true,
+              "restarts": 0,
+              "image": "docker.io/prom/node-exporter:v1.11.1",
+              "imageID": "docker.io/prom/node-exporter@sha256:e9cff4fc67b1818f8c97adb115b9f12c9a54b533de86765d4a0effc01b357205"
+            }
+          ]
+        },
+        {
+          "name": "postgres-0",
+          "uid": "8c62486d-1dba-4bda-90f0-4517ba776433",
+          "containers": [
+            {
+              "name": "postgres",
+              "ready": true,
+              "restarts": 0,
+              "image": "sha256:f372eda99ac2ea249c3dce566dcdf468397035371284d2cf2103b4bc52b3b39e",
+              "imageID": "docker.io/library/postgres@sha256:1c59e2c3c818eaa0f0628f695b36e7c9e362d6b219b36a54a32df645cbd7e1af"
+            }
+          ]
+        },
+        {
+          "name": "probe-9445b656d-bfhvc",
+          "uid": "c8cc8739-49a7-446a-8147-81ca2b6593ee",
+          "containers": [
+            {
+              "name": "probe",
+              "ready": true,
+              "restarts": 0,
+              "image": "docker.io/library/vetnotify-backend:f7e1ff3720c56b42b096a56fa7559abb4fe773c5",
+              "imageID": "docker.io/library/vetnotify-backend@sha256:07cbb0df9ecea050a8005e8349c3bebc5d2aed8d66ac79dd3f04ad6106847f97"
+            }
+          ]
+        },
+        {
+          "name": "prometheus-74956f9b96-ptr6b",
+          "uid": "c9b292f0-2ccc-4022-aec8-77871745b4d7",
+          "containers": [
+            {
+              "name": "prometheus",
+              "ready": true,
+              "restarts": 0,
+              "image": "docker.io/prom/prometheus:v3.15.0",
+              "imageID": "docker.io/prom/prometheus@sha256:efd719c99d83b060d9daefdcf00360461adf279f45ef5391f8d111892118753e"
+            }
+          ]
+        },
+        {
+          "name": "simulator-7bc85bf884-zpdcv",
+          "uid": "dbf1c0bc-e40f-4d80-891f-04a7f6650126",
+          "containers": [
+            {
+              "name": "simulator",
+              "ready": true,
+              "restarts": 0,
+              "image": "docker.io/library/vetnotify-backend:f7e1ff3720c56b42b096a56fa7559abb4fe773c5",
+              "imageID": "docker.io/library/vetnotify-backend@sha256:07cbb0df9ecea050a8005e8349c3bebc5d2aed8d66ac79dd3f04ad6106847f97"
+            }
+          ]
+        },
+        {
+          "name": "web-69f9c4c776-xxfw6",
+          "uid": "59d1ee83-04f3-44a5-91fd-d55fb2837ea7",
+          "containers": [
+            {
+              "name": "web",
+              "ready": true,
+              "restarts": 0,
+              "image": "docker.io/library/vetnotify-web:f7e1ff3720c56b42b096a56fa7559abb4fe773c5",
+              "imageID": "docker.io/library/vetnotify-web@sha256:b6bffded0bd3479da222ba66e062297dffc9bfb4d1e6ffb5b72e10d4c4f78c98"
+            }
+          ]
+        },
+        {
+          "name": "worker-email-5b4b845db6-hm8p7",
+          "uid": "ffd8716f-a6c7-4f86-8851-7f42188ef4f8",
+          "containers": [
+            {
+              "name": "worker-email",
+              "ready": true,
+              "restarts": 0,
+              "image": "docker.io/library/vetnotify-backend:f7e1ff3720c56b42b096a56fa7559abb4fe773c5",
+              "imageID": "docker.io/library/vetnotify-backend@sha256:07cbb0df9ecea050a8005e8349c3bebc5d2aed8d66ac79dd3f04ad6106847f97"
+            }
+          ]
+        },
+        {
+          "name": "worker-internal-f87645bc-lcbng",
+          "uid": "6066c4de-8441-43f2-ba03-c7c1e6e320bf",
+          "containers": [
+            {
+              "name": "worker-internal",
+              "ready": true,
+              "restarts": 0,
+              "image": "docker.io/library/vetnotify-backend:f7e1ff3720c56b42b096a56fa7559abb4fe773c5",
+              "imageID": "docker.io/library/vetnotify-backend@sha256:07cbb0df9ecea050a8005e8349c3bebc5d2aed8d66ac79dd3f04ad6106847f97"
+            }
+          ]
+        }
+      ],
+      "claims": [
+        {
+          "name": "data-postgres-0",
+          "state": "Bound",
+          "size": "8Gi",
+          "volume": "pvc-ce559022-32f0-44b6-8a4a-313c6e29b0af"
+        },
+        {
+          "name": "grafana-data",
+          "state": "Bound",
+          "size": "1Gi",
+          "volume": "pvc-78d9890a-5d5b-4d2a-a848-e03803aaf19f"
+        },
+        {
+          "name": "jaeger-data",
+          "state": "Bound",
+          "size": "2Gi",
+          "volume": "pvc-e2b2d961-f167-43f9-96f2-664c39590098"
+        },
+        {
+          "name": "prometheus-data",
+          "state": "Bound",
+          "size": "2Gi",
+          "volume": "pvc-38c99c6f-0540-4759-a214-895cd6e2f725"
+        }
+      ],
+      "cpu": "POD                              NAME              CPU(cores)   MEMORY(bytes)   \nagenda-585767448d-4q7pf          agenda            0m           32Mi            \napi-5555877697-c7l42             api               5m           140Mi           \ncollector-f9f8998-dzcmq          collector         1m           20Mi            \ngateway-77d9d8556c-7r5ck         gateway           1m           2Mi             \ngrafana-7f7c676ff4-4jcks         grafana           6m           190Mi           \njaeger-6794757b74-w55b5          jaeger            7m           30Mi            \nlaboratorio-554d6c556f-lrkw8     laboratorio       1m           33Mi            \nnode-exporter-64466bdfd9-689rl   node-exporter     1m           7Mi             \npostgres-0                       postgres          57m          72Mi            \nprobe-9445b656d-bfhvc            probe             1m           32Mi            \nprometheus-74956f9b96-ptr6b      prometheus        3m           35Mi            \nsimulator-7bc85bf884-zpdcv       simulator         1m           38Mi            \nweb-69f9c4c776-xxfw6             web               1m           2Mi             \nworker-email-5b4b845db6-hm8p7    worker-email      7m           53Mi            \nworker-internal-f87645bc-lcbng   worker-internal   7m           42Mi",
+      "releaseCanPatch": "yes",
+      "releaseCannotReadSecrets": true
+    },
+    {
+      "name": "Liveness",
+      "state": "pasó",
+      "summary": "El kubelet registró fallo de liveness y reinició el contenedor. Probe restaurada.",
+      "pod": "2fd923f3-3a35-49f9-a20c-cf15be7d243c",
+      "restarts": 1,
+      "events": [
+        {
+          "at": "2026-11-08T23:07:04.993955Z",
+          "reason": "Scheduled",
+          "message": "Successfully assigned vetnotify-dev/worker-internal-697f466968-7xmxw to vetnotify-26a7d1"
+        },
+        {
+          "at": "2026-11-08T23:07:15Z",
+          "reason": "Pulled",
+          "message": "Container image \"docker.io/library/vetnotify-backend@sha256:07cbb0df9ecea050a8005e8349c3bebc5d2aed8d66ac79dd3f04ad6106847f97\" already present on machine and can be accessed by the pod"
+        },
+        {
+          "at": "2026-11-08T23:07:15Z",
+          "reason": "Created",
+          "message": "Container created"
+        },
+        {
+          "at": "2026-11-08T23:07:16Z",
+          "reason": "Started",
+          "message": "Container started"
+        },
+        {
+          "at": "2026-11-08T23:07:14Z",
+          "reason": "Unhealthy",
+          "message": "Liveness probe failed: HTTP probe failed with statuscode: 404"
+        },
+        {
+          "at": "2026-11-08T23:07:14Z",
+          "reason": "Killing",
+          "message": "Container worker-internal failed liveness probe, will be restarted"
+        },
+        {
+          "at": "2026-11-08T23:07:12Z",
+          "reason": "Unhealthy",
+          "message": "Readiness probe failed: Get \"http://10.42.0.37:8080/health/ready\": dial tcp 10.42.0.37:8080: connect: connection refused"
+        }
+      ]
+    }
+  ],
+  "version": {
+    "name": "VetNotify",
+    "version": "1.0.0",
+    "commit": "f7e1ff3720c56b42b096a56fa7559abb4fe773c5",
+    "image": "docker.io/library/vetnotify-backend@sha256:07cbb0df9ecea050a8005e8349c3bebc5d2aed8d66ac79dd3f04ad6106847f97",
+    "environment": "dev"
+  },
+  "end": "2026-11-08T23:07:23.204Z"
+}

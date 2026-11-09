@@ -1,0 +1,20 @@
+{
+  "title": "VetNotify · Dos clientes de consola",
+  "runId": "demo-cli-mw8e6pyg-82700af9",
+  "start": "2026-11-08T22:16:42.472Z",
+  "cases": [
+    {
+      "name": "Demo API",
+      "state": "falló",
+      "summary": "Emisor agenda falló\n\n1 !== 0\n"
+    }
+  ],
+  "version": {
+    "name": "VetNotify",
+    "version": "1.0.0",
+    "commit": "6a24524f2de9",
+    "image": "local",
+    "environment": "local"
+  },
+  "end": "2026-11-08T22:16:46.962Z"
+}

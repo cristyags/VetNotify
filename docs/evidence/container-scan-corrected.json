@@ -1,0 +1,23 @@
+{
+  "commit": "92e5a9af8cfd7c1c5c7d409fd77c126e6bb7c30b",
+  "results": [
+    {
+      "exitCode": 0,
+      "findings": [],
+      "count": 0,
+      "ref": "docker.io/library/vetnotify-backend@sha256:fefda5156fa1797e4a5cc81c4dfc6a19e2e5f18d3c7b74e1778073b09c4fe6f0",
+      "component": "backend"
+    },
+    {
+      "exitCode": 0,
+      "findings": [],
+      "count": 0,
+      "ref": "docker.io/library/vetnotify-web@sha256:47bc6a1a3b36dfdaffa79cea6a62bf981471c9875dc112fe9071fee2800cc198",
+      "component": "web"
+    }
+  ],
+  "scanner": "Trivy 0.70.0",
+  "severity": "HIGH,CRITICAL con corrección disponible",
+  "source": "OCI local",
+  "at": "2026-11-08T23:31:03.9453294Z"
+}

@@ -1,0 +1,24 @@
+{
+  "at": "2026-11-08T23:53:44.7669661Z",
+  "origin": "https://vetnotify-26a7d1.mexicocentral.cloudapp.azure.com",
+  "transport": "HTTPS público",
+  "browser": "Chrome",
+  "result": "passed",
+  "version": {
+    "name": "VetNotify",
+    "version": "1.0.0",
+    "commit": "92e5a9af8cfd7c1c5c7d409fd77c126e6bb7c30b",
+    "image": "ghcr.io/cristyags/vetnotify-backend@sha256:bceee49a3f1dfeb5c2d7ecb5a81d6039cb7ddf2142c9f37cecc93e7dab00e0d9",
+    "environment": "dev"
+  },
+  "screenshots": [
+    "01-acceso.png",
+    "02-agenda.png",
+    "03-laboratorio.png",
+    "04-detalle-entrega.png",
+    "05-reproceso.png",
+    "06-resumen.png",
+    "07-centro.png",
+    "08-bandeja-360.png"
+  ]
+}

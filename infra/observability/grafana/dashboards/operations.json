@@ -1,0 +1,390 @@
+{
+  "uid": "vetnotify-ops",
+  "title": "VetNotify · Operación",
+  "description": "Resultados, cola, salud, señales de capacidad y objetivos del laboratorio.",
+  "timezone": "utc",
+  "schemaVersion": 40,
+  "version": 1,
+  "refresh": "10s",
+  "time": {
+    "from": "now-30m",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Resultados durables por estado",
+      "description": "Población acumulada de registros iniciales por estado actual.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "vet-prom"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (environment, channel, state) (vetnotify_notifications{creation_kind=\"initial\"})",
+          "legendFormat": "{{environment}} · {{channel}} · {{state}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "SLI de cohorte madura",
+      "description": "Ventana de 15 min; excluye registros cuyo plazo todavía no vence. Sin serie cuando N=0.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "vet-prom"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "targets": [
+        {
+          "expr": "vetnotify_sli_good{channel=\"all\",app_slug=\"all\"} / (vetnotify_sli_population{channel=\"all\",app_slug=\"all\"} > 0)",
+          "legendFormat": "{{environment}} · {{sli}}",
+          "refId": "A"
+        },
+        {
+          "expr": "vetnotify_sli_target{channel=\"all\",app_slug=\"all\"}",
+          "legendFormat": "Meta · {{sli}}",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Población y presupuesto de error",
+      "description": "Número de notificaciones evaluables y tolerancia discreta.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "vet-prom"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "targets": [
+        {
+          "expr": "vetnotify_sli_population{channel=\"all\",app_slug=\"all\"}",
+          "legendFormat": "N · {{environment}} · {{sli}}",
+          "refId": "A"
+        },
+        {
+          "expr": "vetnotify_sli_budget{channel=\"all\",app_slug=\"all\"}",
+          "legendFormat": "Incumplimientos permitidos · {{sli}}",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "P95 de entrega y espera inicial",
+      "description": "Últimos 5 min. Solo trabajos que llegaron a la etapa observada.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "vet-prom"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum by (le, environment, stage, channel) (rate(vetnotify_duration_seconds_bucket[5m])))",
+          "legendFormat": "{{environment}} · {{stage}} · {{channel}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Pendientes, activas y antigüedad",
+      "description": "Cantidad por estado y edad del trabajo pendiente más antiguo.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "vet-prom"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "targets": [
+        {
+          "expr": "vetnotify_queue_jobs",
+          "legendFormat": "{{environment}} · {{channel}} · {{state}}",
+          "refId": "A"
+        },
+        {
+          "expr": "vetnotify_oldest_pending_seconds",
+          "legendFormat": "Antigüedad (s) · {{channel}}",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Fallos finales y reintentos",
+      "description": "Los fallos son finales. Los intentos se conservan por separado.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "vet-prom"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "targets": [
+        {
+          "expr": "vetnotify_final_2m{outcome=\"failed\"}",
+          "legendFormat": "Fallos / 2 min · {{environment}} · {{channel}}",
+          "refId": "A"
+        },
+        {
+          "expr": "increase(vetnotify_retries_total[5m])",
+          "legendFormat": "Reintentos / 5 min · {{channel}}",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Memoria de nodo y API",
+      "description": "Memoria ocupada del nodo y memoria residente de cada proceso API.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "vet-prom"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 24,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "targets": [
+        {
+          "expr": "node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes",
+          "legendFormat": "Nodo · {{instance}}",
+          "refId": "A"
+        },
+        {
+          "expr": "vetnotify_api_resident_memory_bytes",
+          "legendFormat": "API · {{environment}}",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "CPU del nodo",
+      "description": "Fracción de tiempo de CPU no ocioso en ventana de 2 min.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "vet-prom"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 24,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "targets": [
+        {
+          "expr": "1 - avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[2m]))",
+          "legendFormat": "{{instance}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Latido de trabajadores",
+      "description": "Segundos desde el último heartbeat durable. Umbral de alerta: 30 s.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "vet-prom"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 32,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "targets": [
+        {
+          "expr": "time() - vetnotify_worker_heartbeat_timestamp_seconds > 0",
+          "legendFormat": "{{environment}} · {{channel}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Aceptación durable desde la sonda",
+      "description": "Peticiones válidas verificadas por GET sobre el total que observó la sonda externa.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "vet-prom"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 32,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "targets": [
+        {
+          "expr": "increase(vetnotify_probe_good_total[15m]) / (increase(vetnotify_probe_started_total[15m]) > 0)",
+          "legendFormat": "{{environment}}",
+          "refId": "A"
+        }
+      ]
+    }
+  ]
+}

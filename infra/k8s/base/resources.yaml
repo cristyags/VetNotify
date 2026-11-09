@@ -1,0 +1,3051 @@
+{
+  "apiVersion": "v1",
+  "kind": "ServiceAccount",
+  "metadata": {
+    "name": "vetnotify-app",
+    "labels": {}
+  },
+  "automountServiceAccountToken": false
+}
+---
+{
+  "apiVersion": "v1",
+  "kind": "ServiceAccount",
+  "metadata": {
+    "name": "vetnotify-release",
+    "labels": {}
+  },
+  "automountServiceAccountToken": false
+}
+---
+{
+  "apiVersion": "rbac.authorization.k8s.io/v1",
+  "kind": "Role",
+  "metadata": {
+    "name": "vetnotify-release",
+    "labels": {}
+  },
+  "rules": [
+    {
+      "apiGroups": [
+        "apps"
+      ],
+      "resources": [
+        "deployments"
+      ],
+      "resourceNames": [
+        "api",
+        "web",
+        "worker-email",
+        "worker-internal",
+        "simulator",
+        "agenda",
+        "laboratorio",
+        "probe"
+      ],
+      "verbs": [
+        "get",
+        "patch"
+      ]
+    },
+    {
+      "apiGroups": [
+        "apps"
+      ],
+      "resources": [
+        "deployments",
+        "replicasets"
+      ],
+      "verbs": [
+        "list",
+        "watch"
+      ]
+    },
+    {
+      "apiGroups": [
+        ""
+      ],
+      "resources": [
+        "pods",
+        "events"
+      ],
+      "verbs": [
+        "get",
+        "list",
+        "watch"
+      ]
+    }
+  ]
+}
+---
+{
+  "apiVersion": "rbac.authorization.k8s.io/v1",
+  "kind": "RoleBinding",
+  "metadata": {
+    "name": "vetnotify-release",
+    "labels": {}
+  },
+  "subjects": [
+    {
+      "kind": "ServiceAccount",
+      "name": "vetnotify-release"
+    }
+  ],
+  "roleRef": {
+    "apiGroup": "rbac.authorization.k8s.io",
+    "kind": "Role",
+    "name": "vetnotify-release"
+  }
+}
+---
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "api",
+    "labels": {
+      "app": "api",
+      "app.kubernetes.io/part-of": "vetnotify"
+    }
+  },
+  "spec": {
+    "replicas": 1,
+    "revisionHistoryLimit": 4,
+    "progressDeadlineSeconds": 150,
+    "selector": {
+      "matchLabels": {
+        "app": "api"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "api",
+          "app.kubernetes.io/part-of": "vetnotify"
+        }
+      },
+      "spec": {
+        "serviceAccountName": "vetnotify-app",
+        "automountServiceAccountToken": false,
+        "enableServiceLinks": false,
+        "securityContext": {
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          }
+        },
+        "containers": [
+          {
+            "name": "api",
+            "image": "vetnotify-backend:local",
+            "imagePullPolicy": "IfNotPresent",
+            "ports": [
+              {
+                "name": "http",
+                "containerPort": 8080
+              }
+            ],
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "runAsNonRoot": true,
+              "runAsUser": 1000,
+              "runAsGroup": 1000,
+              "readOnlyRootFilesystem": false,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              }
+            },
+            "resources": {
+              "requests": {
+                "cpu": "30m",
+                "memory": "160Mi"
+              },
+              "limits": {
+                "cpu": "500m",
+                "memory": "256Mi"
+              }
+            },
+            "startupProbe": {
+              "httpGet": {
+                "path": "/health/live",
+                "port": 8080
+              },
+              "periodSeconds": 3,
+              "failureThreshold": 30,
+              "timeoutSeconds": 3
+            },
+            "readinessProbe": {
+              "httpGet": {
+                "path": "/health/ready",
+                "port": 8080
+              },
+              "periodSeconds": 4,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            },
+            "livenessProbe": {
+              "httpGet": {
+                "path": "/health/live",
+                "port": 8080
+              },
+              "periodSeconds": 10,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            },
+            "env": [
+              {
+                "name": "VET_ENV",
+                "valueFrom": {
+                  "configMapKeyRef": {
+                    "name": "vetnotify-config",
+                    "key": "VET_ENV"
+                  }
+                }
+              },
+              {
+                "name": "DEMO_FAULTS",
+                "valueFrom": {
+                  "configMapKeyRef": {
+                    "name": "vetnotify-config",
+                    "key": "DEMO_FAULTS"
+                  }
+                }
+              },
+              {
+                "name": "DATABASE_URL",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "vetnotify-database",
+                    "key": "url"
+                  }
+                }
+              },
+              {
+                "name": "OTEL_EXPORTER_OTLP_TRACES_ENDPOINT",
+                "value": "http://collector:4318/v1/traces"
+              },
+              {
+                "name": "PUBLIC_ORIGIN",
+                "valueFrom": {
+                  "configMapKeyRef": {
+                    "name": "vetnotify-config",
+                    "key": "PUBLIC_ORIGIN"
+                  }
+                }
+              },
+              {
+                "name": "IMAGE_REF",
+                "valueFrom": {
+                  "configMapKeyRef": {
+                    "name": "vetnotify-config",
+                    "key": "IMAGE_REF"
+                  }
+                }
+              },
+              {
+                "name": "AGENDA_URL",
+                "value": "http://agenda:8080"
+              },
+              {
+                "name": "LAB_URL",
+                "value": "http://laboratorio:8080"
+              },
+              {
+                "name": "ADAPTER_KEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "vetnotify-adapter",
+                    "key": "key"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
+---
+{
+  "apiVersion": "v1",
+  "kind": "Service",
+  "metadata": {
+    "name": "api",
+    "labels": {}
+  },
+  "spec": {
+    "selector": {
+      "app": "api"
+    },
+    "ports": [
+      {
+        "name": "http",
+        "port": 8080,
+        "targetPort": 8080
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "worker-email",
+    "labels": {
+      "app": "worker-email",
+      "app.kubernetes.io/part-of": "vetnotify"
+    }
+  },
+  "spec": {
+    "replicas": 1,
+    "revisionHistoryLimit": 4,
+    "progressDeadlineSeconds": 150,
+    "selector": {
+      "matchLabels": {
+        "app": "worker-email"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "worker-email",
+          "app.kubernetes.io/part-of": "vetnotify"
+        }
+      },
+      "spec": {
+        "serviceAccountName": "vetnotify-app",
+        "automountServiceAccountToken": false,
+        "enableServiceLinks": false,
+        "securityContext": {
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          }
+        },
+        "containers": [
+          {
+            "name": "worker-email",
+            "image": "vetnotify-backend:local",
+            "imagePullPolicy": "IfNotPresent",
+            "ports": [
+              {
+                "name": "http",
+                "containerPort": 8080
+              }
+            ],
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "runAsNonRoot": true,
+              "runAsUser": 1000,
+              "runAsGroup": 1000,
+              "readOnlyRootFilesystem": false,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              }
+            },
+            "resources": {
+              "requests": {
+                "cpu": "30m",
+                "memory": "64Mi"
+              },
+              "limits": {
+                "cpu": "500m",
+                "memory": "256Mi"
+              }
+            },
+            "startupProbe": {
+              "httpGet": {
+                "path": "/health/live",
+                "port": 8080
+              },
+              "periodSeconds": 3,
+              "failureThreshold": 30,
+              "timeoutSeconds": 3
+            },
+            "readinessProbe": {
+              "httpGet": {
+                "path": "/health/ready",
+                "port": 8080
+              },
+              "periodSeconds": 4,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            },
+            "livenessProbe": {
+              "httpGet": {
+                "path": "/health/live",
+                "port": 8080
+              },
+              "periodSeconds": 10,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            },
+            "command": [
+              "node",
+              "dist-api/apps/worker/src/index.js",
+              "email"
+            ],
+            "env": [
+              {
+                "name": "VET_ENV",
+                "valueFrom": {
+                  "configMapKeyRef": {
+                    "name": "vetnotify-config",
+                    "key": "VET_ENV"
+                  }
+                }
+              },
+              {
+                "name": "DEMO_FAULTS",
+                "valueFrom": {
+                  "configMapKeyRef": {
+                    "name": "vetnotify-config",
+                    "key": "DEMO_FAULTS"
+                  }
+                }
+              },
+              {
+                "name": "DATABASE_URL",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "vetnotify-database",
+                    "key": "url"
+                  }
+                }
+              },
+              {
+                "name": "OTEL_EXPORTER_OTLP_TRACES_ENDPOINT",
+                "value": "http://collector:4318/v1/traces"
+              },
+              {
+                "name": "SIMULATOR_URL",
+                "value": "http://simulator:8080"
+              },
+              {
+                "name": "SIMULATOR_KEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "vetnotify-simulator",
+                    "key": "key"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
+---
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "worker-internal",
+    "labels": {
+      "app": "worker-internal",
+      "app.kubernetes.io/part-of": "vetnotify"
+    }
+  },
+  "spec": {
+    "replicas": 1,
+    "revisionHistoryLimit": 4,
+    "progressDeadlineSeconds": 150,
+    "selector": {
+      "matchLabels": {
+        "app": "worker-internal"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "worker-internal",
+          "app.kubernetes.io/part-of": "vetnotify"
+        }
+      },
+      "spec": {
+        "serviceAccountName": "vetnotify-app",
+        "automountServiceAccountToken": false,
+        "enableServiceLinks": false,
+        "securityContext": {
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          }
+        },
+        "containers": [
+          {
+            "name": "worker-internal",
+            "image": "vetnotify-backend:local",
+            "imagePullPolicy": "IfNotPresent",
+            "ports": [
+              {
+                "name": "http",
+                "containerPort": 8080
+              }
+            ],
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "runAsNonRoot": true,
+              "runAsUser": 1000,
+              "runAsGroup": 1000,
+              "readOnlyRootFilesystem": false,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              }
+            },
+            "resources": {
+              "requests": {
+                "cpu": "30m",
+                "memory": "64Mi"
+              },
+              "limits": {
+                "cpu": "500m",
+                "memory": "256Mi"
+              }
+            },
+            "startupProbe": {
+              "httpGet": {
+                "path": "/health/live",
+                "port": 8080
+              },
+              "periodSeconds": 3,
+              "failureThreshold": 30,
+              "timeoutSeconds": 3
+            },
+            "readinessProbe": {
+              "httpGet": {
+                "path": "/health/ready",
+                "port": 8080
+              },
+              "periodSeconds": 4,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            },
+            "livenessProbe": {
+              "httpGet": {
+                "path": "/health/live",
+                "port": 8080
+              },
+              "periodSeconds": 10,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            },
+            "command": [
+              "node",
+              "dist-api/apps/worker/src/index.js",
+              "internal"
+            ],
+            "env": [
+              {
+                "name": "VET_ENV",
+                "valueFrom": {
+                  "configMapKeyRef": {
+                    "name": "vetnotify-config",
+                    "key": "VET_ENV"
+                  }
+                }
+              },
+              {
+                "name": "DEMO_FAULTS",
+                "valueFrom": {
+                  "configMapKeyRef": {
+                    "name": "vetnotify-config",
+                    "key": "DEMO_FAULTS"
+                  }
+                }
+              },
+              {
+                "name": "DATABASE_URL",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "vetnotify-database",
+                    "key": "url"
+                  }
+                }
+              },
+              {
+                "name": "OTEL_EXPORTER_OTLP_TRACES_ENDPOINT",
+                "value": "http://collector:4318/v1/traces"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
+---
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "simulator",
+    "labels": {
+      "app": "simulator",
+      "app.kubernetes.io/part-of": "vetnotify"
+    }
+  },
+  "spec": {
+    "replicas": 1,
+    "revisionHistoryLimit": 4,
+    "progressDeadlineSeconds": 150,
+    "selector": {
+      "matchLabels": {
+        "app": "simulator"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "simulator",
+          "app.kubernetes.io/part-of": "vetnotify"
+        }
+      },
+      "spec": {
+        "serviceAccountName": "vetnotify-app",
+        "automountServiceAccountToken": false,
+        "enableServiceLinks": false,
+        "securityContext": {
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          }
+        },
+        "containers": [
+          {
+            "name": "simulator",
+            "image": "vetnotify-backend:local",
+            "imagePullPolicy": "IfNotPresent",
+            "ports": [
+              {
+                "name": "http",
+                "containerPort": 8080
+              }
+            ],
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "runAsNonRoot": true,
+              "runAsUser": 1000,
+              "runAsGroup": 1000,
+              "readOnlyRootFilesystem": false,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              }
+            },
+            "resources": {
+              "requests": {
+                "cpu": "30m",
+                "memory": "64Mi"
+              },
+              "limits": {
+                "cpu": "500m",
+                "memory": "256Mi"
+              }
+            },
+            "startupProbe": {
+              "httpGet": {
+                "path": "/health/live",
+                "port": 8080
+              },
+              "periodSeconds": 3,
+              "failureThreshold": 30,
+              "timeoutSeconds": 3
+            },
+            "readinessProbe": {
+              "httpGet": {
+                "path": "/health/ready",
+                "port": 8080
+              },
+              "periodSeconds": 4,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            },
+            "livenessProbe": {
+              "httpGet": {
+                "path": "/health/live",
+                "port": 8080
+              },
+              "periodSeconds": 10,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            },
+            "command": [
+              "node",
+              "dist-api/apps/email-simulator/src/index.js"
+            ],
+            "env": [
+              {
+                "name": "VET_ENV",
+                "valueFrom": {
+                  "configMapKeyRef": {
+                    "name": "vetnotify-config",
+                    "key": "VET_ENV"
+                  }
+                }
+              },
+              {
+                "name": "DEMO_FAULTS",
+                "valueFrom": {
+                  "configMapKeyRef": {
+                    "name": "vetnotify-config",
+                    "key": "DEMO_FAULTS"
+                  }
+                }
+              },
+              {
+                "name": "DATABASE_URL",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "vetnotify-database",
+                    "key": "url"
+                  }
+                }
+              },
+              {
+                "name": "OTEL_EXPORTER_OTLP_TRACES_ENDPOINT",
+                "value": "http://collector:4318/v1/traces"
+              },
+              {
+                "name": "SIMULATOR_KEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "vetnotify-simulator",
+                    "key": "key"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
+---
+{
+  "apiVersion": "v1",
+  "kind": "Service",
+  "metadata": {
+    "name": "simulator",
+    "labels": {}
+  },
+  "spec": {
+    "selector": {
+      "app": "simulator"
+    },
+    "ports": [
+      {
+        "name": "http",
+        "port": 8080,
+        "targetPort": 8080
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "agenda",
+    "labels": {
+      "app": "agenda",
+      "app.kubernetes.io/part-of": "vetnotify"
+    }
+  },
+  "spec": {
+    "replicas": 1,
+    "revisionHistoryLimit": 4,
+    "progressDeadlineSeconds": 150,
+    "selector": {
+      "matchLabels": {
+        "app": "agenda"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "agenda",
+          "app.kubernetes.io/part-of": "vetnotify"
+        }
+      },
+      "spec": {
+        "serviceAccountName": "vetnotify-app",
+        "automountServiceAccountToken": false,
+        "enableServiceLinks": false,
+        "securityContext": {
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          }
+        },
+        "containers": [
+          {
+            "name": "agenda",
+            "image": "vetnotify-backend:local",
+            "imagePullPolicy": "IfNotPresent",
+            "ports": [
+              {
+                "name": "http",
+                "containerPort": 8080
+              }
+            ],
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "runAsNonRoot": true,
+              "runAsUser": 1000,
+              "runAsGroup": 1000,
+              "readOnlyRootFilesystem": false,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              }
+            },
+            "resources": {
+              "requests": {
+                "cpu": "15m",
+                "memory": "48Mi"
+              },
+              "limits": {
+                "cpu": "250m",
+                "memory": "160Mi"
+              }
+            },
+            "startupProbe": {
+              "httpGet": {
+                "path": "/health/live",
+                "port": 8080
+              },
+              "periodSeconds": 3,
+              "failureThreshold": 30,
+              "timeoutSeconds": 3
+            },
+            "readinessProbe": {
+              "httpGet": {
+                "path": "/health/ready",
+                "port": 8080
+              },
+              "periodSeconds": 4,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            },
+            "livenessProbe": {
+              "httpGet": {
+                "path": "/health/live",
+                "port": 8080
+              },
+              "periodSeconds": 10,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            },
+            "command": [
+              "node",
+              "dist-api/clients/agenda/index.js",
+              "serve"
+            ],
+            "env": [
+              {
+                "name": "VET_ENV",
+                "valueFrom": {
+                  "configMapKeyRef": {
+                    "name": "vetnotify-config",
+                    "key": "VET_ENV"
+                  }
+                }
+              },
+              {
+                "name": "API_URL",
+                "value": "http://api:8080"
+              },
+              {
+                "name": "OTEL_EXPORTER_OTLP_TRACES_ENDPOINT",
+                "value": "http://collector:4318/v1/traces"
+              },
+              {
+                "name": "ADAPTER_KEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "vetnotify-adapter",
+                    "key": "key"
+                  }
+                }
+              },
+              {
+                "name": "AGENDA_KEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "vetnotify-agenda",
+                    "key": "key"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
+---
+{
+  "apiVersion": "v1",
+  "kind": "Service",
+  "metadata": {
+    "name": "agenda",
+    "labels": {}
+  },
+  "spec": {
+    "selector": {
+      "app": "agenda"
+    },
+    "ports": [
+      {
+        "name": "http",
+        "port": 8080,
+        "targetPort": 8080
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "laboratorio",
+    "labels": {
+      "app": "laboratorio",
+      "app.kubernetes.io/part-of": "vetnotify"
+    }
+  },
+  "spec": {
+    "replicas": 1,
+    "revisionHistoryLimit": 4,
+    "progressDeadlineSeconds": 150,
+    "selector": {
+      "matchLabels": {
+        "app": "laboratorio"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "laboratorio",
+          "app.kubernetes.io/part-of": "vetnotify"
+        }
+      },
+      "spec": {
+        "serviceAccountName": "vetnotify-app",
+        "automountServiceAccountToken": false,
+        "enableServiceLinks": false,
+        "securityContext": {
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          }
+        },
+        "containers": [
+          {
+            "name": "laboratorio",
+            "image": "vetnotify-backend:local",
+            "imagePullPolicy": "IfNotPresent",
+            "ports": [
+              {
+                "name": "http",
+                "containerPort": 8080
+              }
+            ],
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "runAsNonRoot": true,
+              "runAsUser": 1000,
+              "runAsGroup": 1000,
+              "readOnlyRootFilesystem": false,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              }
+            },
+            "resources": {
+              "requests": {
+                "cpu": "15m",
+                "memory": "48Mi"
+              },
+              "limits": {
+                "cpu": "250m",
+                "memory": "160Mi"
+              }
+            },
+            "startupProbe": {
+              "httpGet": {
+                "path": "/health/live",
+                "port": 8080
+              },
+              "periodSeconds": 3,
+              "failureThreshold": 30,
+              "timeoutSeconds": 3
+            },
+            "readinessProbe": {
+              "httpGet": {
+                "path": "/health/ready",
+                "port": 8080
+              },
+              "periodSeconds": 4,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            },
+            "livenessProbe": {
+              "httpGet": {
+                "path": "/health/live",
+                "port": 8080
+              },
+              "periodSeconds": 10,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            },
+            "command": [
+              "node",
+              "dist-api/clients/laboratorio/index.js",
+              "serve"
+            ],
+            "env": [
+              {
+                "name": "VET_ENV",
+                "valueFrom": {
+                  "configMapKeyRef": {
+                    "name": "vetnotify-config",
+                    "key": "VET_ENV"
+                  }
+                }
+              },
+              {
+                "name": "API_URL",
+                "value": "http://api:8080"
+              },
+              {
+                "name": "OTEL_EXPORTER_OTLP_TRACES_ENDPOINT",
+                "value": "http://collector:4318/v1/traces"
+              },
+              {
+                "name": "ADAPTER_KEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "vetnotify-adapter",
+                    "key": "key"
+                  }
+                }
+              },
+              {
+                "name": "LAB_KEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "vetnotify-laboratorio",
+                    "key": "key"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
+---
+{
+  "apiVersion": "v1",
+  "kind": "Service",
+  "metadata": {
+    "name": "laboratorio",
+    "labels": {}
+  },
+  "spec": {
+    "selector": {
+      "app": "laboratorio"
+    },
+    "ports": [
+      {
+        "name": "http",
+        "port": 8080,
+        "targetPort": 8080
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "web",
+    "labels": {
+      "app": "web",
+      "app.kubernetes.io/part-of": "vetnotify"
+    }
+  },
+  "spec": {
+    "replicas": 1,
+    "revisionHistoryLimit": 4,
+    "progressDeadlineSeconds": 150,
+    "selector": {
+      "matchLabels": {
+        "app": "web"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "web",
+          "app.kubernetes.io/part-of": "vetnotify"
+        }
+      },
+      "spec": {
+        "serviceAccountName": "vetnotify-app",
+        "automountServiceAccountToken": false,
+        "enableServiceLinks": false,
+        "securityContext": {
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          }
+        },
+        "containers": [
+          {
+            "name": "web",
+            "image": "vetnotify-web:local",
+            "imagePullPolicy": "IfNotPresent",
+            "ports": [
+              {
+                "name": "http",
+                "containerPort": 8080
+              }
+            ],
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "runAsNonRoot": true,
+              "runAsUser": 101,
+              "runAsGroup": 101,
+              "readOnlyRootFilesystem": false,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              }
+            },
+            "resources": {
+              "requests": {
+                "cpu": "10m",
+                "memory": "20Mi"
+              },
+              "limits": {
+                "cpu": "150m",
+                "memory": "80Mi"
+              }
+            },
+            "startupProbe": {
+              "httpGet": {
+                "path": "/health/live",
+                "port": 8080
+              },
+              "periodSeconds": 3,
+              "failureThreshold": 30,
+              "timeoutSeconds": 3
+            },
+            "readinessProbe": {
+              "httpGet": {
+                "path": "/health/ready",
+                "port": 8080
+              },
+              "periodSeconds": 4,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            },
+            "livenessProbe": {
+              "httpGet": {
+                "path": "/health/live",
+                "port": 8080
+              },
+              "periodSeconds": 10,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+---
+{
+  "apiVersion": "v1",
+  "kind": "Service",
+  "metadata": {
+    "name": "web",
+    "labels": {}
+  },
+  "spec": {
+    "selector": {
+      "app": "web"
+    },
+    "ports": [
+      {
+        "name": "http",
+        "port": 8080,
+        "targetPort": 8080
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "gateway",
+    "labels": {
+      "app": "gateway",
+      "app.kubernetes.io/part-of": "vetnotify"
+    }
+  },
+  "spec": {
+    "replicas": 1,
+    "revisionHistoryLimit": 4,
+    "progressDeadlineSeconds": 150,
+    "selector": {
+      "matchLabels": {
+        "app": "gateway"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "gateway",
+          "app.kubernetes.io/part-of": "vetnotify"
+        }
+      },
+      "spec": {
+        "serviceAccountName": "vetnotify-app",
+        "automountServiceAccountToken": false,
+        "enableServiceLinks": false,
+        "securityContext": {
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          }
+        },
+        "containers": [
+          {
+            "name": "gateway",
+            "image": "nginx:1.30.6-alpine",
+            "imagePullPolicy": "IfNotPresent",
+            "ports": [
+              {
+                "name": "http",
+                "containerPort": 8080
+              }
+            ],
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "runAsNonRoot": true,
+              "runAsUser": 101,
+              "runAsGroup": 101,
+              "readOnlyRootFilesystem": false,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              }
+            },
+            "resources": {
+              "requests": {
+                "cpu": "15m",
+                "memory": "20Mi"
+              },
+              "limits": {
+                "cpu": "250m",
+                "memory": "80Mi"
+              }
+            },
+            "command": [
+              "nginx",
+              "-g",
+              "daemon off;"
+            ],
+            "volumeMounts": [
+              {
+                "name": "gateway-config",
+                "mountPath": "/etc/nginx/nginx.conf",
+                "subPath": "nginx.conf",
+                "readOnly": true
+              }
+            ],
+            "startupProbe": {
+              "httpGet": {
+                "path": "/gateway/live",
+                "port": 8080
+              },
+              "periodSeconds": 3,
+              "failureThreshold": 30,
+              "timeoutSeconds": 3
+            },
+            "readinessProbe": {
+              "httpGet": {
+                "path": "/gateway/live",
+                "port": 8080
+              },
+              "periodSeconds": 4,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            },
+            "livenessProbe": {
+              "httpGet": {
+                "path": "/gateway/live",
+                "port": 8080
+              },
+              "periodSeconds": 10,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            }
+          }
+        ],
+        "volumes": [
+          {
+            "name": "gateway-config",
+            "configMap": {
+              "name": "vetnotify-gateway"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+---
+{
+  "apiVersion": "v1",
+  "kind": "Service",
+  "metadata": {
+    "name": "gateway",
+    "labels": {}
+  },
+  "spec": {
+    "selector": {
+      "app": "gateway"
+    },
+    "ports": [
+      {
+        "name": "http",
+        "port": 8080,
+        "targetPort": 8080,
+        "nodePort": 31080
+      }
+    ],
+    "type": "NodePort"
+  }
+}
+---
+{
+  "apiVersion": "apps/v1",
+  "kind": "StatefulSet",
+  "metadata": {
+    "name": "postgres",
+    "labels": {}
+  },
+  "spec": {
+    "replicas": 1,
+    "serviceName": "postgres",
+    "selector": {
+      "matchLabels": {
+        "app": "postgres"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "postgres"
+        }
+      },
+      "spec": {
+        "serviceAccountName": "vetnotify-app",
+        "automountServiceAccountToken": false,
+        "enableServiceLinks": false,
+        "securityContext": {
+          "fsGroup": 999,
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          }
+        },
+        "containers": [
+          {
+            "name": "postgres",
+            "image": "postgres:18-bookworm@sha256:1c59e2c3c818eaa0f0628f695b36e7c9e362d6b219b36a54a32df645cbd7e1af",
+            "imagePullPolicy": "IfNotPresent",
+            "ports": [
+              {
+                "name": "http",
+                "containerPort": 5432
+              }
+            ],
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "runAsNonRoot": true,
+              "runAsUser": 999,
+              "runAsGroup": 999,
+              "readOnlyRootFilesystem": false,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              }
+            },
+            "resources": {
+              "requests": {
+                "cpu": "120m",
+                "memory": "192Mi"
+              },
+              "limits": {
+                "cpu": "850m",
+                "memory": "640Mi"
+              }
+            },
+            "env": [
+              {
+                "name": "POSTGRES_USER",
+                "value": "vetnotify"
+              },
+              {
+                "name": "POSTGRES_DB",
+                "value": "vetnotify"
+              },
+              {
+                "name": "POSTGRES_PASSWORD",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "vetnotify-database",
+                    "key": "password"
+                  }
+                }
+              }
+            ],
+            "volumeMounts": [
+              {
+                "name": "data",
+                "mountPath": "/var/lib/postgresql"
+              }
+            ],
+            "startupProbe": {
+              "exec": {
+                "command": [
+                  "sh",
+                  "-ec",
+                  "pg_isready -h 127.0.0.1 -U vetnotify -d vetnotify"
+                ]
+              },
+              "periodSeconds": 3,
+              "failureThreshold": 40
+            },
+            "readinessProbe": {
+              "exec": {
+                "command": [
+                  "sh",
+                  "-ec",
+                  "pg_isready -h 127.0.0.1 -U vetnotify -d vetnotify"
+                ]
+              },
+              "periodSeconds": 3
+            },
+            "livenessProbe": {
+              "exec": {
+                "command": [
+                  "sh",
+                  "-ec",
+                  "pg_isready -h 127.0.0.1 -U vetnotify -d vetnotify"
+                ]
+              },
+              "periodSeconds": 10,
+              "timeoutSeconds": 3
+            }
+          }
+        ]
+      }
+    },
+    "volumeClaimTemplates": [
+      {
+        "metadata": {
+          "name": "data"
+        },
+        "spec": {
+          "storageClassName": "local-path",
+          "accessModes": [
+            "ReadWriteOnce"
+          ],
+          "resources": {
+            "requests": {
+              "storage": "8Gi"
+            }
+          }
+        }
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "v1",
+  "kind": "Service",
+  "metadata": {
+    "name": "postgres",
+    "labels": {}
+  },
+  "spec": {
+    "selector": {
+      "app": "postgres"
+    },
+    "ports": [
+      {
+        "name": "http",
+        "port": 5432,
+        "targetPort": 5432
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "collector",
+    "labels": {
+      "app": "collector",
+      "app.kubernetes.io/part-of": "vetnotify"
+    }
+  },
+  "spec": {
+    "replicas": 1,
+    "revisionHistoryLimit": 4,
+    "progressDeadlineSeconds": 150,
+    "selector": {
+      "matchLabels": {
+        "app": "collector"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "collector",
+          "app.kubernetes.io/part-of": "vetnotify"
+        }
+      },
+      "spec": {
+        "serviceAccountName": "vetnotify-app",
+        "automountServiceAccountToken": false,
+        "enableServiceLinks": false,
+        "securityContext": {
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          }
+        },
+        "containers": [
+          {
+            "name": "collector",
+            "image": "otel/opentelemetry-collector:0.160.0",
+            "imagePullPolicy": "IfNotPresent",
+            "ports": [
+              {
+                "name": "http",
+                "containerPort": 4318
+              }
+            ],
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "runAsNonRoot": true,
+              "runAsUser": 10001,
+              "runAsGroup": 10001,
+              "readOnlyRootFilesystem": false,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              }
+            },
+            "resources": {
+              "requests": {
+                "cpu": "30m",
+                "memory": "48Mi"
+              },
+              "limits": {
+                "cpu": "300m",
+                "memory": "192Mi"
+              }
+            },
+            "args": [
+              "--config=/etc/otelcol/vetnotify.yaml"
+            ],
+            "volumeMounts": [
+              {
+                "name": "config",
+                "mountPath": "/etc/otelcol/vetnotify.yaml",
+                "subPath": "collector.yaml",
+                "readOnly": true
+              }
+            ],
+            "startupProbe": {
+              "httpGet": {
+                "path": "/",
+                "port": 13133
+              },
+              "periodSeconds": 4,
+              "failureThreshold": 20,
+              "timeoutSeconds": 3
+            },
+            "readinessProbe": {
+              "httpGet": {
+                "path": "/",
+                "port": 13133
+              },
+              "periodSeconds": 4,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            },
+            "livenessProbe": {
+              "httpGet": {
+                "path": "/",
+                "port": 13133
+              },
+              "periodSeconds": 10,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            }
+          }
+        ],
+        "volumes": [
+          {
+            "name": "config",
+            "configMap": {
+              "name": "vetnotify-observability"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+---
+{
+  "apiVersion": "v1",
+  "kind": "Service",
+  "metadata": {
+    "name": "collector",
+    "labels": {}
+  },
+  "spec": {
+    "selector": {
+      "app": "collector"
+    },
+    "ports": [
+      {
+        "name": "http",
+        "port": 4318,
+        "targetPort": 4318
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "v1",
+  "kind": "PersistentVolumeClaim",
+  "metadata": {
+    "name": "jaeger-data",
+    "labels": {}
+  },
+  "spec": {
+    "storageClassName": "local-path",
+    "accessModes": [
+      "ReadWriteOnce"
+    ],
+    "resources": {
+      "requests": {
+        "storage": "2Gi"
+      }
+    }
+  }
+}
+---
+{
+  "apiVersion": "v1",
+  "kind": "PersistentVolumeClaim",
+  "metadata": {
+    "name": "prometheus-data",
+    "labels": {}
+  },
+  "spec": {
+    "storageClassName": "local-path",
+    "accessModes": [
+      "ReadWriteOnce"
+    ],
+    "resources": {
+      "requests": {
+        "storage": "2Gi"
+      }
+    }
+  }
+}
+---
+{
+  "apiVersion": "v1",
+  "kind": "PersistentVolumeClaim",
+  "metadata": {
+    "name": "grafana-data",
+    "labels": {}
+  },
+  "spec": {
+    "storageClassName": "local-path",
+    "accessModes": [
+      "ReadWriteOnce"
+    ],
+    "resources": {
+      "requests": {
+        "storage": "1Gi"
+      }
+    }
+  }
+}
+---
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "jaeger",
+    "labels": {
+      "app": "jaeger",
+      "app.kubernetes.io/part-of": "vetnotify"
+    }
+  },
+  "spec": {
+    "replicas": 1,
+    "revisionHistoryLimit": 4,
+    "progressDeadlineSeconds": 150,
+    "strategy": {
+      "type": "Recreate"
+    },
+    "selector": {
+      "matchLabels": {
+        "app": "jaeger"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "jaeger",
+          "app.kubernetes.io/part-of": "vetnotify"
+        }
+      },
+      "spec": {
+        "serviceAccountName": "vetnotify-app",
+        "automountServiceAccountToken": false,
+        "enableServiceLinks": false,
+        "securityContext": {
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          },
+          "fsGroup": 10001,
+          "fsGroupChangePolicy": "OnRootMismatch"
+        },
+        "containers": [
+          {
+            "name": "jaeger",
+            "image": "cr.jaegertracing.io/jaegertracing/jaeger:2.22.0",
+            "imagePullPolicy": "IfNotPresent",
+            "ports": [
+              {
+                "name": "http",
+                "containerPort": 16686
+              },
+              {
+                "name": "otlp",
+                "containerPort": 4318
+              }
+            ],
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "runAsNonRoot": true,
+              "runAsUser": 10001,
+              "runAsGroup": 10001,
+              "readOnlyRootFilesystem": false,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              }
+            },
+            "resources": {
+              "requests": {
+                "cpu": "50m",
+                "memory": "96Mi"
+              },
+              "limits": {
+                "cpu": "400m",
+                "memory": "300Mi"
+              }
+            },
+            "args": [
+              "--config=/etc/jaeger/vetnotify.yaml"
+            ],
+            "volumeMounts": [
+              {
+                "name": "config",
+                "mountPath": "/etc/jaeger/vetnotify.yaml",
+                "subPath": "jaeger.yaml",
+                "readOnly": true
+              },
+              {
+                "name": "data",
+              "mountPath": "/tmp"
+              }
+            ],
+            "startupProbe": {
+              "httpGet": {
+                "path": "/",
+                "port": 16686
+              },
+              "periodSeconds": 3,
+              "failureThreshold": 30,
+              "timeoutSeconds": 3
+            },
+            "readinessProbe": {
+              "httpGet": {
+                "path": "/",
+                "port": 16686
+              },
+              "periodSeconds": 5,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            },
+            "livenessProbe": {
+              "httpGet": {
+                "path": "/",
+                "port": 16686
+              },
+              "periodSeconds": 15,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            }
+          }
+        ],
+        "volumes": [
+          {
+            "name": "config",
+            "configMap": {
+              "name": "vetnotify-observability"
+            }
+          },
+          {
+            "name": "data",
+            "persistentVolumeClaim": {
+              "claimName": "jaeger-data"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+---
+{
+  "apiVersion": "v1",
+  "kind": "Service",
+  "metadata": {
+    "name": "jaeger",
+    "labels": {}
+  },
+  "spec": {
+    "selector": {
+      "app": "jaeger"
+    },
+    "ports": [
+      {
+        "name": "http",
+        "port": 16686,
+        "targetPort": 16686
+      },
+      {
+        "name": "otlp",
+        "port": 4318,
+        "targetPort": 4318
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "prometheus",
+    "labels": {
+      "app": "prometheus",
+      "app.kubernetes.io/part-of": "vetnotify"
+    }
+  },
+  "spec": {
+    "replicas": 1,
+    "revisionHistoryLimit": 4,
+    "progressDeadlineSeconds": 150,
+    "strategy": {
+      "type": "Recreate"
+    },
+    "selector": {
+      "matchLabels": {
+        "app": "prometheus"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "prometheus",
+          "app.kubernetes.io/part-of": "vetnotify"
+        }
+      },
+      "spec": {
+        "serviceAccountName": "vetnotify-app",
+        "automountServiceAccountToken": false,
+        "enableServiceLinks": false,
+        "securityContext": {
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          },
+          "fsGroup": 65534,
+          "fsGroupChangePolicy": "OnRootMismatch"
+        },
+        "containers": [
+          {
+            "name": "prometheus",
+            "image": "prom/prometheus:v3.15.0",
+            "imagePullPolicy": "IfNotPresent",
+            "ports": [
+              {
+                "name": "http",
+                "containerPort": 9090
+              }
+            ],
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "runAsNonRoot": true,
+              "runAsUser": 65534,
+              "runAsGroup": 65534,
+              "readOnlyRootFilesystem": false,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              }
+            },
+            "resources": {
+              "requests": {
+                "cpu": "60m",
+                "memory": "125Mi"
+              },
+              "limits": {
+                "cpu": "450m",
+                "memory": "420Mi"
+              }
+            },
+            "args": [
+              "--config.file=/etc/prometheus/vetnotify.yaml",
+              "--storage.tsdb.retention.time=3d",
+              "--storage.tsdb.retention.size=1GB"
+            ],
+            "volumeMounts": [
+              {
+                "name": "config",
+                "mountPath": "/etc/prometheus/vetnotify.yaml",
+                "subPath": "prometheus.yaml",
+                "readOnly": true
+              },
+              {
+                "name": "config",
+                "mountPath": "/etc/prometheus/rules.yaml",
+                "subPath": "rules.yaml",
+                "readOnly": true
+              },
+              {
+                "name": "data",
+                "mountPath": "/prometheus"
+              }
+            ],
+            "startupProbe": {
+              "httpGet": {
+                "path": "/-/healthy",
+                "port": 9090
+              },
+              "periodSeconds": 4,
+              "failureThreshold": 25,
+              "timeoutSeconds": 3
+            },
+            "readinessProbe": {
+              "httpGet": {
+                "path": "/-/ready",
+                "port": 9090
+              },
+              "periodSeconds": 5,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            },
+            "livenessProbe": {
+              "httpGet": {
+                "path": "/-/healthy",
+                "port": 9090
+              },
+              "periodSeconds": 10,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            }
+          }
+        ],
+        "volumes": [
+          {
+            "name": "config",
+            "configMap": {
+              "name": "vetnotify-observability"
+            }
+          },
+          {
+            "name": "data",
+            "persistentVolumeClaim": {
+              "claimName": "prometheus-data"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+---
+{
+  "apiVersion": "v1",
+  "kind": "Service",
+  "metadata": {
+    "name": "prometheus",
+    "labels": {}
+  },
+  "spec": {
+    "selector": {
+      "app": "prometheus"
+    },
+    "ports": [
+      {
+        "name": "http",
+        "port": 9090,
+        "targetPort": 9090
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "grafana",
+    "labels": {
+      "app": "grafana",
+      "app.kubernetes.io/part-of": "vetnotify"
+    }
+  },
+  "spec": {
+    "replicas": 1,
+    "revisionHistoryLimit": 4,
+    "progressDeadlineSeconds": 150,
+    "strategy": {
+      "type": "Recreate"
+    },
+    "selector": {
+      "matchLabels": {
+        "app": "grafana"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "grafana",
+          "app.kubernetes.io/part-of": "vetnotify"
+        }
+      },
+      "spec": {
+        "serviceAccountName": "vetnotify-app",
+        "automountServiceAccountToken": false,
+        "enableServiceLinks": false,
+        "securityContext": {
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          },
+          "fsGroup": 472,
+          "fsGroupChangePolicy": "OnRootMismatch"
+        },
+        "containers": [
+          {
+            "name": "grafana",
+            "image": "grafana/grafana:13.2.4",
+            "imagePullPolicy": "IfNotPresent",
+            "ports": [
+              {
+                "name": "http",
+                "containerPort": 3000
+              }
+            ],
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "runAsNonRoot": true,
+              "runAsUser": 472,
+              "runAsGroup": 472,
+              "readOnlyRootFilesystem": false,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              }
+            },
+            "resources": {
+              "requests": {
+                "cpu": "40m",
+                "memory": "208Mi"
+              },
+              "limits": {
+                "cpu": "400m",
+                "memory": "340Mi"
+              }
+            },
+            "env": [
+              {
+                "name": "GF_SECURITY_ADMIN_USER",
+                "value": "vetnotify"
+              },
+              {
+                "name": "GF_SECURITY_ADMIN_PASSWORD",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "vetnotify-grafana",
+                    "key": "password"
+                  }
+                }
+              },
+              {
+                "name": "GF_AUTH_ANONYMOUS_ENABLED",
+                "value": "false"
+              },
+              {
+                "name": "GF_ANALYTICS_REPORTING_ENABLED",
+                "value": "false"
+              },
+              {
+                "name": "GF_ANALYTICS_CHECK_FOR_UPDATES",
+                "value": "false"
+              },
+              {
+                "name": "GF_PLUGINS_PREINSTALL_DISABLED",
+                "value": "true"
+              }
+            ],
+            "volumeMounts": [
+              {
+                "name": "config",
+                "mountPath": "/etc/grafana/provisioning/datasources/vetnotify.yaml",
+                "subPath": "datasources.yaml",
+                "readOnly": true
+              },
+              {
+                "name": "config",
+                "mountPath": "/etc/grafana/provisioning/dashboards/vetnotify.yaml",
+                "subPath": "dashboards.yaml",
+                "readOnly": true
+              },
+              {
+                "name": "config",
+              "mountPath": "/var/lib/grafana/dashboards/operations.json",
+                "subPath": "operations.json",
+                "readOnly": true
+              },
+              {
+                "name": "data",
+                "mountPath": "/var/lib/grafana"
+              }
+            ],
+            "startupProbe": {
+              "httpGet": {
+                "path": "/api/health",
+                "port": 3000
+              },
+              "periodSeconds": 4,
+              "failureThreshold": 25,
+              "timeoutSeconds": 3
+            },
+            "readinessProbe": {
+              "httpGet": {
+                "path": "/api/health",
+                "port": 3000
+              },
+              "periodSeconds": 5,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            },
+            "livenessProbe": {
+              "httpGet": {
+                "path": "/api/health",
+                "port": 3000
+              },
+              "periodSeconds": 15,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            }
+          }
+        ],
+        "volumes": [
+          {
+            "name": "config",
+            "configMap": {
+              "name": "vetnotify-observability"
+            }
+          },
+          {
+            "name": "data",
+            "persistentVolumeClaim": {
+              "claimName": "grafana-data"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+---
+{
+  "apiVersion": "v1",
+  "kind": "Service",
+  "metadata": {
+    "name": "grafana",
+    "labels": {}
+  },
+  "spec": {
+    "selector": {
+      "app": "grafana"
+    },
+    "ports": [
+      {
+        "name": "http",
+        "port": 3000,
+        "targetPort": 3000
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "node-exporter",
+    "labels": {
+      "app": "node-exporter",
+      "app.kubernetes.io/part-of": "vetnotify"
+    }
+  },
+  "spec": {
+    "replicas": 1,
+    "revisionHistoryLimit": 4,
+    "progressDeadlineSeconds": 150,
+    "selector": {
+      "matchLabels": {
+        "app": "node-exporter"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "node-exporter",
+          "app.kubernetes.io/part-of": "vetnotify"
+        }
+      },
+      "spec": {
+        "serviceAccountName": "vetnotify-app",
+        "automountServiceAccountToken": false,
+        "enableServiceLinks": false,
+        "securityContext": {
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          }
+        },
+        "containers": [
+          {
+            "name": "node-exporter",
+            "image": "prom/node-exporter:v1.11.1",
+            "imagePullPolicy": "IfNotPresent",
+            "ports": [
+              {
+                "name": "http",
+                "containerPort": 9100
+              }
+            ],
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "runAsNonRoot": true,
+              "runAsUser": 65534,
+              "runAsGroup": 65534,
+              "readOnlyRootFilesystem": false,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              }
+            },
+            "resources": {
+              "requests": {
+                "cpu": "10m",
+                "memory": "20Mi"
+              },
+              "limits": {
+                "cpu": "130m",
+                "memory": "70Mi"
+              }
+            },
+            "args": [
+              "--collector.disable-defaults",
+              "--collector.cpu",
+              "--collector.meminfo"
+            ],
+            "startupProbe": {
+              "httpGet": {
+                "path": "/",
+                "port": 9100
+              },
+              "periodSeconds": 4,
+              "failureThreshold": 15,
+              "timeoutSeconds": 3
+            },
+            "readinessProbe": {
+              "httpGet": {
+                "path": "/",
+                "port": 9100
+              },
+              "periodSeconds": 6,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            },
+            "livenessProbe": {
+              "httpGet": {
+                "path": "/",
+                "port": 9100
+              },
+              "periodSeconds": 15,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+---
+{
+  "apiVersion": "v1",
+  "kind": "Service",
+  "metadata": {
+    "name": "node-exporter",
+    "labels": {}
+  },
+  "spec": {
+    "selector": {
+      "app": "node-exporter"
+    },
+    "ports": [
+      {
+        "name": "http",
+        "port": 9100,
+        "targetPort": 9100
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "probe",
+    "labels": {
+      "app": "probe",
+      "app.kubernetes.io/part-of": "vetnotify"
+    }
+  },
+  "spec": {
+    "replicas": 1,
+    "revisionHistoryLimit": 4,
+    "progressDeadlineSeconds": 150,
+    "selector": {
+      "matchLabels": {
+        "app": "probe"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "probe",
+          "app.kubernetes.io/part-of": "vetnotify"
+        }
+      },
+      "spec": {
+        "serviceAccountName": "vetnotify-app",
+        "automountServiceAccountToken": false,
+        "enableServiceLinks": false,
+        "securityContext": {
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          }
+        },
+        "containers": [
+          {
+            "name": "probe",
+            "image": "vetnotify-backend:local",
+            "imagePullPolicy": "IfNotPresent",
+            "ports": [
+              {
+                "name": "http",
+                "containerPort": 8080
+              }
+            ],
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "runAsNonRoot": true,
+              "runAsUser": 1000,
+              "runAsGroup": 1000,
+              "readOnlyRootFilesystem": false,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              }
+            },
+            "resources": {
+              "requests": {
+                "cpu": "10m",
+                "memory": "32Mi"
+              },
+              "limits": {
+                "cpu": "250m",
+                "memory": "128Mi"
+              }
+            },
+            "command": [
+              "node",
+              "scripts/probe.mjs"
+            ],
+            "env": [
+              {
+                "name": "VET_ENV",
+                "valueFrom": {
+                  "configMapKeyRef": {
+                    "name": "vetnotify-config",
+                    "key": "VET_ENV"
+                  }
+                }
+              },
+              {
+                "name": "API_URL",
+                "value": "http://gateway:8080"
+              },
+              {
+                "name": "AGENDA_KEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "vetnotify-agenda",
+                    "key": "key"
+                  }
+                }
+              }
+            ],
+            "startupProbe": {
+              "httpGet": {
+                "path": "/health/live",
+                "port": 8080
+              },
+              "periodSeconds": 3,
+              "failureThreshold": 30,
+              "timeoutSeconds": 3
+            },
+            "readinessProbe": {
+              "httpGet": {
+                "path": "/health/live",
+                "port": 8080
+              },
+              "periodSeconds": 5,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            },
+            "livenessProbe": {
+              "httpGet": {
+                "path": "/health/live",
+                "port": 8080
+              },
+              "periodSeconds": 15,
+              "failureThreshold": 3,
+              "timeoutSeconds": 3
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+---
+{
+  "apiVersion": "v1",
+  "kind": "Service",
+  "metadata": {
+    "name": "probe",
+    "labels": {}
+  },
+  "spec": {
+    "selector": {
+      "app": "probe"
+    },
+    "ports": [
+      {
+        "name": "http",
+        "port": 8080,
+        "targetPort": 8080
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "default-deny-ingress",
+    "labels": {}
+  },
+  "spec": {
+    "podSelector": {},
+    "policyTypes": [
+      "Ingress"
+    ],
+    "ingress": []
+  }
+}
+---
+{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "gateway-public-edge",
+    "labels": {}
+  },
+  "spec": {
+    "podSelector": {
+      "matchExpressions": [
+        {
+          "key": "app",
+          "operator": "In",
+          "values": [
+            "gateway"
+          ]
+        }
+      ]
+    },
+    "policyTypes": [
+      "Ingress"
+    ],
+    "ingress": [
+      {
+        "ports": [
+          {
+            "port": 8080,
+            "protocol": "TCP"
+          }
+        ]
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "api-callers",
+    "labels": {}
+  },
+  "spec": {
+    "podSelector": {
+      "matchExpressions": [
+        {
+          "key": "app",
+          "operator": "In",
+          "values": [
+            "api"
+          ]
+        }
+      ]
+    },
+    "policyTypes": [
+      "Ingress"
+    ],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchExpressions": [
+                {
+                  "key": "app",
+                  "operator": "In",
+                  "values": [
+                    "gateway",
+                    "agenda",
+                    "laboratorio",
+                    "prometheus"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "ports": [
+          {
+            "port": 8080,
+            "protocol": "TCP"
+          }
+        ]
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "web-gateway",
+    "labels": {}
+  },
+  "spec": {
+    "podSelector": {
+      "matchExpressions": [
+        {
+          "key": "app",
+          "operator": "In",
+          "values": [
+            "web"
+          ]
+        }
+      ]
+    },
+    "policyTypes": [
+      "Ingress"
+    ],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchExpressions": [
+                {
+                  "key": "app",
+                  "operator": "In",
+                  "values": [
+                    "gateway"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "ports": [
+          {
+            "port": 8080,
+            "protocol": "TCP"
+          }
+        ]
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "app-adapters",
+    "labels": {}
+  },
+  "spec": {
+    "podSelector": {
+      "matchExpressions": [
+        {
+          "key": "app",
+          "operator": "In",
+          "values": [
+            "agenda",
+            "laboratorio"
+          ]
+        }
+      ]
+    },
+    "policyTypes": [
+      "Ingress"
+    ],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchExpressions": [
+                {
+                  "key": "app",
+                  "operator": "In",
+                  "values": [
+                    "api"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "ports": [
+          {
+            "port": 8080,
+            "protocol": "TCP"
+          }
+        ]
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "simulator-worker",
+    "labels": {}
+  },
+  "spec": {
+    "podSelector": {
+      "matchExpressions": [
+        {
+          "key": "app",
+          "operator": "In",
+          "values": [
+            "simulator"
+          ]
+        }
+      ]
+    },
+    "policyTypes": [
+      "Ingress"
+    ],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchExpressions": [
+                {
+                  "key": "app",
+                  "operator": "In",
+                  "values": [
+                    "worker-email"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "ports": [
+          {
+            "port": 8080,
+            "protocol": "TCP"
+          }
+        ]
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "database-consumers",
+    "labels": {}
+  },
+  "spec": {
+    "podSelector": {
+      "matchExpressions": [
+        {
+          "key": "app",
+          "operator": "In",
+          "values": [
+            "postgres"
+          ]
+        }
+      ]
+    },
+    "policyTypes": [
+      "Ingress"
+    ],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchExpressions": [
+                {
+                  "key": "app",
+                  "operator": "In",
+                  "values": [
+                    "api",
+                    "worker-email",
+                    "worker-internal",
+                    "simulator",
+                    "db-setup"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "ports": [
+          {
+            "port": 5432,
+            "protocol": "TCP"
+          }
+        ]
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "otlp-collector",
+    "labels": {}
+  },
+  "spec": {
+    "podSelector": {
+      "matchExpressions": [
+        {
+          "key": "app",
+          "operator": "In",
+          "values": [
+            "collector"
+          ]
+        }
+      ]
+    },
+    "policyTypes": [
+      "Ingress"
+    ],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchExpressions": [
+                {
+                  "key": "app",
+                  "operator": "In",
+                  "values": [
+                    "api",
+                    "agenda",
+                    "laboratorio",
+                    "worker-email",
+                    "worker-internal",
+                    "simulator"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "ports": [
+          {
+            "port": 4318,
+            "protocol": "TCP"
+          }
+        ]
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "jaeger-storage",
+    "labels": {}
+  },
+  "spec": {
+    "podSelector": {
+      "matchExpressions": [
+        {
+          "key": "app",
+          "operator": "In",
+          "values": [
+            "jaeger"
+          ]
+        }
+      ]
+    },
+    "policyTypes": [
+      "Ingress"
+    ],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchExpressions": [
+                {
+                  "key": "app",
+                  "operator": "In",
+                  "values": [
+                    "collector",
+                    "grafana"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "ports": [
+          {
+            "port": 4318,
+            "protocol": "TCP"
+          },
+          {
+            "port": 16686,
+            "protocol": "TCP"
+          }
+        ]
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "prometheus-query",
+    "labels": {}
+  },
+  "spec": {
+    "podSelector": {
+      "matchExpressions": [
+        {
+          "key": "app",
+          "operator": "In",
+          "values": [
+            "prometheus"
+          ]
+        }
+      ]
+    },
+    "policyTypes": [
+      "Ingress"
+    ],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchExpressions": [
+                {
+                  "key": "app",
+                  "operator": "In",
+                  "values": [
+                    "grafana"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "ports": [
+          {
+            "port": 9090,
+            "protocol": "TCP"
+          }
+        ]
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "scrape-targets",
+    "labels": {}
+  },
+  "spec": {
+    "podSelector": {
+      "matchExpressions": [
+        {
+          "key": "app",
+          "operator": "In",
+          "values": [
+            "probe",
+            "node-exporter"
+          ]
+        }
+      ]
+    },
+    "policyTypes": [
+      "Ingress"
+    ],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchExpressions": [
+                {
+                  "key": "app",
+                  "operator": "In",
+                  "values": [
+                    "prometheus"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "ports": [
+          {
+            "port": 8080,
+            "protocol": "TCP"
+          },
+          {
+            "port": 9100,
+            "protocol": "TCP"
+          }
+        ]
+      }
+    ]
+  }
+}

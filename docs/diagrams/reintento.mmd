@@ -1,0 +1,17 @@
+sequenceDiagram
+  autonumber
+  participant P as Cola PostgreSQL
+  participant W as Worker correo
+  participant S as Simulador
+  W->>P: SKIP LOCKED, token, intento 1
+  W->>S: Entrega con clave entorno + UUID
+  S-->>W: HTTP 503
+  W->>P: Resultado transitorio y próxima fecha +2 s
+  W->>P: Reclama intento 2
+  W->>S: Misma clave estable
+  S-->>W: HTTP 503
+  W->>P: Programa +4 s
+  W->>P: Reclama intento 3
+  W->>S: Misma clave estable
+  S-->>W: 202 y recibo
+  W->>P: Guarda recibo y delivered si el lease sigue vigente

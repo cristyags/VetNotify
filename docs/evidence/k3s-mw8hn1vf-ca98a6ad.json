@@ -1,0 +1,261 @@
+{
+  "title": "VetNotify · Evidencia operativa de K3s",
+  "runId": "k3s-mw8hn1vf-ca98a6ad",
+  "start": "2026-11-08T23:53:23.260Z",
+  "cases": [
+    {
+      "name": "DEV-09/10/11",
+      "state": "pasó",
+      "summary": "Nodo Ready, workloads por digest, PVC y capacidad observada. RBAC de release limita secretos.",
+      "nodes": [
+        {
+          "name": "vetnotify-26a7d1",
+          "version": "v1.35.2+k3s1",
+          "ready": "True",
+          "allocatable": {
+            "cpu": "2",
+            "ephemeral-storage": "62173523510",
+            "hugepages-1Gi": "0",
+            "hugepages-2Mi": "0",
+            "memory": "8122984Ki",
+            "pods": "110"
+          }
+        }
+      ],
+      "pods": [
+        {
+          "name": "agenda-78954bb9b5-pv59q",
+          "uid": "88f88853-a2b1-49d7-86a7-9ede92fad041",
+          "containers": [
+            {
+              "name": "agenda",
+              "ready": true,
+              "restarts": 0,
+              "image": "ghcr.io/cristyags/vetnotify-backend:92e5a9af8cfd7c1c5c7d409fd77c126e6bb7c30b",
+              "imageID": "ghcr.io/cristyags/vetnotify-backend@sha256:bceee49a3f1dfeb5c2d7ecb5a81d6039cb7ddf2142c9f37cecc93e7dab00e0d9"
+            }
+          ]
+        },
+        {
+          "name": "api-97f8c94c6-jn7z8",
+          "uid": "88981ade-b8ac-405d-9bf6-6527e3c4716d",
+          "containers": [
+            {
+              "name": "api",
+              "ready": true,
+              "restarts": 0,
+              "image": "ghcr.io/cristyags/vetnotify-backend:92e5a9af8cfd7c1c5c7d409fd77c126e6bb7c30b",
+              "imageID": "ghcr.io/cristyags/vetnotify-backend@sha256:bceee49a3f1dfeb5c2d7ecb5a81d6039cb7ddf2142c9f37cecc93e7dab00e0d9"
+            }
+          ]
+        },
+        {
+          "name": "collector-f9f8998-dzcmq",
+          "uid": "01cb349f-8888-404e-b57a-a060d43413c9",
+          "containers": [
+            {
+              "name": "collector",
+              "ready": true,
+              "restarts": 0,
+              "image": "docker.io/otel/opentelemetry-collector:0.160.0",
+              "imageID": "docker.io/otel/opentelemetry-collector@sha256:e495787f07dbe432ce763ebaf5bc3d113850e9eee2250ade7a3da6a882d0d69a"
+            }
+          ]
+        },
+        {
+          "name": "gateway-55ffd66df7-4hsq9",
+          "uid": "c3834301-84f7-4eaa-b12c-0d1b6df2d1f8",
+          "containers": [
+            {
+              "name": "gateway",
+              "ready": true,
+              "restarts": 0,
+              "image": "docker.io/library/nginx:1.30.6-alpine",
+              "imageID": "docker.io/library/nginx@sha256:583b7f2fce1cdb8da5ad5c39ebd3c33b98b87d493190e548bdee1fa8c619c311"
+            }
+          ]
+        },
+        {
+          "name": "grafana-69887ccf4-9brwl",
+          "uid": "ac4a7be9-1385-49ba-940a-6da54d57637f",
+          "containers": [
+            {
+              "name": "grafana",
+              "ready": true,
+              "restarts": 0,
+              "image": "docker.io/grafana/grafana:13.2.4",
+              "imageID": "docker.io/grafana/grafana@sha256:dbbc38ea21103cefb50396340cd88afec779c7e070b0a7bf5a75b4ce46651d3f"
+            }
+          ]
+        },
+        {
+          "name": "jaeger-756987567d-jsmsq",
+          "uid": "dbf40806-236b-4ad0-bee7-b50a24099c92",
+          "containers": [
+            {
+              "name": "jaeger",
+              "ready": true,
+              "restarts": 0,
+              "image": "cr.jaegertracing.io/jaegertracing/jaeger:2.22.0",
+              "imageID": "cr.jaegertracing.io/jaegertracing/jaeger@sha256:836b967b5abcf1f7758066aa6b348619267a2f1459f72d472840570f9bd88a17"
+            }
+          ]
+        },
+        {
+          "name": "laboratorio-6d7586484b-l9s99",
+          "uid": "f660ea3d-c792-493b-b1e4-6b4fb8c5e819",
+          "containers": [
+            {
+              "name": "laboratorio",
+              "ready": true,
+              "restarts": 0,
+              "image": "ghcr.io/cristyags/vetnotify-backend:92e5a9af8cfd7c1c5c7d409fd77c126e6bb7c30b",
+              "imageID": "ghcr.io/cristyags/vetnotify-backend@sha256:bceee49a3f1dfeb5c2d7ecb5a81d6039cb7ddf2142c9f37cecc93e7dab00e0d9"
+            }
+          ]
+        },
+        {
+          "name": "node-exporter-64466bdfd9-689rl",
+          "uid": "2c785367-e11e-4e1d-adac-49dba9ad9c3f",
+          "containers": [
+            {
+              "name": "node-exporter",
+              "ready": true,
+              "restarts": 0,
+              "image": "docker.io/prom/node-exporter:v1.11.1",
+              "imageID": "docker.io/prom/node-exporter@sha256:e9cff4fc67b1818f8c97adb115b9f12c9a54b533de86765d4a0effc01b357205"
+            }
+          ]
+        },
+        {
+          "name": "postgres-0",
+          "uid": "47b201e0-a0ed-4e9c-a357-50d348f0a7ad",
+          "containers": [
+            {
+              "name": "postgres",
+              "ready": true,
+              "restarts": 0,
+              "image": "sha256:f372eda99ac2ea249c3dce566dcdf468397035371284d2cf2103b4bc52b3b39e",
+              "imageID": "docker.io/library/postgres@sha256:1c59e2c3c818eaa0f0628f695b36e7c9e362d6b219b36a54a32df645cbd7e1af"
+            }
+          ]
+        },
+        {
+          "name": "probe-5ffc9d4d5f-9mdz5",
+          "uid": "05ef2ec6-05c7-4bc2-99ca-4f944835cbed",
+          "containers": [
+            {
+              "name": "probe",
+              "ready": true,
+              "restarts": 0,
+              "image": "ghcr.io/cristyags/vetnotify-backend:92e5a9af8cfd7c1c5c7d409fd77c126e6bb7c30b",
+              "imageID": "ghcr.io/cristyags/vetnotify-backend@sha256:bceee49a3f1dfeb5c2d7ecb5a81d6039cb7ddf2142c9f37cecc93e7dab00e0d9"
+            }
+          ]
+        },
+        {
+          "name": "prometheus-74956f9b96-ptr6b",
+          "uid": "c9b292f0-2ccc-4022-aec8-77871745b4d7",
+          "containers": [
+            {
+              "name": "prometheus",
+              "ready": true,
+              "restarts": 0,
+              "image": "docker.io/prom/prometheus:v3.15.0",
+              "imageID": "docker.io/prom/prometheus@sha256:efd719c99d83b060d9daefdcf00360461adf279f45ef5391f8d111892118753e"
+            }
+          ]
+        },
+        {
+          "name": "simulator-5cfcc5778c-fjmkd",
+          "uid": "d88e1ed6-bba3-4d2d-ac10-e680bb91637a",
+          "containers": [
+            {
+              "name": "simulator",
+              "ready": true,
+              "restarts": 0,
+              "image": "ghcr.io/cristyags/vetnotify-backend:92e5a9af8cfd7c1c5c7d409fd77c126e6bb7c30b",
+              "imageID": "ghcr.io/cristyags/vetnotify-backend@sha256:bceee49a3f1dfeb5c2d7ecb5a81d6039cb7ddf2142c9f37cecc93e7dab00e0d9"
+            }
+          ]
+        },
+        {
+          "name": "web-5fb4dd55dd-52dxs",
+          "uid": "d2ba317b-6c5c-4bd6-8730-245f225dda2b",
+          "containers": [
+            {
+              "name": "web",
+              "ready": true,
+              "restarts": 0,
+              "image": "ghcr.io/cristyags/vetnotify-web:92e5a9af8cfd7c1c5c7d409fd77c126e6bb7c30b",
+              "imageID": "ghcr.io/cristyags/vetnotify-web@sha256:884f01be7e5f61070aee38cf175cc34b9ab6569802739479d35bd12743dcc302"
+            }
+          ]
+        },
+        {
+          "name": "worker-email-c8cbcb997-8w5xx",
+          "uid": "3b636980-6845-41ee-8ee3-4e1a14834842",
+          "containers": [
+            {
+              "name": "worker-email",
+              "ready": true,
+              "restarts": 0,
+              "image": "ghcr.io/cristyags/vetnotify-backend:92e5a9af8cfd7c1c5c7d409fd77c126e6bb7c30b",
+              "imageID": "ghcr.io/cristyags/vetnotify-backend@sha256:bceee49a3f1dfeb5c2d7ecb5a81d6039cb7ddf2142c9f37cecc93e7dab00e0d9"
+            }
+          ]
+        },
+        {
+          "name": "worker-internal-f69bc6ff8-kb9m6",
+          "uid": "611d080d-a213-4303-8f9c-4cc26bab3de8",
+          "containers": [
+            {
+              "name": "worker-internal",
+              "ready": true,
+              "restarts": 0,
+              "image": "ghcr.io/cristyags/vetnotify-backend:92e5a9af8cfd7c1c5c7d409fd77c126e6bb7c30b",
+              "imageID": "ghcr.io/cristyags/vetnotify-backend@sha256:bceee49a3f1dfeb5c2d7ecb5a81d6039cb7ddf2142c9f37cecc93e7dab00e0d9"
+            }
+          ]
+        }
+      ],
+      "claims": [
+        {
+          "name": "data-postgres-0",
+          "state": "Bound",
+          "size": "8Gi",
+          "volume": "pvc-ce559022-32f0-44b6-8a4a-313c6e29b0af"
+        },
+        {
+          "name": "grafana-data",
+          "state": "Bound",
+          "size": "1Gi",
+          "volume": "pvc-78d9890a-5d5b-4d2a-a848-e03803aaf19f"
+        },
+        {
+          "name": "jaeger-data",
+          "state": "Bound",
+          "size": "2Gi",
+          "volume": "pvc-e2b2d961-f167-43f9-96f2-664c39590098"
+        },
+        {
+          "name": "prometheus-data",
+          "state": "Bound",
+          "size": "2Gi",
+          "volume": "pvc-38c99c6f-0540-4759-a214-895cd6e2f725"
+        }
+      ],
+      "cpu": "POD                               NAME              CPU(cores)   MEMORY(bytes)   \nagenda-78954bb9b5-pv59q           agenda            59m          33Mi            \napi-97f8c94c6-jn7z8               api               2m           79Mi            \ncollector-f9f8998-dzcmq           collector         1m           19Mi            \ngateway-55ffd66df7-4hsq9          gateway           1m           2Mi             \ngrafana-69887ccf4-9brwl           grafana           7m           190Mi           \njaeger-756987567d-jsmsq           jaeger            6m           23Mi            \nlaboratorio-6d7586484b-l9s99      laboratorio       60m          33Mi            \nnode-exporter-64466bdfd9-689rl    node-exporter     1m           7Mi             \npostgres-0                        postgres          55m          70Mi            \nprobe-5ffc9d4d5f-9mdz5            probe             1m           31Mi            \nprometheus-74956f9b96-ptr6b       prometheus        2m           35Mi            \nsimulator-5cfcc5778c-fjmkd        simulator         1m           36Mi            \nweb-5fb4dd55dd-52dxs              web               1m           2Mi             \nworker-email-c8cbcb997-8w5xx      worker-email      7m           54Mi            \nworker-internal-f69bc6ff8-kb9m6   worker-internal   7m           40Mi",
+      "releaseCanPatch": "yes",
+      "releaseCannotReadSecrets": true
+    }
+  ],
+  "version": {
+    "name": "VetNotify",
+    "version": "1.0.0",
+    "commit": "92e5a9af8cfd7c1c5c7d409fd77c126e6bb7c30b",
+    "image": "ghcr.io/cristyags/vetnotify-backend@sha256:bceee49a3f1dfeb5c2d7ecb5a81d6039cb7ddf2142c9f37cecc93e7dab00e0d9",
+    "environment": "dev"
+  },
+  "end": "2026-11-08T23:53:32.958Z"
+}
