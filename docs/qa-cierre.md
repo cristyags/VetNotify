@@ -21,7 +21,7 @@ La primera ejecución autenticada de Terraform falló en Azure Login con `AADSTS
 
 Tras encender la VM, la sonda de arranque de Grafana registró conexiones rechazadas y el Pod acumuló tres reinicios. Reinicié el Deployment de Grafana y comprobé que el Pod nuevo quedara `Ready` sin reinicios. El PVC se conservó. La evidencia confirma la recuperación del servicio y sirve para distinguir el síntoma observado de la causa interna, que no quedó aislada. [Operación y recuperación](operations.md).
 
-La revisión de los guiones detectó que un namespace de validación podía acompañar a una URL que sirviera producción. Incorporé una comprobación de `/api/v1/version` antes del login y las mutaciones de prueba. La regresión apuntó cuatro comandos a una API de prueba que devolvía `prod` y verificó que sus únicas peticiones fueran lecturas de versión. La demo sana de consola sigue disponible mediante `--smoke`. [Evidencia de la guarda](evidence/qa-main/guard-qa.json).
+La revisión de los guiones detectó que un namespace de validación podía acompañar a una URL que sirviera producción. Incorporé una comprobación de `/api/v1/version` antes del login y las mutaciones de prueba. La regresión apuntó cuatro comandos a una API de prueba que devolvía `prod` y verificó que sus únicas peticiones fueran lecturas de versión. Los guiones con la guarda pasaron CI en Compose, incluida la aceptación con frontend detenido y la prueba de navegador. La demo sana de consola sigue disponible mediante `--smoke`. [Evidencia de la guarda](evidence/qa-main/guard-qa.json) · [CI de la auditoría](https://github.com/cristyags/VetNotify/actions/runs/42562957036).
 
 ## Resultados del candidato e1132db
 
@@ -35,12 +35,13 @@ La revisión de los guiones detectó que un namespace de validación podía acom
 | Señales | Diez paneles, tres targets sanos y una traza del incidente consultable tras reiniciar Jaeger. La alerta pasó de `firing` a normal. | [Observabilidad](evidence/qa-main/senales-mw8r9iyy-83033550.md) |
 | Seguridad de entrega | El escaneo de secretos de ambos OCI devolvió cero hallazgos. Verifiqué tres archivos del bundle publicado contra las variables sensibles de dev y prod. Retiré el servicio SQL temporal. | [Escaneo OCI](evidence/qa-main/oci-secrets.json) · [Retirada del servicio](evidence/qa-main/sql-temporal.json) |
 
-El ensayo de promoción con el PR #2 abierto validó los digests y falló al comprobar que el PR estuviera integrado en `main`. Actions terminó sin emitir el artefacto de autorización. El PR fija el candidato ya probado y requiere su propia aprobación. [Evidencia del rechazo](evidence/qa-main/promocion-control.json) · [PR de promoción](https://github.com/cristyags/VetNotify/pull/2) · [Estado](STATUS.md).
+El ensayo de promoción con el PR #2 abierto validó los digests y falló al comprobar que el PR estuviera integrado en `main`. Actions terminó sin emitir el artefacto de autorización. El instalador también rechazó esa ejecución antes de tocar el clúster. El gateway público siguió sirviendo la web y la API de validación. El PR fija el candidato ya probado y requiere su propia aprobación. [Evidencia del rechazo](evidence/qa-main/promocion-control.json) · [PR de promoción](https://github.com/cristyags/VetNotify/pull/2) · [Estado](STATUS.md).
 
 ## Límites que importan en la defensa
 
 - El correo corresponde al simulador del escenario. Los recibos comprueban aceptación y deduplicación en ese proveedor de prueba. [Estados y garantías](data-and-states.md).
 - Los namespaces separan credenciales, datos y fallas controladas. Ambos dependen del mismo nodo y la disponibilidad termina cuando Azure desasigna la VM. [Arquitectura](architecture.md) · [Operación](operations.md).
+- El FQDN público sirve un ambiente a la vez. Actions necesita ver el candidato en validación por ese FQDN. Una promoción posterior al primer cambio a producción requiere coordinar una ventana de validación. La suite de fallos también se puede ejecutar en Compose. [Entrega](ci-cd.md) · [Guion API](demo-api.md).
 - Los ensayos con degradación, caída de PostgreSQL e imagen inválida corresponden a validación. Las comprobaciones de producción usan entregas sanas y verifican el rechazo de los controles de fallo. [Seguridad](security.md).
 - La consulta `ActualCost` de los grupos del proyecto respondió sin filas atribuibles. Las tarifas, el presupuesto y el estado de Azure son evidencia del control de gasto. La cifra de US$9.61 es un estimado del escenario documentado. [Costos](costs.md).
 - El equipo debe completar los nombres, carnets y horario reales para la defensa. [Preparación de la defensa](defense-guide.md).

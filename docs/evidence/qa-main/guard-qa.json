@@ -11,5 +11,10 @@
   ],
   "requestsBeforeRejection": 4,
   "mutationRequests": 0,
-  "allowedWhenApiReports": "dev"
+  "allowedWhenApiReports": "dev",
+  "composeCi": {
+    "commit": "ea30176ffa462105a68d01cf190a10207d289f41",
+    "run": "https://github.com/cristyags/VetNotify/actions/runs/42562957036",
+    "checks": { "verify": "success", "iac": "success" }
+  }
 }

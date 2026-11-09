@@ -11,5 +11,16 @@
   "failedStep": "Verify independently reviewed promotion PR",
   "mergedIntoMainCheck": false,
   "exitCode": 1,
-  "artifacts": 0
+  "artifacts": 0,
+  "installerGuard": {
+    "failedAuthorizationRun": 42562425118,
+    "exitCode": 1,
+    "rejectedBeforeDeployment": true
+  },
+  "publicGatewayAfterRejection": {
+    "environment": "dev",
+    "commit": "e1132db86bbf4e87b3855d17f1c7a562e7c834fe",
+    "webStatus": 200,
+    "readinessStatus": 200
+  }
 }

@@ -23,4 +23,4 @@ npm run cloud-start -- -Subscription ID -Suffix 26a7d1
 npm run cloud-stop -- -Subscription ID -Suffix 26a7d1
 ```
 
-Azure confirmó la desasignación al finalizar la verificación. El disco, la IP y el estado siguen facturando según uso. `cloud-destroy` produce un plan de eliminación del workload y exige revisar destino antes de aplicar. El bootstrap del estado se conserva por separado. [Estado final](evidence/azure-closeout.json) · [Presupuestos Azure](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/tutorial-acm-create-budgets).
+Azure confirmó la desasignación tras verificar el candidato de `main`. El disco, la IP y el estado siguen facturando según uso. `cloud-destroy` produce un plan de eliminación del workload y exige revisar destino antes de aplicar. El bootstrap del estado se conserva por separado. [Estado final](evidence/qa-main/azure-closeout.json) · [Presupuestos Azure](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/tutorial-acm-create-budgets).

@@ -28,6 +28,7 @@ Los informes JSON conservan el entorno, la versión, las horas UTC y las comprob
 | Alcance de las pruebas y entrega | [Guarda de entorno](qa-main/guard-qa.json) · [Escaneo OCI](qa-main/oci-secrets.json) · [Retirada SQL](qa-main/sql-temporal.json) |
 | Protección de `main` con checks fallidos y posterior corrección | [Regla y bloqueo](github-gate-before.json) · [checks aprobados](github-gate-after.json) · [PR #1](https://github.com/cristyags/VetNotify/pull/1) |
 | Rechazo de autorización de producción con el PR de promoción abierto | [Resultado](qa-main/promocion-control.json) · [Actions](https://github.com/cristyags/VetNotify/actions/runs/42562425118) |
+| Desasignación al cerrar QA y estado de revisión | [Azure y GitHub](qa-main/azure-closeout.json) |
 
 Las capturas muestran datos ficticios de pruebas ejecutadas por Chrome. La suite completa de Azure usó un túnel SSH local hacia el mismo Caddy HTTPS con validación del certificado del FQDN. La prueba visual usó el FQDN público. La corrida directa de consola anterior registró timeouts y se conserva para comparar. [Corrida directa](aceptacion-mw8ha5w5-3d7d42ab.md).
 

@@ -27,3 +27,5 @@ pwsh -NoProfile -File scripts/install-ci-candidate.ps1 -ReleaseRun ID -ExpectedC
 5. Desde SSH, conserva una copia de `/etc/caddy/Caddyfile`, cambia el upstream de `127.0.0.1:31080` a `127.0.0.1:31081`, valida con `sudo /usr/local/bin/caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile` y ejecuta `sudo systemctl restart vetnotify-edge`. Verifica `/health/ready`, `/api/v1/version` y una entrega por los dos canales. Si falla la verificación, restaura la copia y reinicia el servicio de nuevo.
 
 La versión y los Pods se consultan con `GET /api/v1/version` y `kubectl get pods -o json`. El ensayo del control con el PR #2 abierto validó los digests, falló en la condición de integración a `main` y dejó cero artefactos de autorización. [Evidencia del ensayo](evidence/qa-main/promocion-control.json) · [Estado de los ambientes](STATUS.md).
+
+El FQDN público sirve un ambiente por vez. Tras el primer cambio a producción, coordina una ventana para volver a servir validación por ese FQDN mientras se verifica y autoriza el candidato siguiente. En esa ventana el acceso público corresponde a `dev`. El entorno productivo conserva sus datos y su gateway privado.

@@ -1,0 +1,16 @@
+{
+  "checkedAtUtc": "2026-11-09T04:47:33Z",
+  "resourceGroup": "rg-vetnotify-26a7d1",
+  "vm": "vetnotify-26a7d1",
+  "powerState": "PowerState/deallocated",
+  "lastServedEnvironment": "dev",
+  "lastServedCommit": "e1132db86bbf4e87b3855d17f1c7a562e7c834fe",
+  "production": "pending-independent-review",
+  "promotionPr": {
+    "headRefOid": "1da6f187ba1aeac74ebfc77a318d6ffd88f1f94a",
+    "mergeStateStatus": "BLOCKED",
+    "reviewDecision": "REVIEW_REQUIRED",
+    "state": "OPEN",
+    "url": "https://github.com/cristyags/VetNotify/pull/2"
+  }
+}
