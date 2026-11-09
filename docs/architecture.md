@@ -16,6 +16,6 @@ La API inserta la notificación, el trabajo y la secuencia accepted/pending en u
 | React | `apps/web` | Operación, detalle, emisores y bandeja |
 | Observabilidad | `infra/observability` | OTLP, TSDB, alertas y dashboard |
 
-En Azure, Caddy termina TLS sobre el nombre de Azure y pasa al gateway de K3s. Validación y producción tienen namespaces, base de datos, PVC y secretos separados. El nombre público apunta a validación durante la entrega académica. Las interfaces técnicas se consultan con port-forward autorizado. Consulta el [estado efectivo](STATUS.md) para saber qué namespace tiene workloads.
+En Azure, Caddy termina TLS y pasa al gateway de K3s. El FQDN público sirve `vetnotify-prod` después de la promoción aprobada. Validación y producción tienen namespaces, bases de datos, PVC y secretos separados. Usa `vetnotify-dev` o Compose para las pruebas controladas. Las interfaces técnicas se consultan con port-forward autorizado. [Estado efectivo](STATUS.md) · [Verificación pública](evidence/qa-main/public-prod.json).
 
 Diagramas y fuentes editables en [diagramas](diagrams/). Las decisiones y alternativas se registran en [ADR](adr/decisiones.md).

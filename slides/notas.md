@@ -26,7 +26,7 @@ Muestra el caso P1-4 y la pantalla de reproceso. Contrasta recuperación automá
 
 ## 7. Terraform y K3s en Azure
 
-Explica qué vive en el estado y qué vive en Secrets. Lee el plan antes de aplicar. Consulta docs/evidence/azure-plan-vm.json, docs/infrastructure.md.
+Explica qué vive en el estado y qué vive en Secrets. Lee el plan del cambio de tamaño por capacidad zonal. Consulta docs/evidence/qa-main/azure-start-recovery.json y docs/infrastructure.md.
 
 ## 8. Checks, revisión y digests
 
